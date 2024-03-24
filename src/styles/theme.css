@@ -1,0 +1,20 @@
+/* 默认日间主题 */
+:root {
+  /* 主题色 */
+  --kele-color-brand: #4045D6;
+
+  /* 功能颜色 */
+  --kele-color-warning: #FF8B20;
+  --kele-color-danger: #FF1F1F;
+
+  /* font 颜色 */
+  --kele-color-font-primary: #1B2124;
+  --kele-color-font-second: #97999B;
+
+  /* 背景色 */
+  --kele-color-bg-page: #F8F8FA;
+  --kele-color-bg-primary: #F2F3F5;
+
+  /* 输入框 placeholder 颜色 */
+  --kele-color-placeholder: #BDBDBD;
+}
