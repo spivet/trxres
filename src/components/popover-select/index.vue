@@ -20,8 +20,8 @@ const modelValue = defineModel<number | string | undefined>({
   required: true,
 })
 
-const boxWidth = ref('')
 const selectBox = ref<HTMLElement | null>(null)
+const boxWidth = computed(() => `${selectBox.value?.offsetWidth}px`)
 
 const showPopover = ref(false)
 const selectedOption = computed(() => props.options.find(item => item.value === modelValue.value))
@@ -33,11 +33,6 @@ function onSelect(item: IOption) {
   modelValue.value = item.value
   emits('changed', item)
 }
-
-onMounted(() => {
-  if (selectBox.value)
-    boxWidth.value = `${selectBox.value.offsetWidth}px`
-})
 </script>
 
 <template>
@@ -78,6 +73,7 @@ onMounted(() => {
 }
 .select-placeholder {
   font-size: 24px;
+  font-weight: bold;
   line-height: 1.5;
   color: var(--kele-color-placeholder);
 
