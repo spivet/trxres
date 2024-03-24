@@ -1,0 +1,32 @@
+{
+  "app": {
+    "home": "首页",
+    "language": "语言",
+    "account": "账户",
+    "connectWallet": "连接钱包",
+    "disconnect": "断开连接",
+    "balance": "可用",
+    "energy": "能量",
+    "bandwidth": "带宽",
+    "energyPal": "能量宝",
+    "fastTrading": "快速租赁",
+    "receive": "领取",
+    "manual": "使用教程",
+    "trades": "最近完成",
+    "myOrder": "我的订单",
+    "pricePerDay": "价格/天",
+    "income": "收入",
+    "orderStatus": "订单状态"
+  },
+
+  "notice": {
+    "saving": "能量是TRON链上的一种资源，每天都会分配给那些质押了TRX的用户。你可以把能量留给自己用，也可以租借给别人使用。当用户在TRON链上进行交易或转账时，如果没有能量，就会直接消耗TRX（每笔交易大约需要30到100个TRX），如果有能量的话，则会消耗能量而不是TRX。使用能量相较于消耗TRX可以节省70%的费用。",
+    "earning": "如果你持有TRX，联系我们可以让你获得的年化25%+收益。我们只需要对你的TRX进行质押和解压的权限，而TRX依然留在你的地址上，所以你的资金是安全的。我们的平台(www.tronify.io)一方面可以帮助你的TRX赚钱，另一方面还可以帮助在TRON链上转账的用户节省费用。"
+  },
+
+  "subsidy": {
+    "transSubsidy": "转账补贴",
+    "title": "转账补贴每日额度:1200",
+    "content": "补贴足够1次USDT转账,能量有效期为10分钟,您本月剩余可领取转账补贴10次，购买能量可省转账网络费68%"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "app": {
+    "home": "Home",
+    "language": "Language",
+    "account": "Account",
+    "connectWallet": "Connect Wallet",
+    "disconnect": "Disconnect",
+    "balance": "Balance",
+    "energy": "Energy",
+    "bandwidth": "Bandwidth",
+    "energyPal": "EnergyPal",
+    "fastTrading": "FastTrading",
+    "receive": "Receive",
+    "manual": "User Manual",
+    "trades": "Trades",
+    "myOrder": "My Orders",
+    "pricePerDay": "Price/day",
+    "income": "Income",
+    "orderStatus": "Order Status"
+  },
+
+  "notice": {
+    "saving": "Energy is a resource on the TRON blockchain that is allocated daily to users who have staked TRX. You can retain energy for your own use, or lease it to others. When users conduct transactions or transfers on the TRON network, the absence of energy will result in the direct consumption of TRX (about 30 to 100 TRX per transaction). If energy is available, it will be consumed instead of TRX. Using energy can save 70% on costs compared to spending TRX.",
+    "earning": "If you hold TRX, contact us and you can earn an annualized return of over 25%. We only need permission to stake and unstake your TRX, while your TRX remains in your address, ensuring the security of your funds. Our platform (www.tronify.io) not only helps your TRX earn money but also aids users in saving on transaction fees on the TRON network."
+  },
+
+  "subsidy": {
+    "transSubsidy": "Transfer Subsidy",
+    "title": "Daily transfer subsidy limit: 1200",
+    "content": "Subsidy is sufficient for one USDT transfer. The energy validity period is 10 minutes. You have 10 remaining subsidy claims for transfers this month. Purchasing energy can save 68% on transfer network fees."
+  }
+}
