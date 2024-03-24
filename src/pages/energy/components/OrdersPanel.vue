@@ -55,6 +55,11 @@ const orderStatus = ref('all')
           :key="completedItem.id"
           :time="completedItem.time"
         >
+          <template #order-tag>
+            <van-tag plain color="#EB5757" class="order-tag">
+              {{ $t('app.hash') }}
+            </van-tag>
+          </template>
           <div class="flex-between">
             <OrderCell :label="$t('app.pricePerDay')" :value="completedItem.value" />
             <OrderCell :label="$t('app.energy')" :value="completedItem.value" />
@@ -74,6 +79,11 @@ const orderStatus = ref('all')
           :key="completedItem.id"
           :time="completedItem.time"
         >
+          <template #order-tag>
+            <van-tag plain color="#4356FC" class="order-tag cursor-pointer">
+              {{ $t('app.viewDetail') }}
+            </van-tag>
+          </template>
           <OrderCell class="flex-between" :label="$t('app.orderStatus')" :value="completedItem.value">
             <template #value>
               <span class="color-function-warning font-bold">进行中</span>
@@ -83,7 +93,7 @@ const orderStatus = ref('all')
             <OrderCell :label="$t('app.pricePerDay')" :value="completedItem.value" />
             <OrderCell :label="$t('app.energy')" :value="completedItem.value" />
           </div>
-          <OrderCell :label="$t('app.income')" :value="completedItem.value">
+          <OrderCell :label="$t('app.receiver')" :value="completedItem.value">
             <template #value>
               <van-text-ellipsis class="w-300px font-bold color-brand" content="addressBtnText" position="middle" />
             </template>
@@ -95,6 +105,12 @@ const orderStatus = ref('all')
 </template>
 
 <style lang="less" scoped>
+.order-tag {
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 22px;
+  line-height: 26px;
+}
 .select-bar {
   display: flex;
   justify-content: flex-end;

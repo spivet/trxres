@@ -16,7 +16,10 @@
     "myOrder": "我的订单",
     "pricePerDay": "价格/天",
     "income": "收入",
-    "orderStatus": "订单状态"
+    "receiver": "接收地址",
+    "orderStatus": "订单状态",
+    "hash": "哈希",
+    "viewDetail": "查看详情"
   },
 
   "notice": {

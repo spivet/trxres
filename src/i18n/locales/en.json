@@ -16,7 +16,10 @@
     "myOrder": "My Orders",
     "pricePerDay": "Price/day",
     "income": "Income",
-    "orderStatus": "Order Status"
+    "receiver": "Receiver",
+    "orderStatus": "Order Status",
+    "hash": "Hash",
+    "viewDetail": "View Detail"
   },
 
   "notice": {

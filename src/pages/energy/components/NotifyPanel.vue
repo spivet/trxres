@@ -8,11 +8,25 @@ const showPanel = ref(true)
   <div v-if="showPanel" class="notify-panel">
     <i class="i-icon:close-fill close-icon" @click="showPanel = false" />
 
-    <ul class="notify-list">
+    <!-- <ul class="notify-list">
       <li class="notify-item">
         {{ $t('notice.earning') }}
       </li>
-    </ul>
+    </ul> -->
+    <van-swipe
+      vertical
+      class="notify-list notice-swipe"
+      :autoplay="5000"
+      :touchable="false"
+      :show-indicators="false"
+    >
+      <van-swipe-item class="notify-item">
+        {{ $t('notice.saving') }}
+      </van-swipe-item>
+      <van-swipe-item class="notify-item">
+        {{ $t('notice.earning') }}
+      </van-swipe-item>
+    </van-swipe>
   </div>
 </template>
 
@@ -33,17 +47,19 @@ const showPanel = ref(true)
   height: 32px;
 }
 .notify-list {
-  height: 190px;
-  padding: 16px;
+  height: 230px;
   border-radius: 16px;
   background: linear-gradient(180deg, #FFF4EA 0%, #FFFAF4 95.72%);
 }
 .notify-item {
+  display: flex;
+  align-items: center;
   height: 100%;
-  overflow: auto;
+  padding: 16px;
+  overflow: hidden;
   white-space: pre-wrap;
-  font-size: 22px;
-  line-height: 1.5;
+  font-size: 20px;
+  line-height: 1.2;
   color: var(--kele-color-warning);
 }
 </style>
