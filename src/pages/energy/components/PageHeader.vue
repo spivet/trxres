@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import flagUA from '../images/flag-ua.png'
 import flagChina from '../images/flag-china.png'
 import { loadLanguageAsync } from '@/i18n'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const showLangPopover = ref(false)
 const languages = [
   { name: 'English', value: 'en', icon: flagUA },
@@ -17,6 +17,13 @@ function onChangeLang(language: typeof languages[number]) {
   loadLanguageAsync(language.value)
   showLangPopover.value = false
 }
+function initLang() {
+  const language = languages.find(item => item.value === locale.value)
+  if (language) {
+    currentLang.value = language
+    loadLanguageAsync(locale.value)
+  }
+}
 
 const showAccountPopover = ref(false)
 const account = ref('')
@@ -27,7 +34,11 @@ async function linkWallet() {
   if (window.tronWeb)
     account.value = window.tronWeb.defaultAddress.base58
 }
-linkWallet()
+
+onMounted(() => {
+  initLang()
+  linkWallet()
+})
 </script>
 
 <template>
