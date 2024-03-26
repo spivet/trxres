@@ -5,6 +5,7 @@ import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { VantResolver } from '@vant/auto-import-resolver'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import svgLoader from 'vite-svg-loader'
 // @ts-expect-error: No types available
 import pxToViewport from 'postcss-px-to-viewport'
@@ -16,10 +17,16 @@ export default defineConfig({
     svgLoader(),
     UnoCSS(),
     AutoImport({
-      resolvers: [VantResolver()],
+      resolvers: [
+        VantResolver(),
+        ElementPlusResolver(),
+      ],
     }),
     Components({
-      resolvers: [VantResolver()],
+      resolvers: [
+        VantResolver(),
+        ElementPlusResolver(),
+      ],
     }),
   ],
   resolve: {

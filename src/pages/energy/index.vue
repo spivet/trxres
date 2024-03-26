@@ -3,9 +3,7 @@ import PageHeader from './components/PageHeader.vue'
 import NotifyPanel from './components/NotifyPanel.vue'
 import AccountPanel from './components/AccountPanel.vue'
 import BalancePanel from './components/BalancePanel.vue'
-import ActionButton from './components/ActionButton.vue'
-import energyImg from './images/energy-icon.png'
-import rentImg from './images/rent-icon.png'
+import ActionPanel from './components/ActionPanel.vue'
 import SubsidyPanel from './components/SubsidyPanel.vue'
 import OrdersPanel from './components/OrdersPanel.vue'
 import PageFooter from './components/PageFooter.vue'
@@ -18,10 +16,7 @@ import PageFooter from './components/PageFooter.vue'
       <NotifyPanel />
       <AccountPanel />
       <BalancePanel />
-      <div class="flex-between gap-24px">
-        <ActionButton :name="$t('app.energyPal')" :icon="energyImg" class="flex-1" />
-        <ActionButton :name="$t('app.fastTrading')" :icon="rentImg" class="flex-1" />
-      </div>
+      <ActionPanel />
       <SubsidyPanel />
       <OrdersPanel />
     </div>

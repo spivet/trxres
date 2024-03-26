@@ -31,5 +31,20 @@
     "transSubsidy": "Transfer Subsidy",
     "title": "Daily transfer subsidy limit: 1200",
     "content": "Subsidy is sufficient for one USDT transfer. The energy validity period is 10 minutes. You have 10 remaining subsidy claims for transfers this month. Purchasing energy can save 68% on transfer network fees."
+  },
+
+  "energyPalDialog": {
+    "title": "EnergyPal",
+    "buy": "Requirements",
+    "buyDesc": "If the recipient doesn't have USDT, the transfer requires extra energy. Order based on your needs.",
+    "transTimes": "Number of transfers",
+    "times": "",
+    "transDesc": "Please enter your estimated daily transfer count. The system will calculate the daily energy usage.",
+    "transResult": "Each transaction equals {result} energy",
+    "pay": "Pay",
+    "needPay": "Amount to be transferred",
+    "discountTag": "Time-limited special offer",
+    "discountDesc": "Using TRX for transfers can save approximately",
+    "note": "Note: When purchasing energy multiple times with the same address, be aware that due to TRON's mechanism, the available energy on the address will be reclaimed when each order expires. To avoid this, it is recommended to buy multiple units of energy at once, make new purchases after the previous ones have been reclaimed, or use the energy promptly before it's reclaimed for efficiency."
   }
 }
