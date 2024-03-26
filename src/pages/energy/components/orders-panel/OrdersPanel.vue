@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import OrderCard from './OrderCard.vue'
 import OrderCell from './OrderCell.vue'
+import OrderDetail from './OrderDetail.vue'
 import KeleTabs from '@/components/kele-tabs/KeleTabs.vue'
 import KeleTab from '@/components/kele-tabs/KeleTab.vue'
 import PopoverSelect from '@/components/popover-select/index.vue'
@@ -44,6 +45,8 @@ const orderStatusOptions = [
   },
 ]
 const orderStatus = ref('all')
+
+const showOrderDetail = ref(false)
 </script>
 
 <template>
@@ -80,7 +83,7 @@ const orderStatus = ref('all')
           :time="completedItem.time"
         >
           <template #order-tag>
-            <van-tag plain color="#4356FC" class="order-tag cursor-pointer">
+            <van-tag plain color="#4356FC" class="order-tag cursor-pointer" @click="showOrderDetail = true">
               {{ $t('app.viewDetail') }}
             </van-tag>
           </template>
@@ -102,6 +105,9 @@ const orderStatus = ref('all')
       </div>
     </KeleTab>
   </KeleTabs>
+
+  <!-- 订单详情弹框 -->
+  <OrderDetail v-model:visible="showOrderDetail" />
 </template>
 
 <style lang="less" scoped>

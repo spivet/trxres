@@ -5,7 +5,7 @@ import AccountPanel from './components/AccountPanel.vue'
 import BalancePanel from './components/BalancePanel.vue'
 import ActionPanel from './components/ActionPanel.vue'
 import SubsidyPanel from './components/SubsidyPanel.vue'
-import OrdersPanel from './components/OrdersPanel.vue'
+import OrdersPanel from './components/orders-panel/OrdersPanel.vue'
 import PageFooter from './components/PageFooter.vue'
 </script>
 

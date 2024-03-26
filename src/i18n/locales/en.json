@@ -18,6 +18,10 @@
     "income": "Income",
     "receiver": "Receiver",
     "orderStatus": "Order Status",
+    "orderNo": "Order No.",
+    "orderDetail": "Order Detail",
+    "time": "Time",
+    "unitPrice": "Unit Price",
     "hash": "Hash",
     "viewDetail": "View Detail"
   },
@@ -34,7 +38,7 @@
   },
 
   "energyPalDialog": {
-    "title": "EnergyPal",
+    "title": "Energy Pal",
     "buy": "Requirements",
     "buyDesc": "If the recipient doesn't have USDT, the transfer requires extra energy. Order based on your needs.",
     "transTimes": "Number of transfers",
@@ -46,5 +50,15 @@
     "discountTag": "Time-limited special offer",
     "discountDesc": "Using TRX for transfers can save approximately",
     "note": "Note: When purchasing energy multiple times with the same address, be aware that due to TRON's mechanism, the available energy on the address will be reclaimed when each order expires. To avoid this, it is recommended to buy multiple units of energy at once, make new purchases after the previous ones have been reclaimed, or use the energy promptly before it's reclaimed for efficiency."
+  },
+
+  "fastTradingDialog": {
+    "title": "Fast Trading",
+    "rentalAmount": "Rental Amount",
+    "rentalAmountPlace": "Please enter the quantity",
+    "rentalDuration": "Rental Duration",
+    "receiverPlace": "If left blank, used current payment address",
+    "money": "Pay",
+    "moneyDesc": "单价 110 SUN , 较 1 小时 烧毁省 0% ≈ 0TRX ($ 0)"
   }
 }

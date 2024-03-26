@@ -18,6 +18,10 @@
     "income": "收入",
     "receiver": "接收地址",
     "orderStatus": "订单状态",
+    "orderNo": "订单号",
+    "orderDetail": "订单详情",
+    "time": "时间",
+    "unitPrice": "单价",
     "hash": "哈希",
     "viewDetail": "查看详情"
   },
@@ -46,5 +50,15 @@
     "discountTag": "限时特惠",
     "discountDesc": "较使用TRX转账，节省约",
     "note": "注：当您使用同一个地址多次购买能量时，请注意：因为波场自身的机制，每笔订单到期回收时会回收该地址上的可用能量。为避免此情况，建议用户一次性购买多笔能量、等待回收完成后再进行新的购买，或在能量将要回收前尽快使用完能量。"
+  },
+
+  "fastTradingDialog": {
+    "title": "快速租赁",
+    "rentalAmount": "租用量",
+    "rentalAmountPlace": "请输入租用数量",
+    "rentalDuration": "租用时间",
+    "receiverPlace": "不填写默认当前付款地址",
+    "money": "支付金额",
+    "moneyDesc": "单价 110 SUN , 较 1 小时 烧毁省 0% ≈ 0TRX ($ 0)"
   }
 }
