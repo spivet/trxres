@@ -30,18 +30,25 @@ function selectOption(option: string | number) {
 </script>
 
 <template>
-  <div class="kele-input__wrapper">
-    <input
-      v-model="inputValue"
-      :placeholder="placeholder"
-      class="kele-input"
-      @input="onInput"
-    >
-    <slot name="suffix">
-      <span v-if="suffix" class="ml-24px text-24px flex-shrink-0">{{ suffix }}</span>
-    </slot>
-    <ul v-if="options?.length">
-      <li v-for="option in options" :key="option" @click="selectOption(option)">
+  <div class="kele-input">
+    <div class="kele-input__wrapper">
+      <input
+        v-model="inputValue"
+        :placeholder="placeholder"
+        class="kele-input__inner"
+        @input="onInput"
+      >
+      <slot name="suffix">
+        <span v-if="suffix" class="ml-24px text-24px flex-shrink-0">{{ suffix }}</span>
+      </slot>
+    </div>
+    <ul v-if="options?.length" class="kele-input__shortcut-list">
+      <li
+        v-for="option in options"
+        :key="option"
+        class="kele-input__shortcut"
+        @click="selectOption(option)"
+      >
         {{ option }}
       </li>
     </ul>
@@ -49,6 +56,11 @@ function selectOption(option: string | number) {
 </template>
 
 <style lang="less" scoped>
+.kele-input {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 .kele-input__wrapper {
   display: flex;
   align-items: center;
@@ -60,7 +72,7 @@ function selectOption(option: string | number) {
   background: #FFF;
   cursor: pointer;
 }
-.kele-input {
+.kele-input__inner {
   width: 100%;
   padding: 0;
   border: none;
@@ -71,6 +83,35 @@ function selectOption(option: string | number) {
 
   &::placeholder {
     font-weight: 400;
+  }
+}
+
+.kele-input__shortcut-list {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+.kele-input__shortcut {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--kele-color-font-primary);
+  border-radius: 16px;
+  background: #FFF;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--kele-color-brand);
   }
 }
 </style>
