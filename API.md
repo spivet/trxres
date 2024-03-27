@@ -25,7 +25,12 @@
     "sun_10m": 100, // 租赁10分钟能量单价
     "lowEnergyFee": 0.56, // 租赁低能量手续费
     "lowEnergyLimit": 65000, // 租赁低能量限制值，低于该值认为是租赁低能量
-    "leftEnergy": 1000000, // 服务剩余可租赁能量
+    "leftEnergy": 1000000, // 平台剩余可租赁能量
+    "pledgeEnergy": 88.53621861, // 质押1TRX可获得的能量
+    "pledgeNet": 0.51405149, // 质押1TRX可获得的带宽
+    "burnEnergy": 2380.95238095 , // 燃烧1TRX可获得的能量
+    "burnNet": 1000, // 燃烧1TRX可获得的带宽 
+    "price": 0.12057227, // 1 TRX 兑换 USDT 价格
     "treasureType": [ // 能量宝选项类型对应的能量
       // 转账 - 对方账户有USDT
       {
@@ -303,14 +308,14 @@
       "pledgeDay": 0,
       "pledgeHour": 0,
       "pledgeMinute": 10,
-      "source": "trxrex",
+      "source": "trxres",
       "orderType": "ENERGY", // 租赁类型，目前为定值 ENERGY，并没带宽业务
       "orderPrice": 100, // 单价
       "pledgeNum": 32000, // 租赁数量
       "pledgeTrxNum": 3.76, // 所需支付的TRX
       "payCoinCode": "USDT", // 支付所需币种
       "payCoinAmt": "42.448", // 支付币种
-      "extraTrxNum": "29", // 
+      "extraTrxNum": "29", // 需要的trx数量（范围限制在 大于1.5，小于等于30），该参数用于确认是否用USDT支付
       "activeAccountFee": 0, // 激活账户费用
       "purchaseTRXFee": 0, // 购买trx费用
       "purchaseEnergyFee": 0, // 购买能量费用
