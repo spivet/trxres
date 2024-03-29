@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const account = '1sdsSDAAfsdf2aDSF1234sdgs34DD2'
+import useAccountStore from '@/store/account'
+
+const accountStore = useAccountStore()
 </script>
 
 <template>
@@ -8,7 +10,7 @@ const account = '1sdsSDAAfsdf2aDSF1234sdgs34DD2'
       {{ $t('app.account') }}
     </div>
 
-    <van-text-ellipsis class="account-text" :content="account" position="middle" />
+    <van-text-ellipsis class="account-text" :content="accountStore.address" position="middle" />
   </div>
 </template>
 
