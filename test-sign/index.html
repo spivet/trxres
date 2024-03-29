@@ -1,0 +1,22 @@
+<html>
+<head>
+    <title>Sign Message</title>
+    </head>
+    <body>
+      <H1>Sign Message</H1>
+      
+    </body> 
+    <script>
+      // 等待tronWeb加载
+      setTimeout(() => {
+        console.log("test", window.tronWeb.trx.signMessageV2)  
+        const addr = 'TC6UxQ1PVw5umiSUp5EiqRwFnQhMhS9gCR'
+        const seconds = Math.floor(new Date().getTime());
+        console.log(seconds);
+        window.tronWeb.trx.signMessageV2(`${addr}-${seconds}`).then((res) => {
+          console.log("sign", res)
+        })
+      }, 2000);
+      
+    </script>
+</html>

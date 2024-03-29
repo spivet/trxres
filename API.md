@@ -60,7 +60,7 @@
 - Body:
   ```json
   {
-    "fromAddress": "TJAvEDAKXUzng4nh9H58XVLRR3ozekDi8P", // 用户地址，可选
+    "fromAddress": "TJAvEDAKXUzng4nh9H58XVLRR3ozekDi8P", // 用户地址，必填
     "sourceFlag": "tpnative", // 第三方来源，可选
   }
   ```
@@ -76,8 +76,10 @@
         "totalReceivedLimit": 2300, // 总次数
         "remaining": 1465, // 剩余次数
         "isReceived": false, // 今日是否已领取
-        "monthRemain": 15,  // 本月剩余领取次数
-        "monthLimit": 15 // 每月领取限额
+        "monthRemain": 15,  // 用户本月剩余领取次数
+        "monthLimit": 15, // 用户每月领取限额
+        "monthIPRemain": 50, // 本月当前IP剩余领取次数
+        "monthIpLimit": 50, // 每月IP剩余领取次数
     }
   }
 
@@ -90,17 +92,10 @@
 - Body:
   ```json
   {
-    "fromAddress": "TJAvEDAKXUzng4nh9H58XVLRR3ozekDi8P", // 用户地址
-    "sourceFlag": "tpnative", // 第三方来源
-    "timeStamp": 1710141920083, // 13位时间戳，精确到毫秒
-    "signed": ""//私钥加密后数据（加密 fromAddress-timeStamp 字符串后的数据） 用户私钥+服务提供的公钥进行签名，服务端验证
-  }
-  ```
-- Header:
-- ```json
-  {
-    "ip": "192.168.0.1", // 用于限制客户端相同ip的领取次数
-    "port": "8083"
+    "fromAddress": "TJAvEDAKXUzng4nh9H58XVLRR3ozekDi8P", // 用户地址，必填
+    "sourceFlag": "tpnative", // 第三方来源，必填
+    "timeStamp": 1710141920083, // 13位时间戳，精确到毫秒，必填
+    "signed": "" // 客户端用用户私钥签名消息(fromAddress-timeStamp)，服务端通过用户公钥验证签名消息，必填
   }
   ```
 
@@ -114,34 +109,7 @@
   }
   ```
 
-## 4.查询账户
-
-### Request
-
-- Method: **GET**
-- URL: /api/v1/account?account=TJAvEDAKXUzng4nh9H58XVLRR3ozekDi8P
-- Params: 
-  + account 账户地址 String 必填
-  
-### Response
-
-- Body:
-  ```json
-  {
-    "resCode": 100,
-    "resMsg": "Success",
-    "data": {
-      "balance": 611000, // 可用 TRX 余额，单位 SUN
-      "energyTotal": 100000, // 总能量
-      "energyUsed": 2000, // 已用能量
-      "bandWidthTotal": 100000, // 总带宽
-      "bandWidthUsed": 2000, // 已用带宽
-    }
-  }
-  ```
-
-
-## 5.查询订单列表
+## 4.查询订单列表
 
 ### Request
 
@@ -192,7 +160,7 @@
   }
   ```
 
-## 6.查询订单详情
+## 5.查询订单详情
 
 ### Request
 
@@ -229,7 +197,7 @@
   }
   ```
 
-## 7.查询价格信息
+## 6.查询价格信息
 
 ### Request
 
@@ -274,7 +242,7 @@
   }
   ```
 
-## 8.创建租赁订单
+## 7.创建租赁订单
 
 ### Request
 
@@ -324,7 +292,7 @@
   }
   ```
 
-## 9.上传买单
+## 8.上传买单
 
 ### Request
 
@@ -351,8 +319,6 @@
     }
   }
   ```
-
-
 
 # 错误码
 
