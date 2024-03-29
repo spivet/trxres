@@ -4,7 +4,9 @@ import { useI18n } from 'vue-i18n'
 import flagUA from '../images/flag-ua.png'
 import flagChina from '../images/flag-china.png'
 import { loadLanguageAsync } from '@/i18n'
+import useAccountStore from '@/store/account'
 
+const accountStore = useAccountStore()
 const { t, locale } = useI18n()
 const showLangPopover = ref(false)
 const languages = [
@@ -26,18 +28,17 @@ function initLang() {
 }
 
 const showAccountPopover = ref(false)
-const account = ref('')
 const addressBtnText = computed(() => {
-  return account.value ? account.value : t('app.connectWallet')
+  // 将hash地址转换为省略形式
+  const shortAddress = accountStore.address ? `${accountStore.address.slice(0, 6)}...${accountStore.address.slice(-4)}` : ''
+  return shortAddress || t('app.connectWallet')
 })
 async function linkWallet() {
-  if (window.tronWeb)
-    account.value = window.tronWeb.defaultAddress.base58
+  accountStore.connect('TronLink')
 }
 
 onMounted(() => {
   initLang()
-  linkWallet()
 })
 </script>
 
@@ -68,12 +69,12 @@ onMounted(() => {
       </van-popover>
 
       <!-- 账户地址 -->
-      <div v-if="!account" class="account-box">
-        {{ addressBtnText }}
+      <div v-if="!accountStore.address" class="account-box" @click="linkWallet">
+        <i class="i-icon:wallet w-30px h-30px" /> {{ addressBtnText }}
       </div>
       <van-popover v-else v-model:show="showAccountPopover">
         <template #reference>
-          <van-text-ellipsis class="account-box" :content="addressBtnText" position="middle" />
+          <span class="account-box">{{ addressBtnText }}</span>
         </template>
         <ul class="w-256px py-16px">
           <li class="popover-option">
@@ -122,11 +123,14 @@ onMounted(() => {
 }
 
 .account-box {
-  width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: auto;
   padding: 6px 12px;
   background-color: #EEF2FF;
   border-radius: 36px;
-  font-size: 23px;
+  font-size: 24px;
   font-weight: 500;
   color: var(--kele-color-brand);
 }

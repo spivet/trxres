@@ -29,7 +29,7 @@ const account = '1sdsSDAAfsdf2aDSF1234sdgs34DD2'
   color: var(--kele-color-font-second);
 }
 .account-text {
-  width: 420px;
+  width: 100%;
   font-size: 28px;
   font-weight: 500;
   color: var(--kele-color-font-primary);
