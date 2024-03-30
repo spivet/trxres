@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { toRefs, watch } from 'vue'
 import PageHeader from './components/PageHeader.vue'
 import NotifyPanel from './components/NotifyPanel.vue'
 import AccountPanel from './components/AccountPanel.vue'
@@ -7,6 +8,16 @@ import ActionPanel from './components/ActionPanel.vue'
 import SubsidyPanel from './components/SubsidyPanel.vue'
 import OrdersPanel from './components/orders-panel/OrdersPanel.vue'
 import PageFooter from './components/PageFooter.vue'
+import useConfigStore from '@/store/config'
+import useAccountStore from '@/store/account'
+
+const { address } = toRefs(useAccountStore())
+const configStore = useConfigStore()
+watch(address, (newVal) => {
+  if (!newVal)
+    return
+  configStore.getConfig(address.value)
+}, { immediate: true })
 </script>
 
 <template>

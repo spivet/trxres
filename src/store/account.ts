@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { WalletType } from '@/utils/wallet'
 import { connectWallet } from '@/utils/wallet'
