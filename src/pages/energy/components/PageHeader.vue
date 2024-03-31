@@ -36,6 +36,10 @@ const addressBtnText = computed(() => {
 async function linkWallet() {
   accountStore.connect('TronLink')
 }
+function unlinkWallet() {
+  accountStore.setAddress('')
+  accountStore.setType(null)
+}
 
 onMounted(() => {
   initLang()
@@ -51,7 +55,7 @@ onMounted(() => {
 
     <div class="header-main">
       <!-- 语言切换 -->
-      <van-popover v-model:show="showLangPopover" :actions="languages">
+      <van-popover v-model:show="showLangPopover">
         <template #reference>
           <van-image :src="currentLang.icon" class="block w-48px h-48px" round />
         </template>
@@ -77,9 +81,9 @@ onMounted(() => {
           <span class="account-box">{{ addressBtnText }}</span>
         </template>
         <ul class="w-256px py-16px">
-          <li class="popover-option">
+          <li class="popover-option" @click="unlinkWallet">
             <i class="i-icon:logout-outline text-40px" />
-            <span class="text-26px color-#333">{{ 'item.value' }}</span>
+            <span class="text-26px color-#333">{{ $t('app.disconnect') }}</span>
           </li>
         </ul>
       </van-popover>

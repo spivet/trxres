@@ -3,11 +3,16 @@ import { ElMessage } from 'element-plus'
 import type { WalletType } from '@/utils/wallet'
 import { connectWallet } from '@/utils/wallet'
 
+interface IState {
+  type: `${WalletType}` | null
+  address: string
+  noExtension: boolean
+}
 const useAccountStore = defineStore('account', {
   persist: true,
-  state: () => {
+  state: (): IState => {
     return {
-      type: '',
+      type: null,
       address: '',
       noExtension: false,
     }
@@ -19,7 +24,7 @@ const useAccountStore = defineStore('account', {
     setAddress(address: string) {
       this.address = address
     },
-    setType(type: `${WalletType}`) {
+    setType(type: `${WalletType}` | null) {
       this.type = type
     },
     async connect(walletType: `${WalletType}`) {

@@ -76,6 +76,7 @@ const showOrderDetail = ref(false)
       <div class="flex flex-col gap-24px">
         <div class="select-bar">
           <PopoverSelect v-model="orderStatus" :options="orderStatusOptions" />
+          <PopoverSelect v-model="orderStatus" :options="orderStatusOptions" />
         </div>
         <OrderCard
           v-for="completedItem in completedList"
@@ -120,9 +121,10 @@ const showOrderDetail = ref(false)
 .select-bar {
   display: flex;
   justify-content: flex-end;
+  gap: 24px;
 
   :deep(.van-popover__wrapper) {
-    width: 50%;
+    flex: 1;
   }
 }
 </style>

@@ -10,7 +10,7 @@ const accountStore = useAccountStore()
       {{ $t('app.account') }}
     </div>
 
-    <van-text-ellipsis class="account-text" :content="accountStore.address" position="middle" />
+    <van-text-ellipsis class="account-text" :content="accountStore.address || '--'" position="middle" />
   </div>
 </template>
 
