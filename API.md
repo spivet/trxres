@@ -79,7 +79,7 @@
         "monthRemain": 15,  // 用户本月剩余领取次数
         "monthLimit": 15, // 用户每月领取限额
         "monthIPRemain": 50, // 本月当前IP剩余领取次数
-        "monthIpLimit": 50, // 每月IP剩余领取次数
+        "monthIPLimit": 50, // 每月IP剩余领取次数
     }
   }
 
@@ -109,7 +109,32 @@
   }
   ```
 
-## 4.查询订单列表
+## 4.查询账户
+
+### Request
+
+- Method: **GET**
+- URL: /api/v1/account?fromAddress=TJAvEDAKXUzng4nh9H58XVLRR3ozekDi8P
+- Params: 
+  + fromAddress 账户地址 String 必填
+  
+### Response
+
+- Body:
+  ```json
+  {
+    "resCode": 100,
+    "resMsg": "Success",
+    "data": {
+      "energyTotal": 100000, // 总能量
+      "energyUsed": 2000, // 已用能量
+      "netTotal": 100000, // 总带宽
+      "netUsed": 2000, // 已用带宽
+    }
+  }
+  ```
+
+## 5.查询订单列表
 
 ### Request
 
@@ -160,7 +185,7 @@
   }
   ```
 
-## 5.查询订单详情
+## 6.查询订单详情
 
 ### Request
 
@@ -197,7 +222,7 @@
   }
   ```
 
-## 6.查询价格信息
+## 7.查询价格信息
 
 ### Request
 
@@ -242,7 +267,7 @@
   }
   ```
 
-## 7.创建租赁订单
+## 8.创建租赁订单
 
 ### Request
 
@@ -292,7 +317,7 @@
   }
   ```
 
-## 8.上传买单
+## 9.上传买单
 
 ### Request
 
