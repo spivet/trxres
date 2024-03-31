@@ -4038,7 +4038,7 @@ vite@^5.1.6:
   optionalDependencies:
     fsevents "~2.3.3"
 
-vue-demi@*, vue-demi@>=0.14.5, vue-demi@>=0.14.7:
+vue-demi@*, vue-demi@>=0.14.5, vue-demi@>=0.14.7, vue-demi@latest:
   version "0.14.7"
   resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.14.7.tgz#8317536b3ef74c5b09f268f7782e70194567d8f2"
   integrity sha512-EOG8KXDQNwkJILkx/gPcoL/7vH+hORoBaKgGe+6W7VFMvCYJfmF2dGbvgDroVnI8LU7/kTu8mbjRZGBU1z9NTA==
@@ -4064,6 +4064,13 @@ vue-i18n@9:
     "@intlify/core-base" "9.10.2"
     "@intlify/shared" "9.10.2"
     "@vue/devtools-api" "^6.5.0"
+
+vue-request@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/vue-request/-/vue-request-2.0.4.tgz#484672c36f46930437fe9415cc40f2fd595f98d3"
+  integrity sha512-+Tu5rDy6ItF9UdD21Mmbjiq5Pq6NZSN9juH72hNQTMn1whHh4KZPTKWVLK2YS4nzbuEnPs+82G91AA2Fgd93mg==
+  dependencies:
+    vue-demi latest
 
 vue-router@^4.3.0:
   version "4.3.0"

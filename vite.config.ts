@@ -21,6 +21,11 @@ export default defineConfig({
         VantResolver(),
         ElementPlusResolver(),
       ],
+      imports: [
+        {
+          'vue-request': ['useRequest'],
+        },
+      ],
     }),
     Components({
       resolvers: [

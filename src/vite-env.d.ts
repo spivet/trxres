@@ -5,6 +5,7 @@ declare interface Window {
       base58: string | false
       hex: string | false
     }
+    trx: any
     ready: boolean
     request: (options: { method: string }) => Promise<any>
   }

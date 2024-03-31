@@ -1,12 +1,37 @@
 <script setup lang="ts">
+import { computed, toRefs } from 'vue'
+import { ElMessage } from 'element-plus'
+import { apiCheckSubsidy, apiSubsidy } from '@/api/index'
+import useAccountStore from '@/store/account'
+import { signOnTronLink } from '@/utils/wallet'
 
+const { address } = toRefs(useAccountStore())
+
+const { data: subsidyInfo, runAsync: checkSubsidy } = useRequest(apiCheckSubsidy, {
+  defaultParams: [address.value],
+})
+const canReceive = computed(() => {
+  return !subsidyInfo.value?.isReceived && subsidyInfo.value?.remaining && subsidyInfo.value?.monthRemain && subsidyInfo.value?.monthIPRemain
+})
+async function receiveSubsidy() {
+  const second = Date.now()
+  const signed = await signOnTronLink(address.value, second)
+  await apiSubsidy({
+    fromAddress: address.value,
+    sourceFlag: '',
+    timeStamp: second,
+    signed,
+  })
+  ElMessage.success('领取成功')
+  checkSubsidy(address.value)
+}
 </script>
 
 <template>
   <div class="subsidy-panel">
     <div class="header">
       <span class="text-34px color-#fff font-600">{{ $t('subsidy.transSubsidy') }}</span>
-      <button class="header-btn">
+      <button v-if="canReceive" class="header-btn" @click="receiveSubsidy">
         {{ $t('app.receive') }}
       </button>
     </div>

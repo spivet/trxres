@@ -7,9 +7,9 @@ export enum WalletType {
 }
 
 interface IConnectResponse {
-  code: number,
-  data: string | null,
-  message: string,
+  code: number
+  data: string | null
+  message: string
 }
 
 // 连接到TronLink
@@ -39,6 +39,9 @@ async function connectToTronLink(): Promise<IConnectResponse> {
       message: res.message,
     })
   }
+}
+export async function signOnTronLink(address: string, second: number) {
+  return await window.tronWeb?.trx.signMessageV2(`${address}-${second}`)
 }
 
 // 连接到TokenPocket

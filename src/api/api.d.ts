@@ -19,4 +19,14 @@ declare namespace API {
       value: number
     }[]
   }
+
+  interface ICheckSubsidyRes {
+    totalReceivedLimit: number // 总次数
+    remaining: number // 剩余次数
+    isReceived: boolean // 今日是否已领取
+    monthRemain: number // 用户本月剩余领取次数
+    monthLimit: number // 用户每月领取限额
+    monthIPRemain: number // 本月当前IP剩余领取次数
+    monthIpLimit: number // 每月IP剩余领取次数
+  }
 }
