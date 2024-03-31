@@ -4,7 +4,7 @@ import { createI18n } from 'vue-i18n'
 
 // Import i18n resources
 // https://vitejs.dev/guide/features.html#glob-import
-const i18n = createI18n({
+export const i18n = createI18n({
   legacy: false,
   locale: '',
   messages: {},
@@ -23,6 +23,7 @@ function setI18nLanguage(lang: Locale) {
   i18n.global.locale.value = lang as any
   if (typeof document !== 'undefined')
     document.querySelector('html')?.setAttribute('lang', lang)
+
   return lang
 }
 

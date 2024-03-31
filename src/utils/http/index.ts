@@ -1,8 +1,8 @@
 import axios from 'axios'
 import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ElMessage } from 'element-plus'
-import { useI18n } from 'vue-i18n'
 import { StatusMessages } from './code'
+import { i18n } from '@/i18n'
 
 interface IAPIRes<T> {
   resCode: keyof typeof StatusMessages
@@ -17,14 +17,18 @@ const instance: AxiosInstance = axios.create({
 
 // 响应拦截器
 instance.interceptors.response.use((response: AxiosResponse<IAPIRes<any>>) => {
-  const { resCode, data } = response.data
+  const { resCode, resMsg, data } = response.data
+  const lang = i18n.global.locale.value || 'zh'
   if (resCode === 100) {
     return data
   }
   else {
-    const { locale } = useI18n()
-    ElMessage.error(StatusMessages[resCode][locale.value as 'zh' | 'en'])
-    return Promise.reject(new Error(data))
+    ElMessage.error(StatusMessages[resCode][lang as 'zh' | 'en'])
+    return Promise.reject({
+      resCode,
+      resMsg,
+      data,
+    })
   }
 }, (error: AxiosError<any>) => {
   const { message = '系统繁忙' } = error?.response!.data
