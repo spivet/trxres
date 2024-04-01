@@ -15,7 +15,7 @@ const visible = defineModel('visible', {
     overlay-class="bg-[rgba(0,0,0,.5)]!"
     class="dialog-container"
   >
-    <DialogContainer :title="$t('fastTradingDialog.title')" @close="visible = false">
+    <DialogContainer :title="$t('app.orderDetail')" @close="visible = false">
       <ul class="detail-list">
         <li class="detail-item">
           <span class="item-label">{{ $t('app.orderNo') }}</span>
@@ -45,6 +45,10 @@ const visible = defineModel('visible', {
           <span class="item-label">{{ $t('app.receiver') }}</span>
           <van-text-ellipsis class="item-value" content="accousdf234234234snt" position="middle" />
         </li>
+        <li v-if="0" class="detail-item">
+          <span class="item-label">{{ $t('app.leaseHash') }}</span>
+          <van-text-ellipsis class="item-value" content="accousdf234234234snt" position="middle" />
+        </li>
       </ul>
     </DialogContainer>
     <!-- <DialogTitle :title="$t('fastTradingDialog.title')" @close="visible = false" /> -->
@@ -65,7 +69,7 @@ const visible = defineModel('visible', {
 .detail-item {
   display: flex;
   justify-content: space-between;
-  font-size: 26px;
+  font-size: 24px;
   line-height: 40px;
   color: var(--kele-color-font-second);
 }

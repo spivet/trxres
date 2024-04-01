@@ -59,15 +59,15 @@ const showOrderDetail = ref(false)
           :time="completedItem.time"
         >
           <template #order-tag>
-            <van-tag plain color="#EB5757" class="order-tag">
-              {{ $t('app.hash') }}
+            <van-tag plain color="#4356FC" class="order-tag">
+              {{ $t('app.viewDetail') }}
             </van-tag>
           </template>
           <div class="flex-between">
             <OrderCell :label="$t('app.pricePerDay')" :value="completedItem.value" />
             <OrderCell :label="$t('app.energy')" :value="completedItem.value" />
           </div>
-          <OrderCell :label="$t('app.income')" :value="completedItem.value" />
+          <OrderCell :label="$t('app.leaseHash')" :value="completedItem.value" />
         </OrderCard>
       </div>
     </KeleTab>
@@ -84,7 +84,7 @@ const showOrderDetail = ref(false)
           :time="completedItem.time"
         >
           <template #order-tag>
-            <van-tag plain color="#4356FC" class="order-tag cursor-pointer" @click="showOrderDetail = true">
+            <van-tag plain color="#4356FC" class="order-tag" @click="showOrderDetail = true">
               {{ $t('app.viewDetail') }}
             </van-tag>
           </template>
@@ -117,6 +117,7 @@ const showOrderDetail = ref(false)
   border-radius: 8px;
   font-size: 22px;
   line-height: 26px;
+  cursor: pointer;
 }
 .select-bar {
   display: flex;

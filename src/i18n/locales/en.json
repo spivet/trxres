@@ -8,8 +8,8 @@
     "balance": "Balance",
     "energy": "Energy",
     "bandwidth": "Bandwidth",
-    "energyPal": "EnergyPal",
-    "fastTrading": "FastTrading",
+    "energyPal": "Transfer Pal",
+    "fastTrading": "Energy Hire",
     "receive": "Receive",
     "manual": "User Manual",
     "trades": "Trades",
@@ -23,7 +23,8 @@
     "time": "Time",
     "unitPrice": "Unit Price",
     "hash": "Hash",
-    "viewDetail": "View Detail"
+    "viewDetail": "View Detail",
+    "leaseHash": "Lease Hash"
   },
 
   "notice": {
@@ -38,7 +39,7 @@
   },
 
   "energyPalDialog": {
-    "title": "Energy Pal",
+    "title": "Transfer Pal",
     "buy": "Requirements",
     "buyDesc": "If the recipient doesn't have USDT, the transfer requires extra energy. Order based on your needs.",
     "transTimes": "Number of transfers",
@@ -53,7 +54,7 @@
   },
 
   "fastTradingDialog": {
-    "title": "Fast Trading",
+    "title": "Energy Trading",
     "rentalAmount": "Rental Amount",
     "rentalAmountPlace": "Please enter the quantity",
     "rentalDuration": "Rental Duration",

@@ -8,8 +8,8 @@
     "balance": "可用",
     "energy": "能量",
     "bandwidth": "带宽",
-    "energyPal": "能量宝",
-    "fastTrading": "快速租赁",
+    "energyPal": "转账宝",
+    "fastTrading": "能量租赁",
     "receive": "领取",
     "manual": "使用教程",
     "trades": "最近完成",
@@ -23,7 +23,8 @@
     "time": "时间",
     "unitPrice": "单价",
     "hash": "哈希",
-    "viewDetail": "查看详情"
+    "viewDetail": "查看详情",
+    "leaseHash": "租赁哈希"
   },
 
   "notice": {
@@ -38,7 +39,7 @@
   },
 
   "energyPalDialog": {
-    "title": "能量宝",
+    "title": "转账宝",
     "buy": "购买需求",
     "buyDesc": "如果接收地址没有USDT，则转账需要更多的能量，请您根据需求进行下单。",
     "transTimes": "转账笔数",
@@ -53,7 +54,7 @@
   },
 
   "fastTradingDialog": {
-    "title": "快速租赁",
+    "title": "能量租赁",
     "rentalAmount": "租用量",
     "rentalAmountPlace": "请输入租用数量",
     "rentalDuration": "租用时间",
