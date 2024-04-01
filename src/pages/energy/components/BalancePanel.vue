@@ -1,7 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, toRefs } from 'vue'
+import useAccountStore from '@/store/account'
 
-const currentRate = ref(0)
+const { balance } = toRefs(useAccountStore())
+const currentEnergyRate = ref(0)
+const energyRate = computed(() => {
+  return (balance.value?.energyUsed ?? 0) / (balance.value?.energyTotal ?? 0) * 100
+})
+
+const currentBandWidthRate = ref(0)
+const bandWidthRate = computed(() => {
+  return (balance.value?.bandWidthUsed ?? 0) / (balance.value?.bandWidthTotal ?? 0) * 100
+})
 </script>
 
 <template>
@@ -12,15 +22,15 @@ const currentRate = ref(0)
       {{ $t('app.balance') }}(TRX)
     </div>
     <p class="coins">
-      {{ 354684.12 }}
+      {{ balance?.balance ?? '--' }}
     </p>
 
     <div class="cells">
       <!-- 带宽 -->
       <div class="cell">
         <van-circle
-          v-model:current-rate="currentRate"
-          :rate="50"
+          v-model:current-rate="currentEnergyRate"
+          :rate="energyRate"
           :stroke-width="120"
           :speed="100"
           layer-color="#eee"
@@ -32,7 +42,7 @@ const currentRate = ref(0)
           </div>
         </van-circle>
         <div class="cell__value">
-          <span class="value__text">{{ 123 }}/{{ 1232 }}</span>
+          <span class="value__text">{{ balance?.energyUsed ?? '--' }}/{{ balance?.energyTotal ?? '--' }}</span>
           <span class="value__label">{{ $t('app.energy') }}</span>
         </div>
       </div>
@@ -41,8 +51,8 @@ const currentRate = ref(0)
       <!-- 能量 -->
       <div class="cell">
         <van-circle
-          v-model:current-rate="currentRate"
-          :rate="50"
+          v-model:current-rate="currentBandWidthRate"
+          :rate="bandWidthRate"
           :stroke-width="120"
           :speed="100"
           layer-color="#eee"
@@ -54,7 +64,7 @@ const currentRate = ref(0)
           </div>
         </van-circle>
         <div class="cell__value">
-          <span class="value__text">{{ 123 }}/{{ 1232 }}</span>
+          <span class="value__text">{{ balance?.bandWidthUsed ?? '--' }}/{{ balance?.bandWidthTotal ?? '--' }}</span>
           <span class="value__label">{{ $t('app.bandwidth') }}</span>
         </div>
       </div>

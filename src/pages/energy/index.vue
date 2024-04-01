@@ -10,13 +10,24 @@ import OrdersPanel from './components/orders-panel/OrdersPanel.vue'
 import PageFooter from './components/PageFooter.vue'
 import useConfigStore from '@/store/config'
 import useAccountStore from '@/store/account'
+import { apiGetBalance } from '@/api'
 
-const { address } = toRefs(useAccountStore())
+const accountStore = useAccountStore()
+const { address } = toRefs(accountStore)
 const configStore = useConfigStore()
+
+const { runAsync: getBalance } = useRequest(apiGetBalance, {
+  manual: true,
+  pollingInterval: 5000,
+  onSuccess(data) {
+    accountStore.setBalance(data)
+  },
+})
 watch(address, (newVal) => {
   if (!newVal)
     return
   configStore.getConfig(address.value)
+  getBalance(address.value)
 }, { immediate: true })
 </script>
 

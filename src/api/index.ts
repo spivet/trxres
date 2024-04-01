@@ -25,3 +25,8 @@ export function apiSubsidy(data: {
 }) {
   return http.post<boolean>('/v1/subsidy', data)
 }
+
+// 查询账户余额能量等信息
+export function apiGetBalance(account: string) {
+  return http.get<API.IBalanceRes>('/v1/account', { account })
+}

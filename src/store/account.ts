@@ -7,6 +7,7 @@ interface IState {
   type: `${WalletType}` | null
   address: string
   noExtension: boolean
+  balance: API.IBalanceRes | null
 }
 const useAccountStore = defineStore('account', {
   persist: true,
@@ -15,6 +16,7 @@ const useAccountStore = defineStore('account', {
       type: null,
       address: '',
       noExtension: false,
+      balance: null,
     }
   },
   actions: {
@@ -26,6 +28,9 @@ const useAccountStore = defineStore('account', {
     },
     setType(type: `${WalletType}` | null) {
       this.type = type
+    },
+    setBalance(balance: API.IBalanceRes | null) {
+      this.balance = balance
     },
     async connect(walletType: `${WalletType}`) {
       this.setType(walletType)

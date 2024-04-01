@@ -29,4 +29,12 @@ declare namespace API {
     monthIPRemain: number // 本月当前IP剩余领取次数
     monthIpLimit: number // 每月IP剩余领取次数
   }
+
+  interface IBalanceRes {
+    balance: number // 可用 TRX 余额，单位 SUN
+    energyTotal: number // 总能量
+    energyUsed: number // 已用能量
+    bandWidthTotal: number // 总带宽
+    bandWidthUsed: number // 已用带宽
+  }
 }
