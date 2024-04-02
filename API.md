@@ -139,16 +139,15 @@
 ### Request
 
 - Method: **GET**
-- URL: /api/v1/order_history?fromAddress=TJAvEDAKXUzng4nh9H58XVLRR3ozekDi8P&page=1&pageSize=20&sourceFlag=tpnative&sort=0&status=0
+- URL: /api/v1/orderHistory?fromAddress=TJAvEDAKXUzng4nh9H58XVLRR3ozekDi8P&page=1&pageSize=20&sourceFlag=tpnative&sort=0&status=0
 - Params:
-  + sourceFlag 第三方标识 String 可选，默认查全部第三方标识
-  + fromAddress 账户地址 String 可选，默认查全部账户地址
+  + sourceFlag 第三方标识 String 可选，默认查全部
+  + fromAddress 账户地址 String 可选，默认查全部
   + page 页码 Int 可选，默认1
-  + pageSize 分页大小 Int 可选，默认20
+  + pageSize 分页大小 Int 可选，默认20，最大支持 100
   + sort 排序类型 Int 0：根据订单时间倒序 1：根据价格倒序 2：根据金额倒序 3：根据能量倒序 可选，默认 0
-  + status 状态 Int 可选，默认全部
-- Header:
-  + X-Timezone-Offset: 时区 Int，如中国为 +8 ，默认值 8，影响返回数据的时间类型转换
+  + status 状态 Int 0:未支付 1:已支付 2:租赁中 3:赎回中 4:结束 5:无效 可选，默认全部
+  + type 订单类型 Int 0:租赁订单 1:补贴订单 可选，默认全部
 
 ### Response
 
@@ -160,20 +159,20 @@
     "data": {
       "data": [
         {
-          "orderId": "2ombu8zk_3jet_0mle_g7id_2mi3gnl6fk4y",
+          "orderId": "eUMnp3bDww2CRUtswvSHtuA3an",
           "fromAddress": "TW7XuicuiQSHCcodUkyjMfdWxnWsbZmiSS", // 发起订单地址
           "pledgeAddress": "TW7XuicuiQSHCcodUkyjMfdWxnWsbZmiSS", // 租赁能量接收地址
           "pledgeNum": 555, // 租用能量数量
-          "orderPrice": 110, // 单价 SUN
+          "orderPrice": 110, // 能量单价 SUN
           "pledgeDay": 3, // 租赁时长 pledgeDay,pledgeHour,pledgeMinute 仅出现一个，按顺序优先选择第一个使用
-          "pledgeHour": 3, // 租赁时长 pledgeDay,pledgeHour,pledgeMinute 仅出现一个，按顺序优先选择第一个使用
-          "pledgeMinute": 10, // 租赁时长 pledgeDay,pledgeHour,pledgeMinute 仅出现一个，按顺序优先选择第一个使用
-          "createTime": "2023-04-11 16:29:55", // 订单创建时间
-          "status": 1, // 状态 0:未支付 1:已支付 2: 租赁中 3:赎回中 4:结束 5:无效
-          "endTime": "2023-04-13 16:29:55", // 订单结束时间
+          "pledgeHour": 0, // 租赁时长 pledgeDay,pledgeHour,pledgeMinute 仅出现一个，按顺序优先选择第一个使用
+          "pledgeMinute": 0, // 租赁时长 pledgeDay,pledgeHour,pledgeMinute 仅出现一个，按顺序优先选择第一个使用
+          "source": "tpnative", // 第三方标识
+          "status": 1, // 状态 0:未支付 1:已支付 2:租赁中 3:赎回中 4:结束 5:无效
+          "startTime": 1711900800, // 订单开始时间戳 单位秒
+          "endTime": 1711900800, // 订单结束时间戳 单位秒
           "pledgeHash": "", // 租赁操作hash
-          "reclaimHash": "", // 回收操作hash
-          "payHash": "", // 支付转账操作hash
+          "reclaimHash": "" // 回收操作hash
         }
       ],
       "pagination": {
@@ -190,11 +189,9 @@
 ### Request
 
 - Method: **GET**
-- URL: /api/v1/order?id=16zi4ynw_sdvn_qv8h_ujfc_crfsgyi07zat
+- URL: /api/v1/orderInfo?id=16zi4ynw_sdvn_qv8h_ujfc_crfsgyi07zat
 - Params:
   + id 订单编号 String
-- Header:
-  + X-Timezone-Offset: 时区 Int，如中国为 +8 ，默认值 +8，影响返回数据的时间类型转换
 
 ### Response
 
@@ -204,20 +201,20 @@
     "resCode": 100,
     "resMsg": "Success",
     "data": {
-      "orderId": "2ombu8zk_3jet_0mle_g7id_2mi3gnl6fk4y",
+      "orderId": "eUMnp3bDww2CRUtswvSHtuA3an",
       "fromAddress": "TW7XuicuiQSHCcodUkyjMfdWxnWsbZmiSS", // 发起订单地址
       "pledgeAddress": "TW7XuicuiQSHCcodUkyjMfdWxnWsbZmiSS", // 租赁能量接收地址
       "pledgeNum": 555, // 租用能量数量
-      "orderPrice": 110, // 单价 SUN
+      "orderPrice": 110, // 能量单价 SUN
       "pledgeDay": 3, // 租赁时长 pledgeDay,pledgeHour,pledgeMinute 仅出现一个，按顺序优先选择第一个使用
-      "pledgeHour": 3, // 租赁时长 pledgeDay,pledgeHour,pledgeMinute 仅出现一个，按顺序优先选择第一个使用
-      "pledgeMinute": 10, // 租赁时长 pledgeDay,pledgeHour,pledgeMinute 仅出现一个，按顺序优先选择第一个使用
-      "createTime": "2023-04-11 16:29:55",
-      "status": 1, // 状态 0:未支付 1:已支付 2: 租赁中 3:赎回中 4:结束 5:无效
-      "endTime": "2023-04-13 16:29:55", // 订单结束时间
+      "pledgeHour": 0, // 租赁时长 pledgeDay,pledgeHour,pledgeMinute 仅出现一个，按顺序优先选择第一个使用
+      "pledgeMinute": 0, // 租赁时长 pledgeDay,pledgeHour,pledgeMinute 仅出现一个，按顺序优先选择第一个使用
+      "source": "tpnative", // 第三方标识
+      "status": 1, // 状态 0:未支付 1:已支付 2:租赁中 3:赎回中 4:结束 5:无效
+      "startTime": 1711900800, // 订单开始时间戳 单位秒
+      "endTime": 1711900800, // 订单结束时间戳 单位秒
       "pledgeHash": "", // 租赁操作hash
-      "reclaimHash": "", // 回收操作hash
-      "payHash": "", // 支付转账操作hash
+      "reclaimHash": "" // 回收操作hash
     }
   }
   ```
@@ -235,9 +232,9 @@
     "pledgeAddress": "TKghVbeEzvrV8GLK3YE1gRrjVHSf8rGB6k", // 能量接收地址
     // 为适配原api pledgeDay、pledgeHour和pledgeMinute，任选其一提交即可
     // 如果同时存在则按 pledgeDay - pledgeHour - pledgeMinute 顺序优先选择第一个有值的 
-    "pledgeDay": 0, // 租赁天数
-    "pledgeHour": , // 租赁小时数
-    "pledgeMinute": 10, // 租赁分钟数
+    "pledgeDay": 0, // 租赁天数 取值范围[1 - 30] 整数
+    "pledgeHour": , // 租赁小时数 取值范围[1, 3] 整数
+    "pledgeMinute": 10, // 租赁分钟数 取值范围[10] 整数
     "pledgeNum": 32000, // 租赁数量
     "extraTrxNum": 0, // 需要的trx数量（范围限制在 大于1.5，小于等于30），该参数用于确认是否用USDT支付
     "sourceFlag": "tpnative" // 第三方来源
