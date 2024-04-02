@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed, toRefs } from 'vue'
 import { ElMessage } from 'element-plus'
+import { useI18n } from 'vue-i18n'
 import { apiCheckSubsidy, apiSubsidy } from '@/api/index'
 import useAccountStore from '@/store/account'
 import { signOnTronLink } from '@/utils/wallet'
 
+const { t } = useI18n()
 const { address } = toRefs(useAccountStore())
 
 const { data: subsidyInfo, runAsync: checkSubsidy } = useRequest(apiCheckSubsidy, {
@@ -15,15 +17,25 @@ const canReceive = computed(() => {
 })
 async function receiveSubsidy() {
   const second = Date.now()
-  const signed = await signOnTronLink(address.value, second)
-  await apiSubsidy({
-    fromAddress: address.value,
-    sourceFlag: '',
-    timeStamp: second,
-    signed,
-  })
-  ElMessage.success('领取成功')
-  checkSubsidy(address.value)
+  try {
+    const signed = await signOnTronLink(address.value, second)
+    await apiSubsidy({
+      fromAddress: address.value,
+      sourceFlag: '',
+      timeStamp: second,
+      signed,
+    }, t('api.receiveSuccess'))
+    checkSubsidy(address.value)
+  }
+  catch (error: any) {
+    if (typeof error === 'string') {
+      ElMessage.error({
+        message: error,
+        customClass: 'whitespace-nowrap',
+      })
+    }
+    console.error('领取失败：', error)
+  }
 }
 </script>
 

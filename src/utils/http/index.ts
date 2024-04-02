@@ -9,6 +9,9 @@ interface IAPIRes<T> {
   resMsg: string
   data: T
 }
+interface IRequestConfig extends AxiosRequestConfig {
+  successMsg?: string
+}
 
 // 创建axios实例对象
 const instance: AxiosInstance = axios.create({
@@ -18,8 +21,10 @@ const instance: AxiosInstance = axios.create({
 // 响应拦截器
 instance.interceptors.response.use((response: AxiosResponse<IAPIRes<any>>) => {
   const { resCode, resMsg, data } = response.data
+  const config = response.config as IRequestConfig
   const lang = i18n.global.locale.value || 'zh'
   if (resCode === 100) {
+    config.successMsg && ElMessage.success(config.successMsg)
     return data
   }
   else {
@@ -31,19 +36,19 @@ instance.interceptors.response.use((response: AxiosResponse<IAPIRes<any>>) => {
     })
   }
 }, (error: AxiosError<any>) => {
-  const { message = '系统繁忙' } = error?.response!.data
+  const { message } = error
   ElMessage.error(message)
   return Promise.reject(error)
 })
 
 const http = {
-  get<T = any>(url: string, params?: any, config?: AxiosRequestConfig) {
+  get<T = any>(url: string, params?: any, config?: IRequestConfig) {
     return instance.get<T, T>(url, {
       params,
       ...config,
     })
   },
-  post<T = any>(url: string, data?: any, config?: AxiosRequestConfig) {
+  post<T = any>(url: string, data?: any, config?: IRequestConfig) {
     return instance.post<T, T>(url, data, config)
   },
 }

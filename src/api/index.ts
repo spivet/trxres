@@ -17,13 +17,10 @@ export function apiCheckSubsidy(fromAddress: string, sourceFlag?: string) {
 }
 
 // 查询账户每日补贴限额
-export function apiSubsidy(data: {
-  fromAddress: string
-  sourceFlag: string
-  timeStamp: number
-  signed: string
-}) {
-  return http.post<boolean>('/v1/subsidy', data)
+export function apiSubsidy(data: API.ISubsidyReq, successMsg: string) {
+  return http.post<boolean>('/v1/subsidy', data, {
+    successMsg,
+  })
 }
 
 // 查询账户余额能量等信息

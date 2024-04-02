@@ -20,6 +20,12 @@ declare namespace API {
     }[]
   }
 
+  interface ISubsidyReq {
+    fromAddress: string
+    sourceFlag: string
+    timeStamp: number
+    signed: string
+  }
   interface ICheckSubsidyRes {
     totalReceivedLimit: number // 总次数
     remaining: number // 剩余次数
