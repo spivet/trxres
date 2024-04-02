@@ -47,7 +47,7 @@ const bandWidthRate = computed(() => {
         </div>
       </div>
       <!-- 分割线 -->
-      <span class="w-2px h-72px bg-#eee" />
+      <span class="w-2px h-72px mx-24px bg-#eee" />
       <!-- 能量 -->
       <div class="cell">
         <van-circle
@@ -109,6 +109,7 @@ const bandWidthRate = computed(() => {
 .cell {
   display: flex;
   align-items: center;
+  flex: 1;
   gap: 24px;
 }
 .cell__value {
