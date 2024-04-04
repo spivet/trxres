@@ -14,6 +14,10 @@
     "manual": "User Manual",
     "trades": "Trades",
     "myOrder": "My Orders",
+    "price": "Price",
+    "day": "Day",
+    "hour": "Hour",
+    "minute": "Minute",
     "pricePerDay": "Price/day",
     "income": "Income",
     "receiver": "Receiver",
@@ -36,6 +40,19 @@
     "transSubsidy": "Transfer Subsidy",
     "title": "Daily transfer subsidy limit: 1200",
     "content": "Subsidy is sufficient for one USDT transfer. The energy validity period is 10 minutes. You have 10 remaining subsidy claims for transfers this month. Purchasing energy can save 68% on transfer network fees."
+  },
+
+  "order": {
+    "latest": "Latest",
+    "highestPrice": "Price Highest",
+    "highestEnergy": "Energy Highest",
+    "all": "All",
+    "0": "Unpaid",
+    "1": "Paid",
+    "2": "Leasing",
+    "3": "Redeeming",
+    "4": "Completed",
+    "5": "Failed"
   },
 
   "energyPalDialog": {

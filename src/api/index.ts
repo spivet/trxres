@@ -27,3 +27,8 @@ export function apiSubsidy(data: API.ISubsidyReq, successMsg: string) {
 export function apiGetBalance(fromAddress: string) {
   return http.get<API.IBalanceRes>('/v1/account', { fromAddress })
 }
+
+// 查询订单列表
+export function apiGetOrderList(params: API.IOrderListReq) {
+  return http.get<API.IOrderListRes>('/v1/order/history', params)
+}

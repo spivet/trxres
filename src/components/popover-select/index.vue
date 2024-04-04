@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 
 interface IOption {
   name: string
-  value: string | number
+  value?: string | number
 }
 defineOptions({
   name: 'PopoverSelect',

@@ -14,6 +14,10 @@
     "manual": "使用教程",
     "trades": "最近完成",
     "myOrder": "我的订单",
+    "price": "价格",
+    "day": "天",
+    "hour": "小时",
+    "minute": "分钟",
     "pricePerDay": "价格/天",
     "income": "收入",
     "receiver": "接收地址",
@@ -36,6 +40,19 @@
     "transSubsidy": "转账补贴",
     "title": "转账补贴每日额度:1200",
     "content": "补贴足够1次USDT转账,能量有效期为10分钟,您本月剩余可领取转账补贴10次，购买能量可省转账网络费68%"
+  },
+
+  "order": {
+    "latest": "最新",
+    "highestPrice": "单价最高",
+    "highestEnergy": "能量最高",
+    "all": "全部",
+    "0": "未支付",
+    "1": "已支付",
+    "2": "租赁中",
+    "3": "赎回中",
+    "4": "已完成",
+    "5": "失败"
   },
 
   "energyPalDialog": {

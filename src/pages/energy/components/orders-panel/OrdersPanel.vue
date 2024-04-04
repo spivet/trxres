@@ -1,52 +1,145 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { dayjs } from 'element-plus'
+import { useI18n } from 'vue-i18n'
 import OrderCard from './OrderCard.vue'
 import OrderCell from './OrderCell.vue'
 import OrderDetail from './OrderDetail.vue'
 import KeleTabs from '@/components/kele-tabs/KeleTabs.vue'
 import KeleTab from '@/components/kele-tabs/KeleTab.vue'
 import PopoverSelect from '@/components/popover-select/index.vue'
+import { apiGetOrderList } from '@/api'
+import { OrderStatus, SortType } from '@/constants'
+import useAccountStore from '@/store/account'
+
+const { t } = useI18n()
+const accountStore = useAccountStore()
 
 const Tabs = {
   TRADE: 'trades', // 最近交易
   MY_ORDER: 'myOrder', // 我的订单
 }
 const activeTab = ref(Tabs.TRADE)
-const completedList = [
-  {
-    id: 1,
-    time: '2021-09-01',
-    value: '0.1',
-  },
-  {
-    id: 2,
-    time: '2021-09-02',
-    value: '0.2',
-  },
-  {
-    id: 3,
-    time: '2021-09-03',
-    value: '0.3',
-  },
-]
 
-const orderStatusOptions = [
-  {
-    name: '全部',
-    value: 'all',
-  },
-  {
-    name: '进行中',
-    value: 'processing',
-  },
-  {
-    name: '已完成',
-    value: 'completed',
-  },
-]
-const orderStatus = ref('all')
+const { data: completedData } = useRequest(apiGetOrderList, {
+  defaultParams: [{ status: OrderStatus.Ended }],
+})
+const completedList = computed(() => {
+  return completedData.value?.data.map((item) => {
+    return {
+      ...item,
+      time: dayjs(item.startTime * 1000).format('YYYY-MM-DD HH:mm:ss'),
+      unitPrice: `${item.orderPrice} SUN`,
+      unit: calculatePriceUnit(item.pledgeDay, item.pledgeHour, item.pledgeMinute),
+    }
+  })
+})
 
+// 我的订单
+const statusType = ref<API.OrderStatus | undefined>()
+const statusOptions = computed(() => [
+  {
+    name: t('order.all'),
+    value: undefined,
+  },
+  {
+    name: t('order.0'),
+    value: OrderStatus.Unpaid,
+  },
+  {
+    name: t('order.1'),
+    value: OrderStatus.Paid,
+  },
+  {
+    name: t('order.2'),
+    value: OrderStatus.Renting,
+  },
+  {
+    name: t('order.3'),
+    value: OrderStatus.Redeeming,
+  },
+  {
+    name: t('order.4'),
+    value: OrderStatus.Ended,
+  },
+  {
+    name: t('order.5'),
+    value: OrderStatus.Invalid,
+  },
+])
+const sortType = ref(SortType.OrderTimeDesc)
+const sortOptions = computed(() => [
+  {
+    name: t('order.latest'),
+    value: SortType.OrderTimeDesc,
+  },
+  {
+    name: t('order.highestPrice'),
+    value: SortType.PriceDesc,
+  },
+  {
+    name: t('order.highestEnergy'),
+    value: SortType.EnergyDesc,
+  },
+])
+const pageing = ref({
+  page: 1,
+  pageSize: 20,
+  total: 0,
+})
+const { data: myOrderData, runAsync: getMyOrder } = useRequest(apiGetOrderList, {
+  defaultParams: [{
+    fromAddress: accountStore.address,
+    status: statusType.value,
+    sort: sortType.value,
+  }],
+  onSuccess(data) {
+    const { pagination } = data
+    pageing.value = {
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      total: pagination.total,
+    }
+  },
+})
+function handleOrderStatusChange({ value }: any) {
+  getMyOrder({
+    // fromAddress: accountStore.address,
+    status: value,
+    sort: sortType.value,
+  })
+}
+function handleSortChange({ value }: any) {
+  getMyOrder({
+    // fromAddress: accountStore.address,
+    status: statusType.value,
+    sort: value,
+  })
+}
+function handleCurrentChange(page: number) {
+  getMyOrder({
+    // fromAddress: accountStore.address,
+    status: statusType.value,
+    sort: sortType.value,
+    page,
+  })
+}
+const myOrderList = computed(() => {
+  return myOrderData.value?.data.map((item) => {
+    return {
+      ...item,
+      time: dayjs(item.startTime * 1000).format('YYYY-MM-DD HH:mm:ss'),
+      unitPrice: `${item.orderPrice} SUN`,
+      unit: calculatePriceUnit(item.pledgeDay, item.pledgeHour, item.pledgeMinute),
+      statusTxt: t(`order.${item.status}`),
+    }
+  })
+})
 const showOrderDetail = ref(false)
+
+function calculatePriceUnit(pledgeDay: number, pledgeHour: number, pledgeMinute: number) {
+  return pledgeDay ? `${t('app.day')}` : pledgeHour ? `${pledgeHour}${t('app.hour')}` : `${pledgeMinute}${t('app.minute')}`
+}
 </script>
 
 <template>
@@ -55,7 +148,7 @@ const showOrderDetail = ref(false)
       <div class="flex flex-col gap-24px">
         <OrderCard
           v-for="completedItem in completedList"
-          :key="completedItem.id"
+          :key="completedItem.orderId"
           :time="completedItem.time"
         >
           <template #order-tag>
@@ -64,10 +157,14 @@ const showOrderDetail = ref(false)
             </van-tag>
           </template>
           <div class="flex-between">
-            <OrderCell :label="$t('app.pricePerDay')" :value="completedItem.value" />
-            <OrderCell :label="$t('app.energy')" :value="completedItem.value" />
+            <OrderCell :label="`${$t('app.price')}/${completedItem.unit}`" :value="completedItem.unitPrice" />
+            <OrderCell :label="$t('app.energy')" :value="`${completedItem.pledgeNum} SUN`" />
           </div>
-          <OrderCell :label="$t('app.leaseHash')" :value="completedItem.value" />
+          <OrderCell :label="$t('app.leaseHash')">
+            <template #value>
+              <van-text-ellipsis class="w-300px font-bold" :content="completedItem.pledgeHash" position="middle" />
+            </template>
+          </OrderCell>
         </OrderCard>
       </div>
     </KeleTab>
@@ -75,34 +172,47 @@ const showOrderDetail = ref(false)
     <KeleTab :key="Tabs.MY_ORDER" :title="$t('app.myOrder')">
       <div class="flex flex-col gap-24px">
         <div class="select-bar">
-          <PopoverSelect v-model="orderStatus" :options="orderStatusOptions" />
-          <PopoverSelect v-model="orderStatus" :options="orderStatusOptions" />
+          <PopoverSelect v-model="statusType" :options="statusOptions" @changed="handleOrderStatusChange" />
+          <PopoverSelect v-model="sortType" :options="sortOptions" @changed="handleSortChange" />
         </div>
-        <OrderCard
-          v-for="completedItem in completedList"
-          :key="completedItem.id"
-          :time="completedItem.time"
-        >
-          <template #order-tag>
-            <van-tag plain color="#4356FC" class="order-tag" @click="showOrderDetail = true">
-              {{ $t('app.viewDetail') }}
-            </van-tag>
-          </template>
-          <OrderCell class="flex-between" :label="$t('app.orderStatus')" :value="completedItem.value">
-            <template #value>
-              <span class="color-function-warning font-bold">进行中</span>
+        <template v-if="myOrderList?.length">
+          <OrderCard
+            v-for="myOrderItem in myOrderList"
+            :key="myOrderItem.orderId"
+            :time="myOrderItem.time"
+          >
+            <template #order-tag>
+              <van-tag plain color="#4356FC" class="order-tag" @click="showOrderDetail = true">
+                {{ $t('app.viewDetail') }}
+              </van-tag>
             </template>
-          </OrderCell>
-          <div class="flex-between">
-            <OrderCell :label="$t('app.pricePerDay')" :value="completedItem.value" />
-            <OrderCell :label="$t('app.energy')" :value="completedItem.value" />
-          </div>
-          <OrderCell :label="$t('app.receiver')" :value="completedItem.value">
-            <template #value>
-              <van-text-ellipsis class="w-300px font-bold color-brand" content="addressBtnText" position="middle" />
-            </template>
-          </OrderCell>
-        </OrderCard>
+            <OrderCell class="flex-between" :label="$t('app.orderStatus')">
+              <template #value>
+                <span class="color-function-warning font-bold">{{ myOrderItem.statusTxt }}</span>
+              </template>
+            </OrderCell>
+            <div class="flex-between">
+              <OrderCell :label="`${$t('app.price')}/${myOrderItem.unit}`" :value="myOrderItem.unitPrice" />
+              <OrderCell :label="$t('app.energy')" :value="`${myOrderItem.pledgeNum} SUN`" />
+            </div>
+            <OrderCell :label="$t('app.receiver')">
+              <template #value>
+                <van-text-ellipsis class="w-300px font-bold color-brand" :content="myOrderItem.pledgeHash" position="middle" />
+              </template>
+            </OrderCell>
+          </OrderCard>
+          <el-pagination
+            background
+            hide-on-single-page
+            :page-size="20"
+            :pager-count="5"
+            layout="prev, pager, next"
+            :total="pageing.total"
+            class="pagination"
+            @current-change="handleCurrentChange"
+          />
+        </template>
+        <van-empty v-else />
       </div>
     </KeleTab>
   </KeleTabs>
@@ -126,6 +236,14 @@ const showOrderDetail = ref(false)
 
   :deep(.van-popover__wrapper) {
     flex: 1;
+  }
+}
+.pagination {
+  justify-content: center;
+  margin-top: 12px;
+
+  :deep(&.is-background .el-pager li.is-active) {
+    background-color: var(--kele-color-brand);
   }
 }
 </style>
