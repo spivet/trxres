@@ -32,3 +32,8 @@ export function apiGetBalance(fromAddress: string) {
 export function apiGetOrderList(params: API.IOrderListReq) {
   return http.get<API.IOrderListRes>('/v1/order/history', params)
 }
+
+// 查询订单详情
+export function apiGetOrderDetail(id: string) {
+  return http.get<API.IOrderItem>('/v1/order/info', { id })
+}

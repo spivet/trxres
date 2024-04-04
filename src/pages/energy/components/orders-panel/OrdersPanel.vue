@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { dayjs } from 'element-plus'
+import dayjs from 'dayjs'
 import { useI18n } from 'vue-i18n'
 import OrderCard from './OrderCard.vue'
 import OrderCell from './OrderCell.vue'
@@ -104,21 +104,21 @@ const { data: myOrderData, runAsync: getMyOrder } = useRequest(apiGetOrderList, 
 })
 function handleOrderStatusChange({ value }: any) {
   getMyOrder({
-    // fromAddress: accountStore.address,
+    fromAddress: accountStore.address,
     status: value,
     sort: sortType.value,
   })
 }
 function handleSortChange({ value }: any) {
   getMyOrder({
-    // fromAddress: accountStore.address,
+    fromAddress: accountStore.address,
     status: statusType.value,
     sort: value,
   })
 }
 function handleCurrentChange(page: number) {
   getMyOrder({
-    // fromAddress: accountStore.address,
+    fromAddress: accountStore.address,
     status: statusType.value,
     sort: sortType.value,
     page,
@@ -135,7 +135,13 @@ const myOrderList = computed(() => {
     }
   })
 })
+
+const currentOrder = ref({} as API.IOrderItem)
 const showOrderDetail = ref(false)
+function openOrderDetail(order: API.IOrderItem) {
+  currentOrder.value = order
+  showOrderDetail.value = true
+}
 
 function calculatePriceUnit(pledgeDay: number, pledgeHour: number, pledgeMinute: number) {
   return pledgeDay ? `${t('app.day')}` : pledgeHour ? `${pledgeHour}${t('app.hour')}` : `${pledgeMinute}${t('app.minute')}`
@@ -152,7 +158,7 @@ function calculatePriceUnit(pledgeDay: number, pledgeHour: number, pledgeMinute:
           :time="completedItem.time"
         >
           <template #order-tag>
-            <van-tag plain color="#4356FC" class="order-tag">
+            <van-tag plain color="#4356FC" class="order-tag" @click="openOrderDetail(completedItem)">
               {{ $t('app.viewDetail') }}
             </van-tag>
           </template>
@@ -182,13 +188,21 @@ function calculatePriceUnit(pledgeDay: number, pledgeHour: number, pledgeMinute:
             :time="myOrderItem.time"
           >
             <template #order-tag>
-              <van-tag plain color="#4356FC" class="order-tag" @click="showOrderDetail = true">
+              <van-tag plain color="#4356FC" class="order-tag" @click="openOrderDetail(myOrderItem)">
                 {{ $t('app.viewDetail') }}
               </van-tag>
             </template>
             <OrderCell class="flex-between" :label="$t('app.orderStatus')">
               <template #value>
-                <span class="color-function-warning font-bold">{{ myOrderItem.statusTxt }}</span>
+                <span
+                  class="font-bold"
+                  :class="{
+                    'color-function-warning': myOrderItem.status !== OrderStatus.Invalid && myOrderItem.status !== OrderStatus.Ended,
+                    'color-function-danger': myOrderItem.status === OrderStatus.Invalid,
+                  }"
+                >
+                  {{ myOrderItem.statusTxt }}
+                </span>
               </template>
             </OrderCell>
             <div class="flex-between">
@@ -218,7 +232,7 @@ function calculatePriceUnit(pledgeDay: number, pledgeHour: number, pledgeMinute:
   </KeleTabs>
 
   <!-- 订单详情弹框 -->
-  <OrderDetail v-model:visible="showOrderDetail" />
+  <OrderDetail v-model:visible="showOrderDetail" :data="currentOrder" />
 </template>
 
 <style lang="less" scoped>

@@ -58,7 +58,7 @@ declare namespace API {
     /** 状态，可选，默认全部 */
     status?: OrderStatus
     /** 订单类型，可选，默认全部 */
-    type?: `${OrderType}`
+    type?: OrderType
   }
 
   /** 排序类型枚举 */
@@ -95,7 +95,7 @@ declare namespace API {
     pledgeHour: number // 租赁时长（小时）
     pledgeMinute: number // 租赁时长（分钟）
     source: string // 第三方标识
-    status: `${OrderStatus}` // 状态 0:未支付 1:已支付 2:租赁中 3:赎回中 4:结束 5:无效
+    status: OrderStatus // 状态 0:未支付 1:已支付 2:租赁中 3:赎回中 4:结束 5:无效
     startTime: number // 订单开始时间戳 单位秒
     endTime: number // 订单结束时间戳 单位秒
     pledgeHash?: string // 租赁操作hash

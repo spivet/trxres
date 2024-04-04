@@ -1,9 +1,22 @@
 <script setup lang="ts">
+import dayjs from 'dayjs'
+import { useI18n } from 'vue-i18n'
+import { computed, toRefs } from 'vue'
 import DialogContainer from '@/components/dialog-custom/DialogContainer.vue'
+import { OrderStatus } from '@/constants'
 
+const props = defineProps<{
+  data: API.IOrderItem
+}>()
 const visible = defineModel('visible', {
   type: Boolean,
   required: true,
+})
+
+const { t } = useI18n()
+const { data } = toRefs(props)
+const pledgeDuration = computed(() => {
+  return data.value.pledgeDay ? `${data.value.pledgeDay}${t('app.day')}` : data.value.pledgeHour ? `${data.value.pledgeHour}${t('app.hour')}` : `${data.value.pledgeMinute}${t('app.minute')}`
 })
 </script>
 
@@ -19,35 +32,43 @@ const visible = defineModel('visible', {
       <ul class="detail-list">
         <li class="detail-item">
           <span class="item-label">{{ $t('app.orderNo') }}</span>
-          <span class="item-value">{{ }}</span>
+          <span class="item-value">{{ data.orderId }}</span>
         </li>
         <li class="detail-item">
           <span class="item-label">{{ $t('app.time') }}</span>
-          <span class="item-value">{{ }}</span>
+          <span class="item-value">{{ dayjs(data.startTime * 1000).format('YYYY-MM-DD HH:mm') }}</span>
         </li>
         <li class="detail-item">
           <span class="item-label">{{ $t('app.orderStatus') }}</span>
-          <span class="item-value">{{ }}</span>
+          <span
+            class="item-value"
+            :class="{
+              'color-function-warning!': data.status !== OrderStatus.Invalid && data.status !== OrderStatus.Ended,
+              'color-function-danger!': data.status === OrderStatus.Invalid,
+            }"
+          >
+            {{ t(`order.${data.status}`) }}
+          </span>
         </li>
         <li class="detail-item">
           <span class="item-label">{{ $t('app.unitPrice') }}</span>
-          <span class="item-value">{{ }}</span>
+          <span class="item-value">{{ data.orderPrice }} SUN</span>
         </li>
         <li class="detail-item">
           <span class="item-label">{{ $t('fastTradingDialog.rentalDuration') }}</span>
-          <span class="item-value">{{ }}</span>
+          <span class="item-value">{{ pledgeDuration }}</span>
         </li>
         <li class="detail-item">
           <span class="item-label">{{ $t('fastTradingDialog.rentalAmount') }}</span>
-          <span class="item-value">{{ }}</span>
+          <span class="item-value">{{ data.pledgeNum }}</span>
         </li>
         <li class="detail-item">
           <span class="item-label">{{ $t('app.receiver') }}</span>
-          <van-text-ellipsis class="item-value" content="accousdf234234234snt" position="middle" />
+          <van-text-ellipsis class="item-value color-brand!" :content="data.fromAddress" position="middle" />
         </li>
-        <li v-if="0" class="detail-item">
+        <li v-if="data.pledgeAddress" class="detail-item">
           <span class="item-label">{{ $t('app.leaseHash') }}</span>
-          <van-text-ellipsis class="item-value" content="accousdf234234234snt" position="middle" />
+          <van-text-ellipsis class="item-value" :content="data.pledgeAddress" position="middle" />
         </li>
       </ul>
     </DialogContainer>
@@ -77,5 +98,6 @@ const visible = defineModel('visible', {
   width: 400px;
   font-weight: 500;
   text-align: right;
+  color: var(--kele-color-font-primary);
 }
 </style>

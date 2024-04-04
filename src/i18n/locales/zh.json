@@ -74,7 +74,7 @@
     "title": "能量租赁",
     "rentalAmount": "租用量",
     "rentalAmountPlace": "请输入租用数量",
-    "rentalDuration": "租用时间",
+    "rentalDuration": "租用时长",
     "receiverPlace": "不填写默认当前付款地址",
     "money": "支付金额",
     "moneyDesc": "单价 110 SUN , 较 1 小时 烧毁省 0% ≈ 0TRX ($ 0)"
