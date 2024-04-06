@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, toRefs } from 'vue'
+import { useI18n } from 'vue-i18n'
 import energyImg from '../images/energy-icon.png'
 import rentImg from '../images/rent-icon.png'
 import ActionButton from './ActionButton.vue'
 import DialogTitle from '@/components/dialog-custom/DialogTitle.vue'
 import KeleInput from '@/components/kele-input/index.vue'
 import PopoverSelect from '@/components/popover-select/index.vue'
+import useConfigStore from '@/store/config'
+
+const { t } = useI18n()
+const configStore = useConfigStore()
+const { treasureType } = toRefs(configStore)
 
 const showEnergyDialog = ref(false)
 const transTimes = ref('')
@@ -24,6 +30,14 @@ const priceList = [
     value: '3',
   },
 ]
+const transferTypeOptions = computed(() => {
+  return treasureType.value.map((item) => {
+    return {
+      name: t(`energyPalDialog.${item.type}`),
+      value: item.value,
+    }
+  })
+})
 const result = ref(0)
 
 const showFastTradingDialog = ref(false)
@@ -69,7 +83,7 @@ const showFastTradingDialog = ref(false)
             <span class="mx-16px text-24px">{{ $t('energyPalDialog.times') }} x</span>
             <PopoverSelect v-model="unitPrice" :options="priceList" custom-select-class="w-350px" />
           </div>
-          <PopoverSelect v-model="unitPrice" :options="priceList" />
+          <PopoverSelect v-model="unitPrice" :options="transferTypeOptions" />
           <i18n-t keypath="energyPalDialog.transResult" tag="div" class="text-24px/38px color-font-second">
             <template #result>
               <span class="color-function-danger">{{ result }}</span>

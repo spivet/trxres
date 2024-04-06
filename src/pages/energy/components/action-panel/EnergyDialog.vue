@@ -1,0 +1,286 @@
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { storeToRefs } from 'pinia'
+import DialogTitle from '@/components/dialog-custom/DialogTitle.vue'
+import KeleInput from '@/components/kele-input/index.vue'
+import PopoverSelect from '@/components/popover-select/index.vue'
+import useConfigStore from '@/store/config'
+import useAccountStore from '@/store/account'
+
+const visible = defineModel('visible', {
+  type: Boolean,
+  default: false,
+})
+
+const { t } = useI18n()
+const accountStore = useAccountStore()
+const configStore = useConfigStore()
+
+const { config, treasureType } = storeToRefs(configStore)
+const transferTypeOptions = computed(() => {
+  return treasureType.value.map((item) => {
+    return {
+      name: t(`energyPalDialog.${item.type}`),
+      value: item.value,
+    }
+  })
+})
+const selectedTransferType = ref(32000)
+const transferTimes = ref()
+const unitPrice = ref()
+const unitPriceList = [{
+  label: 'm10',
+  value: 'm10',
+}, {
+  label: 'h1',
+  value: 'h1',
+}, {
+  label: 'h3',
+  value: 'h3',
+}, {
+  label: 'day1',
+  value: 'day1',
+}, {
+  label: 'day2',
+  value: 'day2',
+  time: 2,
+}, {
+  label: 'day3',
+  value: 'day3',
+  time: 3,
+}, {
+  label: 'day4',
+  value: 'day4',
+  time: 4,
+}, {
+  label: 'day5',
+  value: 'day5',
+  time: 5,
+}, {
+  label: 'day6',
+  value: 'day6',
+  time: 6,
+}, {
+  label: 'day7',
+  value: 'day7',
+  time: 7,
+}, {
+  label: 'day8',
+  value: 'day8',
+  time: 8,
+}, {
+  label: 'day9',
+  value: 'day9',
+  time: 9,
+}, {
+  label: 'day10',
+  value: 'day10',
+  time: 10,
+}, {
+  label: 'day11',
+  value: 'day11',
+  time: 11,
+}, {
+  label: 'day12',
+  value: 'day12',
+  time: 12,
+}, {
+  label: 'day13',
+  value: 'day13',
+  time: 13,
+}, {
+  label: 'day14',
+  value: 'day14',
+  time: 14,
+}, {
+  label: 'day15',
+  value: 'day15',
+  time: 15,
+}, {
+  label: 'day16',
+  value: 'day16',
+  time: 16,
+}, {
+  label: 'day17',
+  value: 'day17',
+  time: 17,
+}, {
+  label: 'day18',
+  value: 'day18',
+  time: 18,
+}, {
+  label: 'day19',
+  value: 'day19',
+  time: 19,
+}, {
+  label: 'day20',
+  value: 'day20',
+  time: 20,
+}, {
+  label: 'day21',
+  value: 'day21',
+  time: 21,
+}, {
+  label: 'day22',
+  value: 'day22',
+  time: 22,
+}, {
+  label: 'day23',
+  value: 'day23',
+  time: 23,
+}, {
+  label: 'day24',
+  value: 'day24',
+  time: 24,
+}, {
+  label: 'day25',
+  value: 'day25',
+  time: 25,
+}, {
+  label: 'day26',
+  value: 'day26',
+  time: 26,
+}, {
+  label: 'day27',
+  value: 'day27',
+  time: 27,
+}, {
+  label: 'day28',
+  value: 'day28',
+  time: 28,
+}, {
+  label: 'day29',
+  value: 'day29',
+  time: 29,
+}, {
+  label: 'day30',
+  value: 'day30',
+  time: 30,
+}]
+const unitPriceOptions = computed(() => {
+  return unitPriceList.map((item) => {
+    const price = getPrice(item.value, item.time)
+    const unit = item.time ? `${item.time} ${t('app.days')}` : t(`energyPalDialog.${item.label}`)
+    return {
+      name: `${t('app.unitPrice')} ${price}RTX / ${unit}`,
+      value: price,
+    }
+  })
+})
+function getPrice(u: string, t = 1) {
+  let price = 0
+  let time = 1
+
+  switch (u) {
+    case 'm10':
+      price = config.value.sun_10m || 0
+      break
+    case 'h1':
+      price = config.value.sun_1h || 0
+      break
+    case 'h3':
+      price = config.value.sun_3h || 0
+      break
+    case 'day1':
+      price = config.value.sun_1d || 0
+      break
+    case 'day2':
+      price = config.value.sun_2d || 0
+      time = 2
+      break
+    // day3及以后的价格
+    default:
+      price = config.value.defaultEnergyPrice || 0
+      time = t
+  }
+
+  return +(selectedTransferType.value / 1e6 * price * time).toFixed(6)
+}
+</script>
+
+<template>
+  <div class="">
+    <van-popup
+      v-model:show="visible"
+      :show-confirm-button="false"
+      round
+      overlay-class="bg-[rgba(0,0,0,.5)]!"
+      class="dialog-container"
+    >
+      <DialogTitle :title="$t('energyPalDialog.title')" @close="visible = false" />
+      <!-- 购买需求 -->
+      <section class="mb-20px">
+        <div class="dialog-body__title">
+          {{ $t('energyPalDialog.buy') }}
+        </div>
+        <div class="dialog-body__content">
+          <div class="dialog-body__desc">
+            {{ $t('energyPalDialog.buyDesc') }}
+          </div>
+          <!-- 转账笔数 -->
+          <div class="dialog-body__title-sub">
+            {{ $t('energyPalDialog.transTimes') }}
+            <el-tooltip effect="dark" placement="bottom">
+              <i class="i-icon:question-outline ml-8px" />
+              <template #content>
+                <div class="text-22px w-380px">
+                  {{ $t('energyPalDialog.transDesc') }}
+                </div>
+              </template>
+            </el-tooltip>
+          </div>
+          <div class="flex items-center">
+            <KeleInput v-model="transferTimes" positive-only class="w-160px" />
+            <span class="mx-16px text-24px">{{ $t('energyPalDialog.times') }} x</span>
+            <PopoverSelect v-model="unitPrice" :options="unitPriceOptions" custom-select-class="w-350px" />
+          </div>
+          <PopoverSelect v-model="selectedTransferType" :options="transferTypeOptions" />
+          <i18n-t keypath="energyPalDialog.transResult" tag="div" class="text-24px/38px color-font-second">
+            <template #result>
+              <span class="color-function-danger">{{ 'result' }}</span>
+            </template>
+          </i18n-t>
+          <!-- 接收地址 -->
+          <div class="dialog-body__title-sub">
+            {{ $t('app.receiver') }}
+          </div>
+          <KeleInput v-model="accountStore.address" placeholder="Please enter the receiver" />
+        </div>
+      </section>
+      <!-- 支付 -->
+      <section class="mb-20px">
+        <div class="dialog-body__title">
+          {{ $t('energyPalDialog.pay') }}
+        </div>
+        <div class="dialog-body__content">
+          <div class="dialog-body__title-sub">
+            {{ $t('energyPalDialog.needPay') }}
+          </div>
+          <div class="flex items-center h-60px text-32px font-bold">
+            <span class="color-function-danger mr-12px">{{ 0 }}</span>
+            TRX
+            <van-tag plain color="#EB5757" class="ml-24px leading-47px! rounded-16px!">
+              {{ $t('energyPalDialog.discountTag') }}
+            </van-tag>
+          </div>
+          <p class="m-0 text-24px/38px color-font-second">
+            {{ $t('energyPalDialog.discountDesc') }}
+            <span class="color-font-primary font-500">{{ 0 }} TRX ≈ $ {{ 0 }}</span>
+          </p>
+        </div>
+      </section>
+      <!-- 注意说明 -->
+      <p class="text-20px/32px color-#4F4F4F">
+        {{ $t('energyPalDialog.note') }}
+      </p>
+      <van-button color="#4045D6" block round class="mt-32px! font-bold">
+        {{ $t('energyPalDialog.pay') }}
+      </van-button>
+    </van-popup>
+  </div>
+</template>
+
+<style lang="less" scoped>
+@import './common.less';
+</style>

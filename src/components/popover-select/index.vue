@@ -82,7 +82,9 @@ function onSelect(item: IOption) {
   }
 }
 .select-options {
+  max-height: 460px;
   padding: 16px 0;
+  overflow: auto;
 }
 .select-option {
   display: flex;
