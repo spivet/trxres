@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, toRefs } from 'vue'
+import { computed, toRefs, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { apiCheckSubsidy, apiSubsidy } from '@/api/index'
@@ -10,8 +10,13 @@ const { t } = useI18n()
 const { address } = toRefs(useAccountStore())
 
 const { data: subsidyInfo, runAsync: checkSubsidy } = useRequest(apiCheckSubsidy, {
-  defaultParams: [address.value],
+  manual: true,
 })
+watch(address, (newVal) => {
+  if (!newVal)
+    return
+  checkSubsidy(address.value)
+}, { immediate: true })
 const canReceive = computed(() => {
   return !subsidyInfo.value?.isReceived && subsidyInfo.value?.remaining && subsidyInfo.value?.monthRemain && subsidyInfo.value?.monthIPRemain
 })

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, toRefs, watch } from 'vue'
 import dayjs from 'dayjs'
 import { useI18n } from 'vue-i18n'
 import OrderCard from './OrderCard.vue'
@@ -14,6 +14,7 @@ import useAccountStore from '@/store/account'
 
 const { t } = useI18n()
 const accountStore = useAccountStore()
+const { address } = toRefs(accountStore)
 
 const Tabs = {
   TRADE: 'trades', // 最近交易
@@ -88,11 +89,7 @@ const pageing = ref({
   total: 0,
 })
 const { data: myOrderData, runAsync: getMyOrder } = useRequest(apiGetOrderList, {
-  defaultParams: [{
-    fromAddress: accountStore.address,
-    status: statusType.value,
-    sort: sortType.value,
-  }],
+  manual: true,
   onSuccess(data) {
     const { pagination } = data
     pageing.value = {
@@ -102,23 +99,32 @@ const { data: myOrderData, runAsync: getMyOrder } = useRequest(apiGetOrderList, 
     }
   },
 })
+watch(address, (newVal) => {
+  if (!newVal)
+    return
+  getMyOrder({
+    fromAddress: address.value,
+    status: statusType.value,
+    sort: sortType.value,
+  })
+}, { immediate: true })
 function handleOrderStatusChange({ value }: any) {
   getMyOrder({
-    fromAddress: accountStore.address,
+    fromAddress: address.value,
     status: value,
     sort: sortType.value,
   })
 }
 function handleSortChange({ value }: any) {
   getMyOrder({
-    fromAddress: accountStore.address,
+    fromAddress: address.value,
     status: statusType.value,
     sort: value,
   })
 }
 function handleCurrentChange(page: number) {
   getMyOrder({
-    fromAddress: accountStore.address,
+    fromAddress: address.value,
     status: statusType.value,
     sort: sortType.value,
     page,
@@ -175,7 +181,7 @@ function calculatePriceUnit(pledgeDay: number, pledgeHour: number, pledgeMinute:
       </div>
     </KeleTab>
 
-    <KeleTab :key="Tabs.MY_ORDER" :title="$t('app.myOrder')">
+    <KeleTab v-if="address" :key="Tabs.MY_ORDER" :title="$t('app.myOrder')">
       <div class="flex flex-col gap-24px">
         <div class="select-bar">
           <PopoverSelect v-model="statusType" :options="statusOptions" @changed="handleOrderStatusChange" />
