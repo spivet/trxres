@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import DialogTitle from '@/components/dialog-custom/DialogTitle.vue'
@@ -18,6 +18,7 @@ const accountStore = useAccountStore()
 const configStore = useConfigStore()
 
 const { config, treasureType } = storeToRefs(configStore)
+// 转账类型
 const transferTypeOptions = computed(() => {
   return treasureType.value.map((item) => {
     return {
@@ -26,9 +27,15 @@ const transferTypeOptions = computed(() => {
     }
   })
 })
-const selectedTransferType = ref(32000)
-const transferTimes = ref()
-const unitPrice = ref()
+const selectedTransferEnergy = ref()
+watch(treasureType, (newTreasure) => {
+  if (newTreasure)
+    selectedTransferEnergy.value = newTreasure[0].value
+})
+// 转账笔数数
+const transferNum = ref(1)
+
+// 单价选项
 const unitPriceList = [{
   label: 'm10',
   value: 'm10',
@@ -160,42 +167,73 @@ const unitPriceList = [{
 }]
 const unitPriceOptions = computed(() => {
   return unitPriceList.map((item) => {
-    const price = getPrice(item.value, item.time)
+    const { priceRtx, priceSun } = getPrice(item.value, item.time)
     const unit = item.time ? `${item.time} ${t('app.days')}` : t(`energyPalDialog.${item.label}`)
     return {
-      name: `${t('app.unitPrice')} ${price}RTX / ${unit}`,
-      value: price,
+      name: `${t('app.unitPrice')} ${priceRtx}RTX / ${unit}`,
+      value: item.value,
+      priceRtx,
+      priceSun,
     }
   })
 })
+
+// 单价
+const unitPriceType = ref('m10')
+const unitPriceRtx = computed(() => {
+  return unitPriceOptions.value.find(item => item.value === unitPriceType.value)?.priceRtx || 0
+})
+
+// 转账能量
+const totalEnergy = computed(() => {
+  return selectedTransferEnergy.value * transferNum.value
+})
+const actualPrice = computed(() => {
+  const basePrice = unitPriceRtx.value * transferNum.value
+  const lowEnergyFee = totalEnergy.value < 65e3 && transferNum.value ? config.value.lowEnergyFee : 0
+  return +(basePrice + lowEnergyFee).toFixed(6) || 0
+})
+
+// 节省的RTX价格
+const savedPrice = computed(() => {
+  return +(selectedTransferEnergy.value * transferNum.value / config.value.burnEnergy - actualPrice.value).toFixed(2)
+})
+// 约等于的美元价格
+const savedUsdPrice = computed(() => {
+  return +(savedPrice.value * config.value.price).toFixed(2)
+})
+
 function getPrice(u: string, t = 1) {
-  let price = 0
+  let priceSun = 0
   let time = 1
 
   switch (u) {
     case 'm10':
-      price = config.value.sun_10m || 0
+      priceSun = config.value.sun_10m || 0
       break
     case 'h1':
-      price = config.value.sun_1h || 0
+      priceSun = config.value.sun_1h || 0
       break
     case 'h3':
-      price = config.value.sun_3h || 0
+      priceSun = config.value.sun_3h || 0
       break
     case 'day1':
-      price = config.value.sun_1d || 0
+      priceSun = config.value.sun_1d || 0
       break
     case 'day2':
-      price = config.value.sun_2d || 0
+      priceSun = config.value.sun_2d || 0
       time = 2
       break
     // day3及以后的价格
     default:
-      price = config.value.defaultEnergyPrice || 0
+      priceSun = config.value.defaultEnergyPrice || 0
       time = t
   }
 
-  return +(selectedTransferType.value / 1e6 * price * time).toFixed(6)
+  return {
+    priceSun,
+    priceRtx: +(selectedTransferEnergy.value / 1e6 * priceSun * time).toFixed(6),
+  }
 }
 </script>
 
@@ -231,14 +269,14 @@ function getPrice(u: string, t = 1) {
             </el-tooltip>
           </div>
           <div class="flex items-center">
-            <KeleInput v-model="transferTimes" positive-only class="w-160px" />
+            <KeleInput v-model="transferNum" positive-only class="w-160px" />
             <span class="mx-16px text-24px">{{ $t('energyPalDialog.times') }} x</span>
-            <PopoverSelect v-model="unitPrice" :options="unitPriceOptions" custom-select-class="w-350px" />
+            <PopoverSelect v-model="unitPriceType" :options="unitPriceOptions" custom-select-class="w-350px" />
           </div>
-          <PopoverSelect v-model="selectedTransferType" :options="transferTypeOptions" />
+          <PopoverSelect v-model="selectedTransferEnergy" :options="transferTypeOptions" />
           <i18n-t keypath="energyPalDialog.transResult" tag="div" class="text-24px/38px color-font-second">
             <template #result>
-              <span class="color-function-danger">{{ 'result' }}</span>
+              <span class="color-function-danger">{{ selectedTransferEnergy }}</span>
             </template>
           </i18n-t>
           <!-- 接收地址 -->
@@ -258,7 +296,7 @@ function getPrice(u: string, t = 1) {
             {{ $t('energyPalDialog.needPay') }}
           </div>
           <div class="flex items-center h-60px text-32px font-bold">
-            <span class="color-function-danger mr-12px">{{ 0 }}</span>
+            <span class="color-function-danger mr-12px">{{ actualPrice }}</span>
             TRX
             <van-tag plain color="#EB5757" class="ml-24px leading-47px! rounded-16px!">
               {{ $t('energyPalDialog.discountTag') }}
@@ -266,7 +304,7 @@ function getPrice(u: string, t = 1) {
           </div>
           <p class="m-0 text-24px/38px color-font-second">
             {{ $t('energyPalDialog.discountDesc') }}
-            <span class="color-font-primary font-500">{{ 0 }} TRX ≈ $ {{ 0 }}</span>
+            <span class="color-font-primary font-500">{{ savedPrice }} TRX ≈ $ {{ savedUsdPrice }}</span>
           </p>
         </div>
       </section>
