@@ -68,6 +68,7 @@
     "needPay": "Amount to be transferred",
     "discountTag": "Time-limited special offer",
     "discountDesc": "Using TRX for transfers can save approximately",
+    "lowEnergyFee": "Charge 0.56TRX included，",
     "note": "Note: When purchasing energy multiple times with the same address, be aware that due to TRON's mechanism, the available energy on the address will be reclaimed when each order expires. To avoid this, it is recommended to buy multiple units of energy at once, make new purchases after the previous ones have been reclaimed, or use the energy promptly before it's reclaimed for efficiency.",
     "transfer": "Transfer - The other account has USDT",
     "notUtransfer": "Transfer - The other account doesn't have USDT",

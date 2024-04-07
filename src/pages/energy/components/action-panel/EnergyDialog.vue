@@ -170,7 +170,7 @@ const unitPriceOptions = computed(() => {
     const { priceRtx, priceSun } = getPrice(item.value, item.time)
     const unit = item.time ? `${item.time} ${t('app.days')}` : t(`energyPalDialog.${item.label}`)
     return {
-      name: `${t('app.unitPrice')} ${priceRtx}RTX / ${unit}`,
+      name: `${t('app.unitPrice')} ${priceRtx}TRX / ${unit}`,
       value: item.value,
       priceRtx,
       priceSun,
@@ -180,7 +180,7 @@ const unitPriceOptions = computed(() => {
 
 // 单价
 const unitPriceType = ref('m10')
-const unitPriceRtx = computed(() => {
+const unitPriceTRX = computed(() => {
   return unitPriceOptions.value.find(item => item.value === unitPriceType.value)?.priceRtx || 0
 })
 
@@ -189,7 +189,7 @@ const totalEnergy = computed(() => {
   return selectedTransferEnergy.value * transferNum.value
 })
 const actualPrice = computed(() => {
-  const basePrice = unitPriceRtx.value * transferNum.value
+  const basePrice = unitPriceTRX.value * transferNum.value
   const lowEnergyFee = totalEnergy.value < 65e3 && transferNum.value ? config.value.lowEnergyFee : 0
   return +(basePrice + lowEnergyFee).toFixed(6) || 0
 })
@@ -238,85 +238,86 @@ function getPrice(u: string, t = 1) {
 </script>
 
 <template>
-  <div class="">
-    <van-popup
-      v-model:show="visible"
-      :show-confirm-button="false"
-      round
-      overlay-class="bg-[rgba(0,0,0,.5)]!"
-      class="dialog-container"
-    >
-      <DialogTitle :title="$t('energyPalDialog.title')" @close="visible = false" />
-      <!-- 购买需求 -->
-      <section class="mb-20px">
-        <div class="dialog-body__title">
-          {{ $t('energyPalDialog.buy') }}
+  <van-popup
+    v-model:show="visible"
+    :show-confirm-button="false"
+    round
+    overlay-class="bg-[rgba(0,0,0,.5)]!"
+    class="dialog-container"
+  >
+    <DialogTitle :title="$t('energyPalDialog.title')" @close="visible = false" />
+    <!-- 购买需求 -->
+    <section class="mb-20px">
+      <div class="dialog-body__title">
+        {{ $t('energyPalDialog.buy') }}
+      </div>
+      <div class="dialog-body__content">
+        <div class="dialog-body__desc">
+          {{ $t('energyPalDialog.buyDesc') }}
         </div>
-        <div class="dialog-body__content">
-          <div class="dialog-body__desc">
-            {{ $t('energyPalDialog.buyDesc') }}
-          </div>
-          <!-- 转账笔数 -->
-          <div class="dialog-body__title-sub">
-            {{ $t('energyPalDialog.transTimes') }}
-            <el-tooltip effect="dark" placement="bottom">
-              <i class="i-icon:question-outline ml-8px" />
-              <template #content>
-                <div class="text-22px w-380px">
-                  {{ $t('energyPalDialog.transDesc') }}
-                </div>
-              </template>
-            </el-tooltip>
-          </div>
-          <div class="flex items-center">
-            <KeleInput v-model="transferNum" positive-only class="w-160px" />
-            <span class="mx-16px text-24px">{{ $t('energyPalDialog.times') }} x</span>
-            <PopoverSelect v-model="unitPriceType" :options="unitPriceOptions" custom-select-class="w-350px" />
-          </div>
-          <PopoverSelect v-model="selectedTransferEnergy" :options="transferTypeOptions" />
-          <i18n-t keypath="energyPalDialog.transResult" tag="div" class="text-24px/38px color-font-second">
-            <template #result>
-              <span class="color-function-danger">{{ selectedTransferEnergy }}</span>
+        <!-- 转账笔数 -->
+        <div class="dialog-body__title-sub">
+          {{ $t('energyPalDialog.transTimes') }}
+          <el-tooltip effect="dark" placement="bottom">
+            <i class="i-icon:question-outline ml-8px" />
+            <template #content>
+              <div class="text-22px w-380px">
+                {{ $t('energyPalDialog.transDesc') }}
+              </div>
             </template>
-          </i18n-t>
-          <!-- 接收地址 -->
-          <div class="dialog-body__title-sub">
-            {{ $t('app.receiver') }}
-          </div>
-          <KeleInput v-model="accountStore.address" placeholder="Please enter the receiver" />
+          </el-tooltip>
         </div>
-      </section>
-      <!-- 支付 -->
-      <section class="mb-20px">
-        <div class="dialog-body__title">
-          {{ $t('energyPalDialog.pay') }}
+        <div class="flex items-center">
+          <KeleInput v-model="transferNum" positive-only class="w-160px" />
+          <span class="mx-16px text-24px">{{ $t('energyPalDialog.times') }} x</span>
+          <PopoverSelect v-model="unitPriceType" :options="unitPriceOptions" custom-select-class="w-350px" />
         </div>
-        <div class="dialog-body__content">
-          <div class="dialog-body__title-sub">
-            {{ $t('energyPalDialog.needPay') }}
-          </div>
-          <div class="flex items-center h-60px text-32px font-bold">
-            <span class="color-function-danger mr-12px">{{ actualPrice }}</span>
-            TRX
-            <van-tag plain color="#EB5757" class="ml-24px leading-47px! rounded-16px!">
-              {{ $t('energyPalDialog.discountTag') }}
-            </van-tag>
-          </div>
-          <p class="m-0 text-24px/38px color-font-second">
-            {{ $t('energyPalDialog.discountDesc') }}
-            <span class="color-font-primary font-500">{{ savedPrice }} TRX ≈ $ {{ savedUsdPrice }}</span>
-          </p>
+        <PopoverSelect v-model="selectedTransferEnergy" :options="transferTypeOptions" />
+        <i18n-t keypath="energyPalDialog.transResult" tag="div" class="text-24px/38px color-font-second">
+          <template #result>
+            <span class="color-function-danger">{{ selectedTransferEnergy }}</span>
+          </template>
+        </i18n-t>
+        <!-- 接收地址 -->
+        <div class="dialog-body__title-sub">
+          {{ $t('app.receiver') }}
         </div>
-      </section>
-      <!-- 注意说明 -->
-      <p class="text-20px/32px color-#4F4F4F">
-        {{ $t('energyPalDialog.note') }}
-      </p>
-      <van-button color="#4045D6" block round class="mt-32px! font-bold">
+        <KeleInput v-model="accountStore.address" placeholder="Please enter the receiver" />
+      </div>
+    </section>
+    <!-- 支付 -->
+    <section class="mb-20px">
+      <div class="dialog-body__title">
         {{ $t('energyPalDialog.pay') }}
-      </van-button>
-    </van-popup>
-  </div>
+      </div>
+      <div class="dialog-body__content">
+        <div class="dialog-body__title-sub">
+          {{ $t('energyPalDialog.needPay') }}
+        </div>
+        <div class="flex items-center h-60px text-32px font-bold">
+          <span class="color-function-danger mr-12px">{{ actualPrice }}</span>
+          TRX
+          <van-tag plain color="#EB5757" class="ml-24px leading-47px! rounded-16px!">
+            {{ $t('energyPalDialog.discountTag') }}
+          </van-tag>
+        </div>
+        <p class="m-0 text-24px/38px color-font-second">
+          <template v-if="totalEnergy < 65e3">
+            {{ $t('energyPalDialog.lowEnergyFee') }}
+          </template>
+          {{ $t('energyPalDialog.discountDesc') }}
+          <span class="color-font-primary font-500">{{ savedPrice }} TRX ≈ $ {{ savedUsdPrice }}</span>
+        </p>
+      </div>
+    </section>
+    <!-- 注意说明 -->
+    <p class="text-20px/32px color-#4F4F4F">
+      {{ $t('energyPalDialog.note') }}
+    </p>
+    <van-button color="#4045D6" block round class="mt-32px! font-bold">
+      {{ $t('energyPalDialog.pay') }}
+    </van-button>
+  </van-popup>
 </template>
 
 <style lang="less" scoped>
