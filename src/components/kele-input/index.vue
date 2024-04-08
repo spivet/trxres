@@ -1,15 +1,35 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
+interface IOption {
+  name: string
+  value: string | number
+  [key: string]: any
+}
+
 defineOptions({
   name: 'KeleInput',
 })
 const props = defineProps<{
+  type?: string // 输入框类型
+  maxLength?: number // 最大长度
+  max?: number // 最大值
+  min?: number // 最小值
   placeholder?: string
   positiveOnly?: boolean // 是否只允许正整数
   suffix?: string
-  options?: (string | number)[]
+  options?: IOption[]
+}>()
+const emits = defineEmits<{
+  input: [value: string | number]
+  select: [option: IOption]
 }>()
 const inputValue = defineModel<string | number>({
   required: true,
+})
+
+const inputMode = computed(() => {
+  return props.positiveOnly ? 'numeric' : 'text'
 })
 
 function onInput(event: Event) {
@@ -17,15 +37,24 @@ function onInput(event: Event) {
   if (props.positiveOnly) {
     // 如果只允许正整数，则移除小数点和负数符号
     value = value.replace(/[^\d]/g, '')
-    inputValue.value = Number.parseInt(value)
+    if (props.max && Number.parseInt(value) > props.max)
+      value = props.max
+
+    if (props.min && Number.parseInt(value as string) < props.min)
+      value = props.min
+
+    inputValue.value = Number.parseInt(value as string)
   }
   if (value === '') {
     // parseInt解析空字符串是NaN，需要转换为空字符串
     inputValue.value = value
   }
+  emits('input', value)
 }
-function selectOption(option: string | number) {
-  inputValue.value = props.positiveOnly ? Number.parseInt(option as string) : option
+function selectOption(option: IOption) {
+  const { value } = option
+  inputValue.value = props.positiveOnly ? Number.parseInt(value as string) : value
+  emits('select', option)
 }
 </script>
 
@@ -34,6 +63,11 @@ function selectOption(option: string | number) {
     <div class="kele-input__wrapper">
       <input
         v-model="inputValue"
+        :type="type"
+        :maxlength="maxLength"
+        :max="max"
+        :min="min"
+        :inputmode="inputMode"
         :placeholder="placeholder"
         class="kele-input__inner"
         @input="onInput"
@@ -45,11 +79,11 @@ function selectOption(option: string | number) {
     <ul v-if="options?.length" class="kele-input__shortcut-list">
       <li
         v-for="option in options"
-        :key="option"
+        :key="option.value"
         class="kele-input__shortcut"
         @click="selectOption(option)"
       >
-        {{ option }}
+        {{ option.name }}
       </li>
     </ul>
   </div>
@@ -102,12 +136,13 @@ function selectOption(option: string | number) {
   align-items: center;
   justify-content: center;
   padding: 8px 16px;
+  border-radius: 16px;
+  background: #FFF;
   font-size: 24px;
   font-weight: 500;
   line-height: 1.5;
   color: var(--kele-color-font-primary);
-  border-radius: 16px;
-  background: #FFF;
+  white-space: nowrap;
   cursor: pointer;
 
   &:hover {

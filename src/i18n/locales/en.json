@@ -84,9 +84,10 @@
     "rentalAmount": "Rental Amount",
     "rentalAmountPlace": "Please enter the quantity",
     "rentalDuration": "Rental Duration",
+    "rentalDurationPlace": "Please enter rental duration",
     "receiverPlace": "If left blank, used current payment address",
     "money": "Pay",
-    "moneyDesc": "单价 110 SUN , 较 1 小时 烧毁省 0% ≈ 0TRX ($ 0)"
+    "moneyDesc": "Price %{unitPrice} SUN , TRX saved in %{time} discount %{savedPercent} ≈ %{savedPrice}TRX ($ %{savedUsdPrice})"
   },
 
   "api": {
