@@ -5,12 +5,14 @@ import useAccountStore from '@/store/account'
 const { balance } = toRefs(useAccountStore())
 const currentEnergyRate = ref(0)
 const energyRate = computed(() => {
-  return (balance.value?.energyUsed ?? 0) / (balance.value?.energyTotal ?? 0) * 100
+  const { energyTotal, energyUsed } = balance.value ?? { energyTotal: 0, energyUsed: 0 }
+  return (energyTotal - energyUsed) / energyTotal * 100
 })
 
 const currentBandWidthRate = ref(0)
 const bandWidthRate = computed(() => {
-  return (balance.value?.bandWidthUsed ?? 0) / (balance.value?.bandWidthTotal ?? 0) * 100
+  const { netTotal, netUsed } = balance.value ?? { netTotal: 0, netUsed: 0 }
+  return (netTotal - netUsed) / netTotal * 100
 })
 </script>
 
@@ -22,7 +24,7 @@ const bandWidthRate = computed(() => {
       {{ $t('app.balance') }}(TRX)
     </div>
     <p class="coins">
-      {{ balance?.balance ?? '--' }}
+      {{ balance?.trxBalance ?? '--' }}
     </p>
 
     <div class="cells">
@@ -64,7 +66,7 @@ const bandWidthRate = computed(() => {
           </div>
         </van-circle>
         <div class="cell__value">
-          <span class="value__text">{{ balance?.bandWidthUsed ?? '--' }}/{{ balance?.bandWidthTotal ?? '--' }}</span>
+          <span class="value__text">{{ balance?.netUsed ?? '--' }}/{{ balance?.netTotal ?? '--' }}</span>
           <span class="value__label">{{ $t('app.bandwidth') }}</span>
         </div>
       </div>

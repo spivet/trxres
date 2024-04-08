@@ -37,11 +37,14 @@ declare namespace API {
   }
 
   interface IBalanceRes {
-    balance: number // 可用 TRX 余额，单位 SUN
+    address: string // 地址
     energyTotal: number // 总能量
     energyUsed: number // 已用能量
-    bandWidthTotal: number // 总带宽
-    bandWidthUsed: number // 已用带宽
+    netTotal: number // 总带宽
+    netUsed: number // 已用带宽
+    isActived: boolean // 是否已激活
+    trxBalance: string // TRX 余额，为防止精度丢失，所以使用字符串
+    usdtBalance: string // USDT 余额，为防止精度丢失，所以使用字符串
   }
 
   interface IOrderListReq {
@@ -111,5 +114,72 @@ declare namespace API {
   interface IOrderListRes {
     data: IOrderItem[]
     pagination: IPagination
+  }
+
+  interface ICheckPriceReq {
+    fromAddress: string // 发起操作地址
+    pledgeAddress: string // 能量接收地址
+    pledgeDay?: number // 租赁天数 取值范围[1 - 30] 整数
+    pledgeHour?: number // 租赁小时数 取值范围[1, 3] 整数
+    pledgeMinute?: number // 租赁分钟数 取值范围[10] 整数
+    pledgeNum: number // 租赁数量
+    extraTrxNum: number // 需要的trx数量（范围限制在 大于1.5，小于等于30），该参数用于确认是否用USDT支付
+    sourceFlag?: 'tpnative' | '' // 第三方来源
+  }
+  interface ICheckPriceRes {
+    fromAddress: string // 发起操作地址
+    pledgeAddress: string // 接收能量地址
+    pledgeDay: number // 租赁天数 pledgeDay,pledgeHour,pledgeMinute 仅会有一个有值，按顺序优先选择第一个有值的使用
+    pledgeHour: number // 租赁小时数 pledgeDay,pledgeHour,pledgeMinute 仅会有一个有值，按顺序优先选择第一个有值的使用
+    pledgeMinute: number // 租赁分钟数 pledgeDay,pledgeHour,pledgeMinute 仅会有一个有值，按顺序优先选择第一个有值的使用
+    source: 'tpnative' | '' // 第三方来源
+    orderType: 'ENERGY' // 资源类型
+    orderPrice: number // 单价 SUN
+    pledgeNum: number // 租赁数量
+    pledgeTrxNum: string // 支付所需的TRX 含低能量租赁手续费 和 激活账号费用 为保证精度采用字符串
+    payCoinCode: string // 支付所需币种
+    payCoinAmt: string // 支付币种数量 为保证精度采用字符串
+    extraTrxNum: number // 需要的trx数量（范围限制在 大于1.5，小于等于30），该参数用于确认是否用USDT支付
+    activeAccountFee: string // 激活账号费用 TRX
+    purchaseTRXFee: string // 购买trx费用 根据payCoinCode 确定币种
+    purchaseEnergyFee: string // 购买能量费用 不含手续费 根据payCoinCode 确定币种
+    usdtModeAvailable: boolean // usdt 兑换是否可用
+  }
+
+  interface ICreateOrderReq {
+    fromAddress: string // 发起操作地址
+    pledgeAddress: string // 能量接收地址
+    // 为适配原api pledgeDay、pledgeHour和pledgeMinute，任选其一提交即可
+    // 如果同时存在则按 pledgeDay - pledgeHour - pledgeMinute 顺序优先选择第一个有值的
+    pledgeDay?: number // 租赁天数 取值范围[1 - 30] 整数
+    pledgeHour?: number // 租赁小时数 取值范围[1, 3] 整数
+    pledgeMinute?: number // 租赁分钟数 取值范围[10] 整数
+    pledgeNum: number // 租赁数量
+    extraTrxNum: number // 需要的trx数量（范围限制在 大于1.5，小于等于30），该参数用于确认是否用USDT支付
+    sourceFlag?: string // 第三方来源
+  }
+  interface ICreateOrderRes {
+    orderId: string // 订单ID
+    pledgeDay: number // 租赁天数
+    pledgeHour: number // 租赁小时数
+    pledgeMinute: number // 租赁分钟数
+    source: string // 第三方来源
+    orderType: string // 租赁类型，目前为定值 ENERGY，并没带宽业务
+    orderPrice: number // 单价
+    pledgeNum: number // 租赁数量
+    pledgeTrxNum: string // 所需支付的TRX
+    payCoinCode: string // 支付所需币种
+    payCoinAmt: string // 支付币种
+    extraTrxNum: string // 需要的trx数量（范围限制在 大于1.5，小于等于30），该参数用于确认是否用USDT支付
+    activeAccountFee: number // 激活账户费用
+    purchaseTRXFee: number // 购买trx费用
+    purchaseEnergyFee: number // 购买能量费用
+    transaction: Record<string, never> // 未签名交易
+  }
+
+  interface IUploadOrderReq {
+    orderId: string // 订单ID
+    fromHash: string // 买单地址
+    signedData: any // 签名数据
   }
 }
