@@ -6,6 +6,7 @@ import DialogTitle from '@/components/dialog-custom/DialogTitle.vue'
 import KeleInput from '@/components/kele-input/index.vue'
 import useConfigStore from '@/store/config'
 import useAccountStore from '@/store/account'
+import usePayment from '@/hooks/usePayment'
 
 const visible = defineModel('visible', {
   type: Boolean,
@@ -15,6 +16,7 @@ const visible = defineModel('visible', {
 const { t } = useI18n()
 const accountStore = useAccountStore()
 const configStore = useConfigStore()
+const { pay, isPaying } = usePayment()
 
 const { config } = storeToRefs(configStore)
 
@@ -44,6 +46,9 @@ const unitPriceRtx = computed(() => {
 const unitPriceSun = computed(() => {
   return getPrice(unitPriceType.value, rentalTime.value).priceSun
 })
+const unit = computed(() => {
+  return unitPriceType.value.includes('day') ? t('app.days') : t(`energyPalDialog.${unitPriceType.value}`).replace(/\d/g, '')
+})
 
 function handleSelectRental(option: any) {
   selectedRentalOption.value = option
@@ -56,7 +61,10 @@ function handleInputRental(value: number | string) {
 }
 function changeRentalTime(step: number) {
   if (unitPriceType.value.includes('day')) {
-    rentalTime.value += step
+    // 最小值为1，最大值为30
+    if (rentalTime.value + step > 0 && rentalTime.value + step <= 30)
+      rentalTime.value += step
+
     unitPriceType.value = `day${rentalTime.value}`
   }
   else {
@@ -113,6 +121,16 @@ function getPrice(type: string, t = 1) {
     priceRtx: +(rentalAmount.value / 1e6 * priceSun * time).toFixed(6),
   }
 }
+async function handlePay() {
+  await pay({
+    pledgeAddress: accountStore.address,
+    pledgeNum: rentalAmount.value,
+    pledgeDay: unitPriceType.value.includes('day') ? rentalTime.value : 0,
+    pledgeHour: unitPriceType.value === 'h1' ? 1 : unitPriceType.value === 'h3' ? 3 : 0,
+    pledgeMinute: unitPriceType.value.includes('m') ? 10 : 0,
+  })
+  visible.value = false
+}
 </script>
 
 <template>
@@ -160,7 +178,7 @@ function getPrice(type: string, t = 1) {
           <template #suffix>
             <div class="step-suffix">
               <span class="text-22px whitespace-nowrap">
-                {{ unitPriceType.includes('day') ? $t('app.days') : $t(`energyPalDialog.${unitPriceType}`) }}
+                {{ unit }}
               </span>
               <van-icon class="step-button" size="14px" name="minus" @click="changeRentalTime(-1)" />
               <van-icon class="step-button" size="14px" name="plus" @click="changeRentalTime(1)" />
@@ -187,7 +205,7 @@ function getPrice(type: string, t = 1) {
       <div class="dialog-body__desc">
         {{ $t('fastTradingDialog.moneyDesc', {
           unitPrice: unitPriceSun,
-          time: '1 h',
+          lowFee: rentalAmount < 65e3 ? $t('energyPalDialog.lowEnergyFee') : '',
           savedPercent: '10%',
           savedPrice,
           savedUsdPrice,
@@ -198,7 +216,7 @@ function getPrice(type: string, t = 1) {
     <p class="text-20px/32px color-#4F4F4F">
       {{ $t('energyPalDialog.note') }}
     </p>
-    <van-button color="#4045D6" block round class="mt-32px! font-bold">
+    <van-button color="#4045D6" block round class="mt-32px! font-bold" :loading="isPaying" @click="handlePay">
       {{ $t('energyPalDialog.pay') }}
     </van-button>
   </van-popup>
