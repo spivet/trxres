@@ -65,6 +65,7 @@
     "transDesc": "Please enter your estimated daily transfer count. The system will calculate the daily energy usage.",
     "transResult": "Each transaction equals {result} energy",
     "pay": "Pay",
+    "paySuccessMsg": "Payment Success",
     "needPay": "Amount to be transferred",
     "discountTag": "Time-limited special offer",
     "discountDesc": "Using TRX for transfers can save approximately",

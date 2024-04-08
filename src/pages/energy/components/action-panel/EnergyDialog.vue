@@ -7,6 +7,7 @@ import KeleInput from '@/components/kele-input/index.vue'
 import PopoverSelect from '@/components/popover-select/index.vue'
 import useConfigStore from '@/store/config'
 import useAccountStore from '@/store/account'
+import usePayment from '@/hooks/usePayment'
 
 const visible = defineModel('visible', {
   type: Boolean,
@@ -16,6 +17,7 @@ const visible = defineModel('visible', {
 const { t } = useI18n()
 const accountStore = useAccountStore()
 const configStore = useConfigStore()
+const { pay, isPaying } = usePayment()
 
 const { config, treasureType } = storeToRefs(configStore)
 // 转账类型
@@ -183,6 +185,9 @@ const unitPriceType = ref('m10')
 const unitPriceTRX = computed(() => {
   return unitPriceOptions.value.find(item => item.value === unitPriceType.value)?.priceRtx || 0
 })
+const rentalDays = computed(() => {
+  return unitPriceType.value.includes('day') ? +unitPriceType.value.replace('day', '') : 1
+})
 
 // 转账能量
 const totalEnergy = computed(() => {
@@ -196,7 +201,7 @@ const actualPrice = computed(() => {
 
 // 节省的RTX价格
 const savedPrice = computed(() => {
-  return +(selectedTransferEnergy.value * transferNum.value / config.value.burnEnergy - actualPrice.value).toFixed(2)
+  return +(selectedTransferEnergy.value * transferNum.value * rentalDays.value / config.value.burnEnergy - actualPrice.value).toFixed(2)
 })
 // 约等于的美元价格
 const savedUsdPrice = computed(() => {
@@ -234,6 +239,16 @@ function getPrice(u: string, t = 1) {
     priceSun,
     priceRtx: +(selectedTransferEnergy.value / 1e6 * priceSun * time).toFixed(6),
   }
+}
+async function handlePay() {
+  await pay({
+    pledgeAddress: accountStore.address,
+    pledgeNum: totalEnergy.value,
+    pledgeDay: unitPriceType.value.includes('day') ? rentalDays.value : 0,
+    pledgeHour: unitPriceType.value === 'h1' ? 1 : unitPriceType.value === 'h3' ? 3 : 0,
+    pledgeMinute: unitPriceType.value.includes('m') ? 10 : 0,
+  })
+  visible.value = false
 }
 </script>
 
@@ -314,7 +329,7 @@ function getPrice(u: string, t = 1) {
     <p class="text-20px/32px color-#4F4F4F">
       {{ $t('energyPalDialog.note') }}
     </p>
-    <van-button color="#4045D6" block round class="mt-32px! font-bold">
+    <van-button color="#4045D6" block round class="mt-32px! font-bold" :loading="isPaying" @click="handlePay">
       {{ $t('energyPalDialog.pay') }}
     </van-button>
   </van-popup>

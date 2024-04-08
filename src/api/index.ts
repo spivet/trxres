@@ -37,3 +37,20 @@ export function apiGetOrderList(params: API.IOrderListReq) {
 export function apiGetOrderDetail(id: string) {
   return http.get<API.IOrderItem>('/v1/order/info', { id })
 }
+
+// 查询价格信息
+export function apiCheckPrice(data: API.ICheckPriceReq) {
+  return http.post<API.ICheckPriceRes>('/v1/order/price', data)
+}
+
+// 创建租赁订单
+export function apiCreateOrder(data: API.ICreateOrderReq) {
+  return http.post<API.ICreateOrderRes>('/v1/order/create', data)
+}
+
+// 上传买单
+export function apiUploadOrder(data: API.IUploadOrderReq, successMsg?: string) {
+  return http.post<{ tx_ids: any[] }>('/v1/order/upload', data, {
+    successMsg,
+  })
+}
