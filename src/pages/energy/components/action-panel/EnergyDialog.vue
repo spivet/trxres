@@ -36,6 +36,11 @@ watch(treasureType, (newTreasure) => {
 })
 // 转账笔数数
 const transferNum = ref(1)
+// 接收地址
+const receiverAddress = ref('')
+watch(() => accountStore.address, (newAddress) => {
+  receiverAddress.value = newAddress
+}, { immediate: true })
 
 // 单价选项
 const unitPriceList = [{
@@ -242,7 +247,7 @@ function getPrice(u: string, t = 1) {
 }
 async function handlePay() {
   await pay({
-    pledgeAddress: accountStore.address,
+    pledgeAddress: receiverAddress.value,
     pledgeNum: totalEnergy.value,
     pledgeDay: unitPriceType.value.includes('day') ? rentalDays.value : 0,
     pledgeHour: unitPriceType.value === 'h1' ? 1 : unitPriceType.value === 'h3' ? 3 : 0,
@@ -297,7 +302,7 @@ async function handlePay() {
         <div class="dialog-body__title-sub">
           {{ $t('app.receiver') }}
         </div>
-        <KeleInput v-model="accountStore.address" placeholder="Please enter the receiver" />
+        <KeleInput v-model="receiverAddress" placeholder="Please enter the receiver" />
       </div>
     </section>
     <!-- 支付 -->

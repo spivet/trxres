@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import DialogTitle from '@/components/dialog-custom/DialogTitle.vue'
@@ -19,6 +19,12 @@ const configStore = useConfigStore()
 const { pay, isPaying } = usePayment()
 
 const { config } = storeToRefs(configStore)
+
+// 接收地址
+const receiverAddress = ref('')
+watch(() => accountStore.address, (newAddress) => {
+  receiverAddress.value = newAddress
+}, { immediate: true })
 
 // 租用量
 const rentalOptions = [
@@ -123,7 +129,7 @@ function getPrice(type: string, t = 1) {
 }
 async function handlePay() {
   await pay({
-    pledgeAddress: accountStore.address,
+    pledgeAddress: receiverAddress.value,
     pledgeNum: rentalAmount.value,
     pledgeDay: unitPriceType.value.includes('day') ? rentalTime.value : 0,
     pledgeHour: unitPriceType.value === 'h1' ? 1 : unitPriceType.value === 'h3' ? 3 : 0,
@@ -193,7 +199,7 @@ async function handlePay() {
         {{ $t('app.receiver') }}
       </div>
       <div class="dialog-body__content">
-        <KeleInput v-model="accountStore.address" :placeholder="$t('fastTradingDialog.receiverPlace')" />
+        <KeleInput v-model="receiverAddress" :placeholder="$t('fastTradingDialog.receiverPlace')" />
       </div>
     </section>
     <!-- 支付金额 -->
