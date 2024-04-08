@@ -11,6 +11,7 @@ import PopoverSelect from '@/components/popover-select/index.vue'
 import { apiGetOrderList } from '@/api'
 import { OrderStatus, SortType } from '@/constants'
 import useAccountStore from '@/store/account'
+import { openAddressDetail, openHashDetail } from '@/utils/utils'
 
 const { t } = useI18n()
 const accountStore = useAccountStore()
@@ -174,7 +175,12 @@ function calculatePriceUnit(pledgeDay: number, pledgeHour: number, pledgeMinute:
           </div>
           <OrderCell :label="$t('app.leaseHash')">
             <template #value>
-              <van-text-ellipsis class="w-300px font-bold" :content="completedItem.pledgeHash" position="middle" />
+              <van-text-ellipsis
+                class="w-300px font-bold"
+                :content="completedItem.pledgeHash"
+                position="middle"
+                @click="openHashDetail(completedItem.pledgeHash as string)"
+              />
             </template>
           </OrderCell>
         </OrderCard>
@@ -217,7 +223,12 @@ function calculatePriceUnit(pledgeDay: number, pledgeHour: number, pledgeMinute:
             </div>
             <OrderCell :label="$t('app.receiver')">
               <template #value>
-                <van-text-ellipsis class="w-300px font-bold color-brand" :content="myOrderItem.pledgeHash" position="middle" />
+                <van-text-ellipsis
+                  class="w-300px font-bold color-brand"
+                  :content="myOrderItem.pledgeAddress"
+                  position="middle"
+                  @click="openAddressDetail(myOrderItem.pledgeAddress as string)"
+                />
               </template>
             </OrderCell>
           </OrderCard>

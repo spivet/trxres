@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { computed, toRefs } from 'vue'
 import DialogContainer from '@/components/dialog-custom/DialogContainer.vue'
 import { OrderStatus } from '@/constants'
+import { openAddressDetail, openHashDetail } from '@/utils/utils'
 
 const props = defineProps<{
   data: API.IOrderItem
@@ -62,13 +63,13 @@ const pledgeDuration = computed(() => {
           <span class="item-label">{{ $t('fastTradingDialog.rentalAmount') }}</span>
           <span class="item-value">{{ data.pledgeNum }}</span>
         </li>
-        <li class="detail-item">
+        <li class="detail-item" @click="openAddressDetail(data.pledgeAddress)">
           <span class="item-label">{{ $t('app.receiver') }}</span>
-          <van-text-ellipsis class="item-value color-brand!" :content="data.fromAddress" position="middle" />
+          <van-text-ellipsis class="item-value color-brand!" :content="data.pledgeAddress" position="middle" />
         </li>
-        <li v-if="data.pledgeAddress" class="detail-item">
+        <li v-if="data.pledgeHash" class="detail-item" @click="openHashDetail(data.pledgeHash)">
           <span class="item-label">{{ $t('app.leaseHash') }}</span>
-          <van-text-ellipsis class="item-value" :content="data.pledgeAddress" position="middle" />
+          <van-text-ellipsis class="item-value" :content="data.pledgeHash" position="middle" />
         </li>
       </ul>
     </DialogContainer>
