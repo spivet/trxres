@@ -15,7 +15,7 @@ import { openAddressDetail, openHashDetail } from '@/utils/utils'
 
 const { t } = useI18n()
 const accountStore = useAccountStore()
-const { address } = toRefs(accountStore)
+const { address, balance } = toRefs(accountStore)
 
 const Tabs = {
   TRADE: 'trades', // 最近交易
@@ -109,6 +109,13 @@ watch(address, (newVal) => {
     sort: sortType.value,
   })
 }, { immediate: true })
+watch(() => balance.value?.trxBalance, () => {
+  getMyOrder({
+    fromAddress: address.value,
+    status: statusType.value,
+    sort: sortType.value,
+  })
+})
 function handleOrderStatusChange({ value }: any) {
   getMyOrder({
     fromAddress: address.value,
