@@ -46,12 +46,18 @@ export async function signOnTronLink(address: string, second: number) {
 
 // 连接到TokenPocket
 async function connectToTokenPocket() {
+  console.log(tronLink)
   if (!tp.isConnected)
     return Promise.reject(new Error('TokenPocket not found'))
 
   const res = await tp.getCurrentWallet()
+  console.log(res)
   const address = res.data.address
-  return Promise.resolve(address)
+  return Promise.resolve({
+    code: 200,
+    data: address,
+    message: 'Success',
+  })
 }
 
 // 统一处理连接请求

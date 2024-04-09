@@ -27,6 +27,7 @@
     "@types/node": "^20.11.30",
     "@vant/auto-import-resolver": "^1.1.0",
     "@vitejs/plugin-vue": "^5.0.4",
+    "eruda": "^3.0.1",
     "eslint": "^8.57.0",
     "less": "^4.2.0",
     "postcss-px-to-viewport": "^1.1.1",

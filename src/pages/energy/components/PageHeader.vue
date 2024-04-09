@@ -34,7 +34,7 @@ const addressBtnText = computed(() => {
   return shortAddress || t('app.connectWallet')
 })
 async function linkWallet() {
-  accountStore.connect('TronLink')
+  accountStore.connect('TokenPocket')
 }
 function unlinkWallet() {
   accountStore.setAddress('')
