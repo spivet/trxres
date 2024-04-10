@@ -183,7 +183,7 @@ async function handlePay() {
         >
           <template #suffix>
             <div class="step-suffix">
-              <span class="text-22px whitespace-nowrap">
+              <span class="text-22px color-#c0c4cc whitespace-nowrap">
                 {{ unit }}
               </span>
               <van-icon class="step-button" size="14px" name="minus" @click="changeRentalTime(-1)" />

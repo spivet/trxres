@@ -123,13 +123,7 @@ function selectOption(option: IOption) {
 .kele-input__shortcut-list {
   display: flex;
   gap: 16px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  flex-wrap: wrap;
 }
 .kele-input__shortcut {
   display: flex;
