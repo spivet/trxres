@@ -8,6 +8,7 @@ import PopoverSelect from '@/components/popover-select/index.vue'
 import useConfigStore from '@/store/config'
 import useAccountStore from '@/store/account'
 import usePayment from '@/hooks/usePayment'
+import { toThousands } from '@/utils/utils'
 
 const visible = defineModel('visible', {
   type: Boolean,
@@ -296,7 +297,7 @@ async function handlePay() {
         <PopoverSelect v-model="selectedTransferEnergy" :options="transferTypeOptions" />
         <i18n-t keypath="energyPalDialog.transResult" tag="div" class="text-24px/38px color-font-second">
           <template #result>
-            <span class="color-function-danger">{{ selectedTransferEnergy }}</span>
+            <span class="color-function-danger">{{ toThousands(selectedTransferEnergy) }}</span>
           </template>
         </i18n-t>
         <!-- 接收地址 -->
