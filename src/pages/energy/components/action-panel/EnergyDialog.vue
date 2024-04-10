@@ -264,6 +264,7 @@ async function handlePay() {
     round
     overlay-class="bg-[rgba(0,0,0,.5)]!"
     class="dialog-container"
+    :z-index="1000"
   >
     <DialogTitle :title="$t('energyPalDialog.title')" @close="visible = false" />
     <!-- 购买需求 -->
@@ -276,9 +277,9 @@ async function handlePay() {
           {{ $t('energyPalDialog.buyDesc') }}
         </div>
         <!-- 转账笔数 -->
-        <div class="dialog-body__title-sub">
+        <div id="pa" class="dialog-body__title-sub">
           {{ $t('energyPalDialog.transTimes') }}
-          <el-tooltip effect="dark" placement="bottom">
+          <el-tooltip effect="dark" placement="bottom" :z-index="1001">
             <i class="i-icon:question-outline ml-8px" />
             <template #content>
               <div class="text-22px w-380px">
