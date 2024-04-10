@@ -37,7 +37,7 @@ const pledgeDuration = computed(() => {
         </li>
         <li class="detail-item">
           <span class="item-label">{{ $t('app.time') }}</span>
-          <span class="item-value">{{ dayjs(data.startTime * 1000).format('YYYY-MM-DD HH:mm') }}</span>
+          <span class="item-value">{{ dayjs(data.startTime * 1000).format('YYYY-MM-DD HH:mm:ss') }}</span>
         </li>
         <li class="detail-item">
           <span class="item-label">{{ $t('app.orderStatus') }}</span>
