@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ElMessage } from 'element-plus'
 import flagUA from '../images/flag-ua.png'
 import flagChina from '../images/flag-china.png'
 import { loadLanguageAsync } from '@/i18n'
 import useAccountStore from '@/store/account'
+import { StatusCodes, connectWallet } from '@/utils/wallet'
 
 const accountStore = useAccountStore()
 const { t, locale } = useI18n()
@@ -33,12 +35,35 @@ const addressBtnText = computed(() => {
   const shortAddress = accountStore.address ? `${accountStore.address.slice(0, 6)}...${accountStore.address.slice(-4)}` : ''
   return shortAddress || t('app.connectWallet')
 })
+const installDialogVisible = ref(false)
 async function linkWallet() {
-  accountStore.connect('TokenPocket')
+  const res = await connectWallet()
+  if (res.code === StatusCodes.Success) {
+    accountStore.setAddress(res.data!)
+  }
+  else if (res.code === StatusCodes.InvalidNetwork) {
+    ElMessage.error(t('app.invalidNetwork'))
+  }
+  else if (res.code === StatusCodes.Unauthorized) {
+    ElMessage.error(t('app.unauthorized'))
+  }
+  else if (res.code === StatusCodes.NoEnvironment) {
+    accountStore.setNoWallet(true)
+    installDialogVisible.value = true
+  }
+  else { ElMessage.error(res.message) }
 }
 function unlinkWallet() {
   accountStore.setAddress('')
-  accountStore.setType(null)
+  accountStore.setSourceFlag(null)
+  accountStore.setBalance(null)
+}
+function goToOfficalWeb(type: 'tp' | 'tl') {
+  if (type === 'tp')
+    window.open('https://www.tokenpocket.pro/')
+
+  else if (type === 'tl')
+    window.open('https://www.tronlink.org/')
 }
 
 onMounted(() => {
@@ -89,6 +114,28 @@ onMounted(() => {
       </van-popover>
     </div>
   </div>
+  <van-popup
+    v-model:show="installDialogVisible"
+    :show-confirm-button="false"
+    round
+    overlay-class="bg-[rgba(0,0,0,.5)]!"
+    class="dialog-container"
+  >
+    <DialogTitle :title="$t('app.installWallet')" @close="installDialogVisible = false" />
+    <div class="flex-around my-56px">
+      <div class="flex flex-col items-center" @click="goToOfficalWeb('tp')">
+        <img src="../images/logo-tp.png" alt="" class="w-152px h-152px">
+        <span class="text-30px font-600 mt-12px">Token Pocket</span>
+      </div>
+      <div class="flex flex-col items-center" @click="goToOfficalWeb('tl')">
+        <img src="../images/logo-tl.png" alt="" class="w-152px h-152px">
+        <span class="text-30px font-600 mt-12px">Tron Link</span>
+      </div>
+    </div>
+    <!-- <van-button color="#4045D6" block round class="mt-32px! font-bold">
+      {{ $t('app.install') }}
+    </van-button> -->
+  </van-popup>
 </template>
 
 <style lang="less" scoped>
@@ -137,5 +184,12 @@ onMounted(() => {
   font-size: 24px;
   font-weight: 500;
   color: var(--kele-color-brand);
+}
+
+.dialog-container {
+  width: 686px;
+  padding: 32px 32px 48px;
+  background-color: #FCFCFD;
+  box-shadow: 0px 128px 128px -96px rgba(31, 47, 70, 0.12);
 }
 </style>

@@ -11,5 +11,6 @@ declare interface Window {
   }
   tronLink?: {
     tronWeb: typeof Window.tronWeb
+    request: (options: { method: string }) => Promise<any>
   }
 }

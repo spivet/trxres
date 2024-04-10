@@ -29,7 +29,11 @@
     "unitPrice": "Unit Price",
     "hash": "Hash",
     "viewDetail": "View Detail",
-    "leaseHash": "Lease Hash"
+    "leaseHash": "Lease Hash",
+    "invalidNetwork": "Please switch to the TRON network",
+    "unauthorized": "Please log in your account",
+    "installWallet": "Install Wallet",
+    "install": "Install"
   },
 
   "notice": {

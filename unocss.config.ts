@@ -51,6 +51,7 @@ export default defineConfig({
   shortcuts: [
     ['flex-center', 'flex items-center justify-center'],
     ['flex-between', 'flex items-center justify-between'],
+    ['flex-around', 'flex items-center justify-around'],
   ],
   safelist: [],
   rules: [],

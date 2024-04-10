@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { toRefs, watch } from 'vue'
+import { onMounted, toRefs, watch } from 'vue'
 import PageHeader from './components/PageHeader.vue'
 import NotifyPanel from './components/NotifyPanel.vue'
 import AccountPanel from './components/AccountPanel.vue'
@@ -11,6 +11,7 @@ import PageFooter from './components/PageFooter.vue'
 import useConfigStore from '@/store/config'
 import useAccountStore from '@/store/account'
 import { apiGetBalance } from '@/api'
+import { isTokenPocket } from '@/utils/wallet'
 
 const accountStore = useAccountStore()
 const { address } = toRefs(accountStore)
@@ -29,6 +30,11 @@ watch(address, (newVal) => {
   configStore.getConfig(address.value)
   getBalance(address.value)
 }, { immediate: true })
+
+onMounted(() => {
+  if (isTokenPocket())
+    accountStore.setSourceFlag('tpnative')
+})
 </script>
 
 <template>

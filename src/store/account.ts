@@ -1,45 +1,46 @@
 import { defineStore } from 'pinia'
 import { ElMessage } from 'element-plus'
-import type { WalletType } from '@/utils/wallet'
-import { connectWallet } from '@/utils/wallet'
+import { StatusCodes, connectWallet } from '@/utils/wallet'
 
 interface IState {
-  type: `${WalletType}` | null
+  sourceFlag: string | null
   address: string
-  noExtension: boolean
+  noWallet: boolean
   balance: API.IBalanceRes | null
 }
 const useAccountStore = defineStore('account', {
   persist: true,
   state: (): IState => {
     return {
-      type: null,
+      sourceFlag: null,
       address: '',
-      noExtension: false,
+      noWallet: false,
       balance: null,
     }
   },
   actions: {
-    setNoExtension(noExtension: boolean) {
-      this.noExtension = noExtension
+    setNoWallet(noWallet: boolean) {
+      this.noWallet = noWallet
     },
     setAddress(address: string) {
       this.address = address
     },
-    setType(type: `${WalletType}` | null) {
-      this.type = type
+    setSourceFlag(type: string | null) {
+      this.sourceFlag = type
     },
     setBalance(balance: API.IBalanceRes | null) {
       this.balance = balance
     },
-    async connect(walletType: `${WalletType}`) {
-      this.setType(walletType)
-      const res = await connectWallet(walletType)
-      if (res.code === 200)
-        this.setAddress(res.data)
-
-      else if (res.code === 400)
-        this.setNoExtension(true)
+    async connect() {
+      const res = await connectWallet()
+      if (res.code === StatusCodes.Success)
+        this.setAddress(res.data!)
+      else if (res.code === StatusCodes.InvalidNetwork)
+        ElMessage.error(res.message)
+      else if (res.code === StatusCodes.Unauthorized)
+        ElMessage.error(res.message)
+      else if (res.code === StatusCodes.NoEnvironment)
+        this.setNoWallet(true)
       else ElMessage.error(res.message)
     },
   },
