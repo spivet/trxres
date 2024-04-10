@@ -11,7 +11,7 @@ import PopoverSelect from '@/components/popover-select/index.vue'
 import { apiGetOrderList } from '@/api'
 import { OrderStatus, SortType } from '@/constants'
 import useAccountStore from '@/store/account'
-import { openAddressDetail, openHashDetail } from '@/utils/utils'
+import { openAddressDetail, openHashDetail, toThousands } from '@/utils/utils'
 
 const { t } = useI18n()
 const accountStore = useAccountStore()
@@ -183,7 +183,7 @@ function calculatePriceUnit(pledgeDay: number, pledgeHour: number, pledgeMinute:
           </template>
           <div class="flex-between">
             <OrderCell :label="`${$t('app.price')}/${completedItem.unit}`" :value="completedItem.unitPrice" />
-            <OrderCell :label="$t('app.energy')" :value="`${completedItem.pledgeNum} SUN`" />
+            <OrderCell :label="$t('app.energy')" :value="`${toThousands(completedItem.pledgeNum)} SUN`" />
           </div>
           <OrderCell :label="$t('app.leaseHash')">
             <template #value>
@@ -231,7 +231,7 @@ function calculatePriceUnit(pledgeDay: number, pledgeHour: number, pledgeMinute:
             </OrderCell>
             <div class="flex-between">
               <OrderCell :label="`${$t('app.price')}/${myOrderItem.unit}`" :value="myOrderItem.unitPrice" />
-              <OrderCell :label="$t('app.energy')" :value="`${myOrderItem.pledgeNum} SUN`" />
+              <OrderCell :label="$t('app.energy')" :value="`${toThousands(myOrderItem.pledgeNum)} SUN`" />
             </div>
             <OrderCell :label="$t('app.receiver')">
               <template #value>

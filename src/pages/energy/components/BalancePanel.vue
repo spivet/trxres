@@ -6,13 +6,13 @@ const { balance } = toRefs(useAccountStore())
 const currentEnergyRate = ref(0)
 const energyRate = computed(() => {
   const { energyTotal, energyUsed } = balance.value ?? { energyTotal: 0, energyUsed: 0 }
-  return (energyTotal - energyUsed) / energyTotal * 100
+  return ((energyTotal - energyUsed) / energyTotal * 100) || 0
 })
 
 const currentBandWidthRate = ref(0)
 const bandWidthRate = computed(() => {
   const { netTotal, netUsed } = balance.value ?? { netTotal: 0, netUsed: 0 }
-  return (netTotal - netUsed) / netTotal * 100
+  return ((netTotal - netUsed) / netTotal * 100) || 0
 })
 </script>
 
