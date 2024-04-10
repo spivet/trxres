@@ -247,7 +247,7 @@ function getPrice(u: string, t = 1) {
 }
 async function handlePay() {
   await pay({
-    pledgeAddress: receiverAddress.value,
+    pledgeAddress: receiverAddress.value || accountStore.address,
     pledgeNum: totalEnergy.value,
     pledgeDay: unitPriceType.value.includes('day') ? rentalDays.value : 0,
     pledgeHour: unitPriceType.value === 'h1' ? 1 : unitPriceType.value === 'h3' ? 3 : 0,
@@ -302,7 +302,7 @@ async function handlePay() {
         <div class="dialog-body__title-sub">
           {{ $t('app.receiver') }}
         </div>
-        <KeleInput v-model="receiverAddress" placeholder="Please enter the receiver" />
+        <KeleInput v-model="receiverAddress" :placeholder="$t('fastTradingDialog.receiverPlace')" />
       </div>
     </section>
     <!-- 支付 -->

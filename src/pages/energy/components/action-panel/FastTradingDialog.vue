@@ -129,7 +129,7 @@ function getPrice(type: string, t = 1) {
 }
 async function handlePay() {
   await pay({
-    pledgeAddress: receiverAddress.value,
+    pledgeAddress: receiverAddress.value || accountStore.address,
     pledgeNum: rentalAmount.value,
     pledgeDay: unitPriceType.value.includes('day') ? rentalTime.value : 0,
     pledgeHour: unitPriceType.value === 'h1' ? 1 : unitPriceType.value === 'h3' ? 3 : 0,
