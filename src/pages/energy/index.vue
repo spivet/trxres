@@ -17,16 +17,20 @@ const accountStore = useAccountStore()
 const { address } = toRefs(accountStore)
 const configStore = useConfigStore()
 
-const { runAsync: getBalance } = useRequest(apiGetBalance, {
+const { runAsync: getBalance, cancel } = useRequest(apiGetBalance, {
   manual: true,
   pollingInterval: 5000,
   onSuccess(data) {
     accountStore.setBalance(data)
   },
 })
-watch(address, (newVal) => {
-  if (!newVal)
+watch(address, (newVal, oldVal) => {
+  if (!newVal && !oldVal)
     return
+  if (!newVal && oldVal) {
+    cancel()
+    return
+  }
   configStore.getConfig(address.value, accountStore.sourceFlag)
   getBalance(address.value)
 }, { immediate: true })
