@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, toRefs, watch } from 'vue'
+import { computed, onMounted, toRefs, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { apiCheckSubsidy, apiSubsidy } from '@/api/index'
@@ -16,11 +16,6 @@ const { config } = toRefs(useConfigStore())
 const { data: subsidyInfo, runAsync: checkSubsidy } = useRequest(apiCheckSubsidy, {
   manual: true,
 })
-watch(address, (newVal) => {
-  if (!newVal)
-    return
-  checkSubsidy(address.value, sourceFlag.value)
-}, { immediate: true })
 
 // 1 usdt原价
 const subsidyPrice = computed(() => {
@@ -35,7 +30,28 @@ const savedPercent = computed(() => {
   return (((1 - subsidyDiscountPrice.value / subsidyPrice.value) * 100) || 0).toFixed(0)
 })
 
+watch(address, (newVal) => {
+  // 监听钱包地址变化
+  if (newVal)
+    checkSubsidy(newVal, sourceFlag.value)
+})
 async function receiveSubsidy() {
+  if (subsidyInfo.value?.isReceived) {
+    ElMessage.error(t('subsidy.received'))
+    return
+  }
+  if (!subsidyInfo.value?.remaining) {
+    ElMessage.error(t('subsidy.remaining'))
+    return
+  }
+  if (!subsidyInfo.value?.monthRemain) {
+    ElMessage.error(t('subsidy.monthRemain'))
+    return
+  }
+  if (!subsidyInfo.value?.monthIPRemain) {
+    ElMessage.error(t('subsidy.monthIPRemain'))
+    return
+  }
   const second = Date.now()
   try {
     const signed = await signOnTronLink(address.value, second)
@@ -68,6 +84,10 @@ async function handleReceive() {
     receiveSubsidy()
   }
 }
+
+onMounted(() => {
+  checkSubsidy(address.value, sourceFlag.value)
+})
 </script>
 
 <template>

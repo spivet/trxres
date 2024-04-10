@@ -44,7 +44,11 @@
   "subsidy": {
     "transSubsidy": "Transfer Subsidy",
     "title": "Daily transfer subsidy limit: ",
-    "content": "Subsidy is sufficient for one USDT transfer. The energy validity period is 10 minutes. You have {monthRemain} remaining subsidy claims for transfers this month. Purchasing energy can save {savedPercent}% on transfer network fees."
+    "content": "Subsidy is sufficient for one USDT transfer. The energy validity period is 10 minutes. You have {monthRemain} remaining subsidy claims for transfers this month. Purchasing energy can save {savedPercent}% on transfer network fees.",
+    "received": "Received in 24 hours",
+    "remaining": "Today's quota has been used up",
+    "monthRemain": "Free quota has been used up",
+    "monthIPRemain": "Free quota has been used up"
   },
 
   "order": {

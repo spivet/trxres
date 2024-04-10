@@ -31,13 +31,17 @@ watch(address, (newVal, oldVal) => {
     cancel()
     return
   }
-  configStore.getConfig(address.value, accountStore.sourceFlag)
   getBalance(address.value)
 }, { immediate: true })
 
-onMounted(() => {
+function setSourceFlag() {
   if (isTokenPocket())
     accountStore.setSourceFlag('tpnative')
+}
+
+onMounted(() => {
+  setSourceFlag()
+  configStore.getConfig(address.value, accountStore.sourceFlag)
 })
 </script>
 
