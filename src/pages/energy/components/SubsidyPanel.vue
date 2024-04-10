@@ -3,11 +3,13 @@ import { computed, toRefs, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { apiCheckSubsidy, apiSubsidy } from '@/api/index'
+import useConfigStore from '@/store/config'
 import useAccountStore from '@/store/account'
 import { signOnTronLink } from '@/utils/wallet'
 
 const { t } = useI18n()
 const { address, sourceFlag } = toRefs(useAccountStore())
+const { config } = toRefs(useConfigStore())
 
 const { data: subsidyInfo, runAsync: checkSubsidy } = useRequest(apiCheckSubsidy, {
   manual: true,
@@ -20,6 +22,20 @@ watch(address, (newVal) => {
 const canReceive = computed(() => {
   return !subsidyInfo.value?.isReceived && subsidyInfo.value?.remaining && subsidyInfo.value?.monthRemain && subsidyInfo.value?.monthIPRemain
 })
+
+// 1 usdt原价
+const subsidyPrice = computed(() => {
+  return (config.value?.treasureType?.[0].value / config.value?.burnEnergy) || 0
+})
+// 1 usdt折扣价
+const subsidyDiscountPrice = computed(() => {
+  return (config.value?.treasureType?.[0].value / 1e6 * config.value?.sun_10m + config.value?.lowEnergyFee) || 0
+})
+// 节省百分比
+const savedPercent = computed(() => {
+  return (((1 - subsidyDiscountPrice.value / subsidyPrice.value) * 100) || 0).toFixed(0)
+})
+
 async function receiveSubsidy() {
   const second = Date.now()
   try {
@@ -54,10 +70,15 @@ async function receiveSubsidy() {
     </div>
     <div class="content">
       <p class="content-title">
-        {{ $t('subsidy.title') }}
+        {{ $t('subsidy.title') }} {{ subsidyInfo?.totalReceivedLimit }}
       </p>
       <p class="content-text">
-        {{ $t('subsidy.content') }}
+        {{
+          $t('subsidy.content', {
+            monthRemain: subsidyInfo?.monthRemain,
+            savedPercent,
+          })
+        }}
       </p>
     </div>
   </div>

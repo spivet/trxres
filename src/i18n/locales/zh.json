@@ -43,8 +43,8 @@
 
   "subsidy": {
     "transSubsidy": "转账补贴",
-    "title": "转账补贴每日额度:1200",
-    "content": "补贴足够1次USDT转账,能量有效期为10分钟,您本月剩余可领取转账补贴10次，购买能量可省转账网络费68%"
+    "title": "转账补贴每日额度: ",
+    "content": "补贴足够1次USDT转账,能量有效期为10分钟,您本月剩余可领取转账补贴{monthRemain}次，购买能量可省转账网络费{savedPercent}%"
   },
 
   "order": {

@@ -43,8 +43,8 @@
 
   "subsidy": {
     "transSubsidy": "Transfer Subsidy",
-    "title": "Daily transfer subsidy limit: 1200",
-    "content": "Subsidy is sufficient for one USDT transfer. The energy validity period is 10 minutes. You have 10 remaining subsidy claims for transfers this month. Purchasing energy can save 68% on transfer network fees."
+    "title": "Daily transfer subsidy limit: ",
+    "content": "Subsidy is sufficient for one USDT transfer. The energy validity period is 10 minutes. You have {monthRemain} remaining subsidy claims for transfers this month. Purchasing energy can save {savedPercent}% on transfer network fees."
   },
 
   "order": {
@@ -79,9 +79,9 @@
     "notUtransfer": "Transfer - The other account doesn't have USDT",
     "exchange": "Contract conversion",
     "m10": "10 minutes",
-    "h1": "1 hour",
-    "h3": "3 hours",
-    "day1": "1 day"
+    "h1": "1 Hour",
+    "h3": "3 Hours",
+    "day1": "1 Day"
   },
 
   "fastTradingDialog": {
