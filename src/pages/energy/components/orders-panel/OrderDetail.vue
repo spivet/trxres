@@ -69,7 +69,7 @@ const pledgeDuration = computed(() => {
         </li>
         <li v-if="data.pledgeHash" class="detail-item" @click="openHashDetail(data.pledgeHash)">
           <span class="item-label">{{ $t('app.leaseHash') }}</span>
-          <van-text-ellipsis class="item-value" :content="data.pledgeHash" position="middle" />
+          <van-text-ellipsis class="item-value color-brand!" :content="data.pledgeHash" position="middle" />
         </li>
       </ul>
     </DialogContainer>

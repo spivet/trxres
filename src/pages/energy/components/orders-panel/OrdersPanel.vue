@@ -188,7 +188,7 @@ function calculatePriceUnit(pledgeDay: number, pledgeHour: number, pledgeMinute:
           <OrderCell :label="$t('app.leaseHash')">
             <template #value>
               <van-text-ellipsis
-                class="w-300px font-bold"
+                class="w-300px font-bold color-brand"
                 :content="completedItem.pledgeHash"
                 position="middle"
                 @click="openHashDetail(completedItem.pledgeHash as string)"
