@@ -206,11 +206,11 @@ const actualPrice = computed(() => {
 
 // 节省的RTX价格
 const savedPrice = computed(() => {
-  return +(selectedTransferEnergy.value * transferNum.value * rentalDays.value / config.value.burnEnergy - actualPrice.value).toFixed(2)
+  return +(selectedTransferEnergy.value * transferNum.value * rentalDays.value / config.value.burnEnergy - actualPrice.value).toFixed(2) || 0
 })
 // 约等于的美元价格
 const savedUsdPrice = computed(() => {
-  return +(savedPrice.value * config.value.price).toFixed(2)
+  return +(savedPrice.value * config.value.price).toFixed(2) || 0
 })
 
 function getPrice(u: string, t = 1) {
@@ -242,7 +242,7 @@ function getPrice(u: string, t = 1) {
 
   return {
     priceSun,
-    priceRtx: +(selectedTransferEnergy.value / 1e6 * priceSun * time).toFixed(6),
+    priceRtx: +(selectedTransferEnergy.value / 1e6 * priceSun * time).toFixed(6) || 0,
   }
 }
 async function handlePay() {
