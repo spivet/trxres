@@ -3,7 +3,7 @@ import { ElMessage } from 'element-plus'
 import { StatusCodes, connectWallet } from '@/utils/wallet'
 
 interface IState {
-  sourceFlag: string | null
+  sourceFlag: string
   address: string
   noWallet: boolean
   balance: API.IBalanceRes | null
@@ -12,7 +12,7 @@ const useAccountStore = defineStore('account', {
   persist: true,
   state: (): IState => {
     return {
-      sourceFlag: null,
+      sourceFlag: '',
       address: '',
       noWallet: false,
       balance: null,
@@ -25,7 +25,7 @@ const useAccountStore = defineStore('account', {
     setAddress(address: string) {
       this.address = address
     },
-    setSourceFlag(type: string | null) {
+    setSourceFlag(type: string) {
       this.sourceFlag = type
     },
     setBalance(balance: API.IBalanceRes | null) {

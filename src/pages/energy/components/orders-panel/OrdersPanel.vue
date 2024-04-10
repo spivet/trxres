@@ -15,7 +15,7 @@ import { openAddressDetail, openHashDetail } from '@/utils/utils'
 
 const { t } = useI18n()
 const accountStore = useAccountStore()
-const { address, balance } = toRefs(accountStore)
+const { address, balance, sourceFlag } = toRefs(accountStore)
 
 const Tabs = {
   TRADE: 'trades', // 最近交易
@@ -24,7 +24,7 @@ const Tabs = {
 const activeTab = ref(Tabs.TRADE)
 
 const { data: completedData } = useRequest(apiGetOrderList, {
-  defaultParams: [{ status: OrderStatus.Ended }],
+  defaultParams: [{ status: OrderStatus.Ended, sourceFlag: sourceFlag.value }],
 })
 const completedList = computed(() => {
   return completedData.value?.data.map((item) => {
@@ -104,6 +104,7 @@ watch(address, (newVal) => {
   if (!newVal)
     return
   getMyOrder({
+    sourceFlag: sourceFlag.value,
     fromAddress: address.value,
     status: statusType.value,
     sort: sortType.value,
@@ -111,6 +112,7 @@ watch(address, (newVal) => {
 }, { immediate: true })
 watch(() => balance.value?.trxBalance, () => {
   getMyOrder({
+    sourceFlag: sourceFlag.value,
     fromAddress: address.value,
     status: statusType.value,
     sort: sortType.value,
@@ -118,6 +120,7 @@ watch(() => balance.value?.trxBalance, () => {
 })
 function handleOrderStatusChange({ value }: any) {
   getMyOrder({
+    sourceFlag: sourceFlag.value,
     fromAddress: address.value,
     status: value,
     sort: sortType.value,
@@ -125,6 +128,7 @@ function handleOrderStatusChange({ value }: any) {
 }
 function handleSortChange({ value }: any) {
   getMyOrder({
+    sourceFlag: sourceFlag.value,
     fromAddress: address.value,
     status: statusType.value,
     sort: value,
@@ -132,6 +136,7 @@ function handleSortChange({ value }: any) {
 }
 function handleCurrentChange(page: number) {
   getMyOrder({
+    sourceFlag: sourceFlag.value,
     fromAddress: address.value,
     status: statusType.value,
     sort: sortType.value,

@@ -27,7 +27,7 @@ const { runAsync: getBalance } = useRequest(apiGetBalance, {
 watch(address, (newVal) => {
   if (!newVal)
     return
-  configStore.getConfig(address.value)
+  configStore.getConfig(address.value, accountStore.sourceFlag)
   getBalance(address.value)
 }, { immediate: true })
 

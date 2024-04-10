@@ -55,7 +55,7 @@ async function linkWallet() {
 }
 function unlinkWallet() {
   accountStore.setAddress('')
-  accountStore.setSourceFlag(null)
+  accountStore.setSourceFlag('')
   accountStore.setBalance(null)
 }
 function goToOfficalWeb(type: 'tp' | 'tl') {

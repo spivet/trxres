@@ -7,7 +7,7 @@ import useAccountStore from '@/store/account'
 
 function usePayment() {
   const { t } = useI18n()
-  const { address } = storeToRefs(useAccountStore())
+  const { address, sourceFlag } = storeToRefs(useAccountStore())
   const isPaying = ref(false)
 
   async function pay(payload: {
@@ -22,6 +22,7 @@ function usePayment() {
     try {
       const res = await apiCreateOrder({
         ...payload,
+        sourceFlag: sourceFlag.value,
         fromAddress: address.value,
         extraTrxNum: payload.extraTrxNum ?? 0,
       })

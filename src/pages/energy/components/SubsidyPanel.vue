@@ -7,7 +7,7 @@ import useAccountStore from '@/store/account'
 import { signOnTronLink } from '@/utils/wallet'
 
 const { t } = useI18n()
-const { address } = toRefs(useAccountStore())
+const { address, sourceFlag } = toRefs(useAccountStore())
 
 const { data: subsidyInfo, runAsync: checkSubsidy } = useRequest(apiCheckSubsidy, {
   manual: true,
@@ -15,7 +15,7 @@ const { data: subsidyInfo, runAsync: checkSubsidy } = useRequest(apiCheckSubsidy
 watch(address, (newVal) => {
   if (!newVal)
     return
-  checkSubsidy(address.value)
+  checkSubsidy(address.value, sourceFlag.value)
 }, { immediate: true })
 const canReceive = computed(() => {
   return !subsidyInfo.value?.isReceived && subsidyInfo.value?.remaining && subsidyInfo.value?.monthRemain && subsidyInfo.value?.monthIPRemain
@@ -26,11 +26,11 @@ async function receiveSubsidy() {
     const signed = await signOnTronLink(address.value, second)
     await apiSubsidy({
       fromAddress: address.value,
-      sourceFlag: '',
+      sourceFlag: sourceFlag.value,
       timeStamp: second,
       signed,
     }, t('api.receiveSuccess'))
-    checkSubsidy(address.value)
+    checkSubsidy(address.value, sourceFlag.value)
   }
   catch (error: any) {
     if (typeof error === 'string') {
