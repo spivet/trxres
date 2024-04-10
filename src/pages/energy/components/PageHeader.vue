@@ -29,29 +29,27 @@ function initLang() {
   }
 }
 
-const showAccountPopover = ref(false)
 const addressBtnText = computed(() => {
   // 将hash地址转换为省略形式
   const shortAddress = accountStore.address ? `${accountStore.address.slice(0, 6)}...${accountStore.address.slice(-4)}` : ''
   return shortAddress || t('app.connectWallet')
 })
-const installDialogVisible = ref(false)
+
 async function linkWallet() {
   const res = await connectWallet()
-  if (res.code === StatusCodes.Success) {
+  if (res.code === StatusCodes.Success)
     accountStore.setAddress(res.data!)
-  }
-  else if (res.code === StatusCodes.InvalidNetwork) {
+
+  else if (res.code === StatusCodes.InvalidNetwork)
     ElMessage.error(t('app.invalidNetwork'))
-  }
-  else if (res.code === StatusCodes.Unauthorized) {
+
+  else if (res.code === StatusCodes.Unauthorized)
     ElMessage.error(t('app.unauthorized'))
-  }
-  else if (res.code === StatusCodes.NoEnvironment) {
+
+  else if (res.code === StatusCodes.NoEnvironment)
     accountStore.setNoWallet(true)
-    installDialogVisible.value = true
-  }
-  else { ElMessage.error(res.message) }
+
+  else ElMessage.error(res.message)
 }
 function unlinkWallet() {
   accountStore.setAddress('')
@@ -101,7 +99,7 @@ onMounted(() => {
       <div v-if="!accountStore.address" class="account-box" @click="linkWallet">
         <i class="i-icon:wallet w-30px h-30px" /> {{ addressBtnText }}
       </div>
-      <van-popover v-else v-model:show="showAccountPopover">
+      <van-popover v-else>
         <template #reference>
           <span class="account-box">{{ addressBtnText }}</span>
         </template>
@@ -115,13 +113,13 @@ onMounted(() => {
     </div>
   </div>
   <van-popup
-    v-model:show="installDialogVisible"
+    v-model:show="accountStore.noWallet"
     :show-confirm-button="false"
     round
     overlay-class="bg-[rgba(0,0,0,.5)]!"
     class="dialog-container"
   >
-    <DialogTitle :title="$t('app.installWallet')" @close="installDialogVisible = false" />
+    <DialogTitle :title="$t('app.installWallet')" @close="accountStore.setNoWallet(false)" />
     <div class="flex-around my-56px">
       <div class="flex flex-col items-center" @click="goToOfficalWeb('tp')">
         <img src="../images/logo-tp.png" alt="" class="w-152px h-152px">

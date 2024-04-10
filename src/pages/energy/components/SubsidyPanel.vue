@@ -6,8 +6,10 @@ import { apiCheckSubsidy, apiSubsidy } from '@/api/index'
 import useConfigStore from '@/store/config'
 import useAccountStore from '@/store/account'
 import { signOnTronLink } from '@/utils/wallet'
+import useWallet from '@/hooks/useWallet'
 
 const { t } = useI18n()
+const { linkWallet } = useWallet()
 const { address, sourceFlag } = toRefs(useAccountStore())
 const { config } = toRefs(useConfigStore())
 
@@ -19,9 +21,6 @@ watch(address, (newVal) => {
     return
   checkSubsidy(address.value, sourceFlag.value)
 }, { immediate: true })
-const canReceive = computed(() => {
-  return !subsidyInfo.value?.isReceived && subsidyInfo.value?.remaining && subsidyInfo.value?.monthRemain && subsidyInfo.value?.monthIPRemain
-})
 
 // 1 usdt原价
 const subsidyPrice = computed(() => {
@@ -58,13 +57,24 @@ async function receiveSubsidy() {
     console.error('领取失败：', error)
   }
 }
+
+async function handleReceive() {
+  if (!address.value) {
+    const res = await linkWallet()
+    if (res)
+      receiveSubsidy()
+  }
+  else {
+    receiveSubsidy()
+  }
+}
 </script>
 
 <template>
   <div class="subsidy-panel">
     <div class="header">
       <span class="text-34px color-#fff font-600">{{ $t('subsidy.transSubsidy') }}</span>
-      <button v-if="canReceive" class="header-btn" @click="receiveSubsidy">
+      <button class="header-btn" @click="handleReceive">
         {{ $t('app.receive') }}
       </button>
     </div>
