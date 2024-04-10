@@ -55,6 +55,9 @@ const unitPriceSun = computed(() => {
 const unit = computed(() => {
   return unitPriceType.value.includes('day') ? t('app.days') : t(`energyPalDialog.${unitPriceType.value}`).replace(/\d/g, '')
 })
+const rentalDays = computed(() => {
+  return unitPriceType.value.includes('day') ? +rentalTime.value : 1
+})
 
 function handleSelectRental(option: any) {
   selectedRentalOption.value = option
@@ -86,9 +89,17 @@ const actualPrice = computed(() => {
   return +(basePrice + lowEnergyFee).toFixed(6) || 0
 })
 
+// 原价
+const originalPrice = computed(() => {
+  return +(rentalAmount.value / config.value.burnEnergy * rentalDays.value).toFixed(2)
+})
 // 节省的RTX价格
 const savedPrice = computed(() => {
-  return +(rentalAmount.value / config.value.burnEnergy - actualPrice.value).toFixed(2)
+  return +(rentalAmount.value / config.value.burnEnergy * rentalDays.value - actualPrice.value).toFixed(2)
+})
+// 节省的百分比
+const savedPercent = computed(() => {
+  return ((savedPrice.value / originalPrice.value) * 100).toFixed(0)
 })
 // 约等于的美元价格
 const savedUsdPrice = computed(() => {
@@ -212,7 +223,7 @@ async function handlePay() {
         {{ $t('fastTradingDialog.moneyDesc', {
           unitPrice: unitPriceSun,
           lowFee: rentalAmount < 65e3 ? $t('energyPalDialog.lowEnergyFee') : '',
-          savedPercent: '10%',
+          savedPercent: `${savedPercent}%`,
           savedPrice,
           savedUsdPrice,
         }) }}
