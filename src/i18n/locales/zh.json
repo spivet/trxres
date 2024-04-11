@@ -1,4 +1,9 @@
 {
+  "meta": {
+    "title": "转账宝",
+    "keywords": "转账宝，能量宝，TRON，波场",
+    "description": "转账宝是一个能量宝，可以帮助用户节省TRON网络上的转账费用。"
+  },
   "app": {
     "home": "首页",
     "language": "语言",

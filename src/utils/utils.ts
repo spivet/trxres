@@ -9,3 +9,14 @@ export function openHashDetail(hash: string) {
 export function toThousands(num: number) {
   return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
 }
+
+// 设置meta属性，如果没有则创建
+export function setMeta(name: string, content: string) {
+  let meta: HTMLMetaElement | null = document.querySelector(`meta[name="${name}"]`)
+  if (!meta) {
+    meta = document.createElement('meta')
+    meta.name = name
+    document.head.appendChild(meta)
+  }
+  meta.content = content
+}

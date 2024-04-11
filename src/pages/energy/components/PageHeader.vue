@@ -7,6 +7,7 @@ import flagChina from '../images/flag-china.png'
 import { loadLanguageAsync } from '@/i18n'
 import useAccountStore from '@/store/account'
 import { StatusCodes, connectWallet } from '@/utils/wallet'
+import { setMeta } from '@/utils/utils'
 
 const accountStore = useAccountStore()
 const { t, locale } = useI18n()
@@ -16,16 +17,18 @@ const languages = [
   { name: '中文', value: 'zh', icon: flagChina },
 ]
 const currentLang = ref(languages[0])
-function onChangeLang(language: typeof languages[number]) {
+async function onChangeLang(language: typeof languages[number]) {
   currentLang.value = language
-  loadLanguageAsync(language.value)
+  await loadLanguageAsync(language.value)
+  setTitleAndMeta()
   showLangPopover.value = false
 }
-function initLang() {
+async function initLang() {
   const language = languages.find(item => item.value === locale.value)
   if (language) {
     currentLang.value = language
-    loadLanguageAsync(locale.value)
+    await loadLanguageAsync(locale.value)
+    setTitleAndMeta()
   }
 }
 
@@ -62,6 +65,12 @@ function goToOfficalWeb(type: 'tp' | 'tl') {
 
   else if (type === 'tl')
     window.open('https://www.tronlink.org/')
+}
+
+function setTitleAndMeta() {
+  document.title = t('meta.title')
+  setMeta('description', t('meta.description'))
+  setMeta('keywords', t('meta.keywords'))
 }
 
 onMounted(() => {

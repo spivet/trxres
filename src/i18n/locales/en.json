@@ -1,4 +1,9 @@
 {
+  "meta": {
+    "title": "Transfer Pal",
+    "keywords": "Transfer treasure, Energy treasure, TRON, Wave field",
+    "description": "Transfer Treasure is an Energy Treasure that can help users save on transfer fees on the TRON network."
+  },
   "app": {
     "home": "Home",
     "language": "Language",
