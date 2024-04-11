@@ -33,7 +33,8 @@
     "invalidNetwork": "请先切换到波场网络",
     "unauthorized": "请先登录或解锁账户",
     "installWallet": "安装钱包",
-    "install": "安装"
+    "install": "安装",
+    "loading": "加载中"
   },
 
   "notice": {

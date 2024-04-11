@@ -2,6 +2,7 @@
 import { computed, ref, toRefs, watch } from 'vue'
 import dayjs from 'dayjs'
 import { useI18n } from 'vue-i18n'
+import { ElLoading } from 'element-plus'
 import OrderCard from './OrderCard.vue'
 import OrderCell from './OrderCell.vue'
 import OrderDetail from './OrderDetail.vue'
@@ -22,6 +23,7 @@ const Tabs = {
   MY_ORDER: 'myOrder', // 我的订单
 }
 const activeTab = ref(Tabs.TRADE)
+const tabsRef = ref <InstanceType<typeof KeleTabs>>()
 
 const { data: completedData } = useRequest(apiGetOrderList, {
   defaultParams: [{ status: OrderStatus.Ended, sourceFlag: sourceFlag.value }],
@@ -89,7 +91,7 @@ const pageing = ref({
   pageSize: 20,
   total: 0,
 })
-const { data: myOrderData, runAsync: getMyOrder } = useRequest(apiGetOrderList, {
+const { loading: isFetching, data: myOrderData, runAsync: getMyOrder } = useRequest(apiGetOrderList, {
   manual: true,
   onSuccess(data) {
     const { pagination } = data
@@ -134,14 +136,27 @@ function handleSortChange({ value }: any) {
     sort: value,
   })
 }
-function handleCurrentChange(page: number) {
-  getMyOrder({
-    sourceFlag: sourceFlag.value,
-    fromAddress: address.value,
-    status: statusType.value,
-    sort: sortType.value,
-    page,
+async function handleCurrentChange(page: number) {
+  if (isFetching.value)
+    return
+
+  const loading = ElLoading.service({
+    fullscreen: true,
+    text: t('app.loading'),
   })
+  try {
+    await getMyOrder({
+      sourceFlag: sourceFlag.value,
+      fromAddress: address.value,
+      status: statusType.value,
+      sort: sortType.value,
+      page,
+    })
+  }
+  finally {
+    window.scrollTo(0, tabsRef.value?.$el.offsetTop - 100)
+    loading.close()
+  }
 }
 const myOrderList = computed(() => {
   return myOrderData.value?.data.map((item) => {
@@ -168,7 +183,7 @@ function calculatePriceUnit(pledgeDay: number, pledgeHour: number, pledgeMinute:
 </script>
 
 <template>
-  <KeleTabs v-model="activeTab" title-active-color="#4356FC">
+  <KeleTabs ref="tabsRef" v-model="activeTab" title-active-color="#4356FC">
     <KeleTab :key="Tabs.TRADE" :title="$t('app.trades')">
       <div class="flex flex-col gap-24px">
         <OrderCard

@@ -8,6 +8,7 @@ import 'virtual:uno.css'
 import 'vant/lib/index.css'
 import '@/styles/index.css'
 import 'element-plus/theme-chalk/el-message.css'
+import 'element-plus/theme-chalk/el-loading.css'
 
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
