@@ -138,6 +138,12 @@ function getPrice(type: string, t = 1) {
     priceRtx: +(rentalAmount.value / 1e6 * priceSun * time).toFixed(6),
   }
 }
+function resetForm() {
+  rentalAmount.value = 32000
+  rentalTime.value = 1
+  unitPriceType.value = 'h1'
+  receiverAddress.value = accountStore.address
+}
 async function handlePay() {
   if (!hasEnoughEnergy(actualPrice.value)) {
     ElMessage.error(t('energyPalDialog.notEnoughEnergy'))
@@ -161,6 +167,7 @@ async function handlePay() {
     round
     overlay-class="bg-[rgba(0,0,0,.5)]!"
     class="dialog-container"
+    @closed="resetForm"
   >
     <DialogTitle :title="$t('fastTradingDialog.title')" @close="visible = false" />
     <!-- 租用量 -->

@@ -246,6 +246,12 @@ function getPrice(u: string, t = 1) {
     priceRtx: +(selectedTransferEnergy.value / 1e6 * priceSun * time).toFixed(6) || 0,
   }
 }
+function resetForm() {
+  transferNum.value = 1
+  receiverAddress.value = accountStore.address
+  unitPriceType.value = 'm10'
+  selectedTransferEnergy.value = treasureType.value[0].value
+}
 async function handlePay() {
   if (!hasEnoughEnergy(actualPrice.value)) {
     ElMessage.error(t('energyPalDialog.notEnoughEnergy'))
@@ -270,6 +276,7 @@ async function handlePay() {
     overlay-class="bg-[rgba(0,0,0,.5)]!"
     class="dialog-container"
     :z-index="1000"
+    @closed="resetForm"
   >
     <DialogTitle :title="$t('energyPalDialog.title')" @close="visible = false" />
     <!-- 购买需求 -->
