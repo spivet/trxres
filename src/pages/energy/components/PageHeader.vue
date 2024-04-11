@@ -29,6 +29,7 @@ async function initLang() {
     currentLang.value = language
     await loadLanguageAsync(locale.value)
     setTitleAndMeta()
+    linkWallet()
   }
 }
 
