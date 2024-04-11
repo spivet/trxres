@@ -18,7 +18,7 @@ const visible = defineModel('visible', {
 const { t } = useI18n()
 const accountStore = useAccountStore()
 const configStore = useConfigStore()
-const { pay, isPaying } = usePayment()
+const { hasEnoughEnergy, pay, isPaying } = usePayment()
 
 const { config, treasureType } = storeToRefs(configStore)
 // 转账类型
@@ -247,6 +247,10 @@ function getPrice(u: string, t = 1) {
   }
 }
 async function handlePay() {
+  if (!hasEnoughEnergy(actualPrice.value)) {
+    ElMessage.error(t('energyPalDialog.notEnoughEnergy'))
+    return
+  }
   await pay({
     pledgeAddress: receiverAddress.value || accountStore.address,
     pledgeNum: totalEnergy.value,

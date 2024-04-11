@@ -7,8 +7,12 @@ import useAccountStore from '@/store/account'
 
 function usePayment() {
   const { t } = useI18n()
-  const { address, sourceFlag } = storeToRefs(useAccountStore())
+  const { address, sourceFlag, balance } = storeToRefs(useAccountStore())
   const isPaying = ref(false)
+
+  const hasEnoughEnergy = (price: number) => {
+    return Number(balance.value?.trxBalance) >= price
+  }
 
   async function pay(payload: {
     pledgeAddress: string
@@ -50,6 +54,7 @@ function usePayment() {
   }
 
   return {
+    hasEnoughEnergy,
     pay,
     isPaying,
   }

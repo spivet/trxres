@@ -91,7 +91,8 @@
     "m10": "10 minutes",
     "h1": "1 Hour",
     "h3": "3 Hours",
-    "day1": "1 Day"
+    "day1": "1 Day",
+    "notEnoughEnergy": "The balance is insufficient"
   },
 
   "fastTradingDialog": {
