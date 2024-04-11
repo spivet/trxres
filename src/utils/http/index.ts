@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ElMessage } from 'element-plus'
-import { StatusMessages } from './code'
+import type { StatusMessages } from './code'
 import { i18n } from '@/i18n'
 
 interface IAPIRes<T> {
@@ -22,13 +22,12 @@ const instance: AxiosInstance = axios.create({
 instance.interceptors.response.use((response: AxiosResponse<IAPIRes<any>>) => {
   const { resCode, resMsg, data } = response.data
   const config = response.config as IRequestConfig
-  const lang = i18n.global.locale.value || 'zh'
   if (resCode === 100) {
     config.successMsg && ElMessage.success(config.successMsg)
     return data
   }
   else {
-    ElMessage.error(StatusMessages[resCode][lang as 'zh' | 'en'])
+    ElMessage.error(i18n.global.t(`api.${resCode}`))
     return Promise.reject({
       resCode,
       resMsg,
