@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import useEruda from '@/hooks/useEruda'
 
+const { toggleEruda } = useEruda(3)
 </script>
 
 <template>
   <div class="page-footer">
-    <div class="logo">
+    <div class="logo" @click="toggleEruda">
       logo
     </div>
     <nav class="flex-between">
