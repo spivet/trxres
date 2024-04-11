@@ -17,7 +17,7 @@ const accountStore = useAccountStore()
 <style scoped>
 .account-panel {
   display: flex;
-  padding: 24px 40px;
+  padding: 32px;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;

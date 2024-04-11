@@ -1,18 +1,40 @@
 <script setup lang="ts">
 import { computed, ref, toRefs } from 'vue'
+import { useI18n } from 'vue-i18n'
 import useAccountStore from '@/store/account'
+import { numberFormatter } from '@/utils/number'
 
+const { locale } = useI18n()
 const { balance } = toRefs(useAccountStore())
 const currentEnergyRate = ref(0)
-const energyRate = computed(() => {
+// 可用能量
+const energyUseable = computed(() => {
   const { energyTotal, energyUsed } = balance.value ?? { energyTotal: 0, energyUsed: 0 }
-  return ((energyTotal - energyUsed) / energyTotal * 100) || 0
+  return energyTotal - energyUsed
+})
+const energyRate = computed(() => {
+  const { energyTotal } = balance.value ?? { energyTotal: 0, energyUsed: 0 }
+  return (energyUseable.value / energyTotal * 100) || 0
+})
+const energyText = computed(() => {
+  const formatedUseable = numberFormatter(energyUseable.value, 0)[locale.value as 'zh' | 'en']
+  const formatedTotal = numberFormatter(balance.value?.energyTotal ?? 0, 0)[locale.value as 'zh' | 'en']
+  return `${formatedUseable.value ?? '--'}${formatedUseable.symbol}/${formatedTotal.value ?? '--'}${formatedTotal.symbol}`
 })
 
 const currentBandWidthRate = ref(0)
-const bandWidthRate = computed(() => {
+const bandWidthUseable = computed(() => {
   const { netTotal, netUsed } = balance.value ?? { netTotal: 0, netUsed: 0 }
-  return ((netTotal - netUsed) / netTotal * 100) || 0
+  return netTotal - netUsed
+})
+const bandWidthRate = computed(() => {
+  const { netTotal } = balance.value ?? { netTotal: 0, netUsed: 0 }
+  return (bandWidthUseable.value / netTotal * 100) || 0
+})
+const bandWidthText = computed(() => {
+  const formatedUseable = numberFormatter(bandWidthUseable.value, 0)[locale.value as 'zh' | 'en']
+  const formatedTotal = numberFormatter(balance.value?.netTotal ?? 0, 0)[locale.value as 'zh' | 'en']
+  return `${formatedUseable.value ?? '--'}${formatedUseable.symbol}/${formatedTotal.value ?? '--'}${formatedTotal.symbol}`
 })
 </script>
 
@@ -44,12 +66,12 @@ const bandWidthRate = computed(() => {
           </div>
         </van-circle>
         <div class="cell__value">
-          <span class="value__text">{{ balance?.energyUsed ?? '--' }}/{{ balance?.energyTotal ?? '--' }}</span>
+          <span class="value__text">{{ energyText }}</span>
           <span class="value__label">{{ $t('app.energy') }}</span>
         </div>
       </div>
       <!-- 分割线 -->
-      <span class="w-2px h-72px mx-24px bg-#eee" />
+      <span class="w-2px h-72px mx-16px bg-#eee" />
       <!-- 能量 -->
       <div class="cell">
         <van-circle
@@ -66,7 +88,7 @@ const bandWidthRate = computed(() => {
           </div>
         </van-circle>
         <div class="cell__value">
-          <span class="value__text">{{ balance?.netUsed ?? '--' }}/{{ balance?.netTotal ?? '--' }}</span>
+          <span class="value__text">{{ bandWidthText }}</span>
           <span class="value__label">{{ $t('app.bandwidth') }}</span>
         </div>
       </div>
@@ -77,7 +99,7 @@ const bandWidthRate = computed(() => {
 <style scoped>
 .balance-panel {
   display: flex;
-  padding: 36px 40px;
+  padding: 32px;
   flex-direction: column;
   align-items: flex-start;
   border-radius: 16px;
@@ -120,7 +142,7 @@ const bandWidthRate = computed(() => {
   gap: 8px;
 }
 .value__text {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 600;
   color: var(--kele-color-brand);
   line-height: normal;
