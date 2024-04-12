@@ -102,15 +102,17 @@ const { loading: isFetching, data: myOrderData, runAsync: getMyOrder } = useRequ
     }
   },
 })
-watch(address, (newVal) => {
-  if (!newVal)
-    return
-  getMyOrder({
-    sourceFlag: sourceFlag.value,
-    fromAddress: address.value,
-    status: statusType.value,
-    sort: sortType.value,
-  })
+watch(address, (newVal, oldVal) => {
+  if (newVal) {
+    getMyOrder({
+      sourceFlag: sourceFlag.value,
+      fromAddress: address.value,
+      status: statusType.value,
+      sort: sortType.value,
+    })
+  }
+  if (!newVal && oldVal)
+    activeTab.value = Tabs.TRADE
 }, { immediate: true })
 watch(() => balance.value?.trxBalance, () => {
   getMyOrder({
