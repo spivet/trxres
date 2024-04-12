@@ -12,10 +12,12 @@ import useConfigStore from '@/store/config'
 import useAccountStore from '@/store/account'
 import { apiGetBalance } from '@/api'
 import { isTokenPocket } from '@/utils/wallet'
+import useWallet from '@/hooks/useWallet'
 
 const accountStore = useAccountStore()
 const { address } = toRefs(accountStore)
 const configStore = useConfigStore()
+const { watchAccountChange } = useWallet()
 
 const { runAsync: getBalance, cancel } = useRequest(apiGetBalance, {
   manual: true,
@@ -42,6 +44,7 @@ function setSourceFlag() {
 onMounted(() => {
   setSourceFlag()
   configStore.getConfig(address.value, accountStore.sourceFlag)
+  watchAccountChange()
 })
 </script>
 

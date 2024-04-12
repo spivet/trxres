@@ -31,9 +31,20 @@ function useWallet() {
     accountStore.setBalance(null)
   }
 
+  function watchAccountChange() {
+    window.addEventListener('message', (e) => {
+      if (e.data?.message?.action === 'accountsChanged') {
+        const data = e.data
+        if (data.isTronLink)
+          accountStore.setAddress(data.message.data.address)
+      }
+    })
+  }
+
   return {
     linkWallet,
     unlinkWallet,
+    watchAccountChange,
   }
 }
 

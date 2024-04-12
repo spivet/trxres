@@ -29,7 +29,7 @@ async function initLang() {
     currentLang.value = language
     await loadLanguageAsync(locale.value)
     setTitleAndMeta()
-    linkWallet()
+    audoLink()
   }
 }
 
@@ -54,6 +54,17 @@ async function linkWallet() {
     accountStore.setNoWallet(true)
 
   else ElMessage.error(res.message)
+}
+async function audoLink() {
+  const res = await connectWallet()
+  if (res.code === StatusCodes.Success)
+    accountStore.setAddress(res.data!)
+
+  else if (res.code === StatusCodes.InvalidNetwork)
+    ElMessage.error(t('app.invalidNetwork'))
+
+  else if (res.code === StatusCodes.Unauthorized)
+    ElMessage.error(t('app.unauthorized'))
 }
 function unlinkWallet() {
   accountStore.setAddress('')
