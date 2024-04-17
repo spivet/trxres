@@ -99,6 +99,7 @@
     "title": "能量租赁",
     "rentalAmount": "租用量",
     "rentalAmountPlace": "请输入租用数量",
+    "rentalAmountRule": "请输入 10000 到 1000000 之间的整数",
     "rentalDuration": "租用时长",
     "rentalDurationPlace": "请输入租用时长",
     "receiverPlace": "不填写默认当前付款地址",

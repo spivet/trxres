@@ -27,6 +27,7 @@ watch(() => accountStore.address, (newAddress) => {
 }, { immediate: true })
 
 // 租用量
+const rentalAmountRef = ref<InstanceType<typeof KeleInput>>()
 const rentalOptions = [
   { name: '32,000', value: 32000 },
   { name: '100,000', value: 100000 },
@@ -144,7 +145,17 @@ function resetForm() {
   unitPriceType.value = 'h1'
   receiverAddress.value = accountStore.address
 }
+function validateRentalAmount(val: string | number) {
+  // 大于10000小于10000000
+  const num = Number(val) || 0
+  return num >= 10000 && num <= 10000000
+}
 async function handlePay() {
+  // 支付前先校验租用量
+  const noError = rentalAmountRef.value?.validate()
+  if (!noError)
+    return
+
   if (!hasEnoughEnergy(actualPrice.value)) {
     ElMessage.error(t('energyPalDialog.notEnoughEnergy'))
     return
@@ -177,14 +188,19 @@ async function handlePay() {
       </div>
       <div class="dialog-body__content">
         <KeleInput
+          ref="rentalAmountRef"
           v-model="rentalAmount"
           positive-only
           type="tel"
-          :min="10000"
+          :min="0"
           :max="1000000000"
           :placeholder="$t('fastTradingDialog.rentalAmountPlace')"
           :options="rentalOptions"
           :suffix="$t('app.energy')"
+          :rule="{
+            validator: validateRentalAmount,
+            message: $t('fastTradingDialog.rentalAmountRule'),
+          }"
         />
       </div>
     </section>

@@ -1,10 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 interface IOption {
   name: string
   value: string | number
   [key: string]: any
+}
+interface IRule {
+  required?: boolean
+  message: string
+  trigger?: 'blur' | 'change'
+  pattern?: RegExp
+  // 有错误返回false
+  validator?: (value: string | number, rule?: IRule,) => boolean
 }
 
 defineOptions({
@@ -19,6 +27,7 @@ const props = defineProps<{
   positiveOnly?: boolean // 是否只允许正整数
   suffix?: string
   options?: IOption[]
+  rule?: IRule
 }>()
 const emits = defineEmits<{
   input: [value: string | number]
@@ -31,6 +40,31 @@ const inputValue = defineModel<string | number>({
 const inputMode = computed(() => {
   return props.positiveOnly ? 'numeric' : 'text'
 })
+
+const errMsg = ref<string | null>(null)
+function validate() {
+  if (props.rule) {
+    const { required, message, pattern, validator } = props.rule
+    if (required && !inputValue.value) {
+      errMsg.value = message
+      return false
+    }
+    if (pattern && !pattern.test(inputValue.value as string)) {
+      errMsg.value = message
+      return false
+    }
+    if (validator && !validator(inputValue.value, props.rule)) {
+      errMsg.value = message
+      return false
+    }
+  }
+  errMsg.value = null
+  return true
+}
+function handleBlur() {
+  if (props.rule?.trigger === 'blur' || !props.rule?.trigger)
+    validate()
+}
 
 function onInput(event: Event) {
   let value: string | number = (event.target as HTMLInputElement).value
@@ -56,6 +90,10 @@ function selectOption(option: IOption) {
   inputValue.value = props.positiveOnly ? Number.parseInt(value as string) : value
   emits('select', option)
 }
+
+defineExpose({
+  validate,
+})
 </script>
 
 <template>
@@ -71,11 +109,15 @@ function selectOption(option: IOption) {
         :placeholder="placeholder"
         class="kele-input__inner"
         @input="onInput"
+        @blur="handleBlur"
       >
       <slot name="suffix">
         <span v-if="suffix" class="ml-24px text-24px flex-shrink-0">{{ suffix }}</span>
       </slot>
     </div>
+    <p v-if="errMsg" class="m-0 -mt-12px text-20px color-#f56c6c">
+      {{ errMsg }}
+    </p>
     <ul v-if="options?.length" class="kele-input__shortcut-list">
       <li
         v-for="option in options"
