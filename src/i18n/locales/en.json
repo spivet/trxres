@@ -99,7 +99,7 @@
     "title": "Energy Trading",
     "rentalAmount": "Rental Amount",
     "rentalAmountPlace": "Please enter the quantity",
-    "rentalAmountRule": "Please enter an integer between 10000 and 1000000",
+    "rentalAmountRule": "Please enter an integer between {min} and {max}",
     "rentalDuration": "Rental Duration",
     "rentalDurationPlace": "Please enter rental duration",
     "receiverPlace": "If left blank, used current payment address",

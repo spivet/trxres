@@ -7,6 +7,8 @@ declare namespace API {
     lowEnergyFee: number
     lowEnergyLimit: number
     pledgeEnergy: number
+    pledgeMax: number
+    pledgeMin: number
     pledgeNet: number
     price: number
     sun_10m: number

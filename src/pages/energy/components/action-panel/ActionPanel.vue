@@ -15,6 +15,11 @@ const dialogVisible = reactive({
   energy: false,
   fastTrading: false,
 })
+// 是否销毁弹窗,用 dialogVisible 会丢失关闭弹窗时的动画效果
+const dialogDestroy = reactive({
+  energy: false,
+  fastTrading: false,
+})
 
 function handleOpenDialog(dialogName: keyof typeof dialogVisible) {
   if (!address.value) {
@@ -22,6 +27,10 @@ function handleOpenDialog(dialogName: keyof typeof dialogVisible) {
     return
   }
   dialogVisible[dialogName] = true
+  dialogDestroy[dialogName] = false
+}
+function onCloseDialog(dialogName: keyof typeof dialogVisible) {
+  dialogDestroy[dialogName] = true
 }
 </script>
 
@@ -31,10 +40,18 @@ function handleOpenDialog(dialogName: keyof typeof dialogVisible) {
     <ActionButton :name="$t('app.fastTrading')" :icon="rentImg" class="flex-1" @click="handleOpenDialog('fastTrading')" />
 
     <!-- 能量宝弹窗 -->
-    <EnergyDialog v-model:visible="dialogVisible.energy" />
+    <EnergyDialog
+      v-if="!dialogDestroy.energy"
+      v-model:visible="dialogVisible.energy"
+      @closed="onCloseDialog('energy')"
+    />
 
     <!-- 快速租赁弹窗 -->
-    <FastTradingDialog v-model:visible="dialogVisible.fastTrading" />
+    <FastTradingDialog
+      v-if="!dialogDestroy.fastTrading"
+      v-model:visible="dialogVisible.fastTrading"
+      @closed="onCloseDialog('fastTrading')"
+    />
   </div>
 </template>
 

@@ -7,7 +7,11 @@ import KeleInput from '@/components/kele-input/index.vue'
 import useConfigStore from '@/store/config'
 import useAccountStore from '@/store/account'
 import usePayment from '@/hooks/usePayment'
+import { toThousands } from '@/utils/utils'
 
+const emits = defineEmits<{
+  closed: []
+}>()
 const visible = defineModel('visible', {
   type: Boolean,
   default: false,
@@ -140,15 +144,11 @@ function getPrice(type: string, t = 1) {
   }
 }
 function resetForm() {
-  rentalAmount.value = 32000
-  rentalTime.value = 1
-  unitPriceType.value = 'h1'
-  receiverAddress.value = accountStore.address
+  emits('closed')
 }
 function validateRentalAmount(val: string | number) {
-  // 大于10000小于10000000
   const num = Number(val) || 0
-  return num >= 10000 && num <= 10000000
+  return num >= config.value.pledgeMin && num <= config.value.pledgeMax
 }
 async function handlePay() {
   // 支付前先校验租用量
@@ -199,7 +199,10 @@ async function handlePay() {
           :suffix="$t('app.energy')"
           :rule="{
             validator: validateRentalAmount,
-            message: $t('fastTradingDialog.rentalAmountRule'),
+            message: $t('fastTradingDialog.rentalAmountRule', {
+              min: toThousands(config.pledgeMin),
+              max: toThousands(config.pledgeMax),
+            }),
           }"
         />
       </div>

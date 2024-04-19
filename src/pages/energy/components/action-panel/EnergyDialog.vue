@@ -10,6 +10,9 @@ import useAccountStore from '@/store/account'
 import usePayment from '@/hooks/usePayment'
 import { toThousands } from '@/utils/utils'
 
+const emits = defineEmits<{
+  closed: []
+}>()
 const visible = defineModel('visible', {
   type: Boolean,
   default: false,
@@ -33,8 +36,8 @@ const transferTypeOptions = computed(() => {
 const selectedTransferEnergy = ref()
 watch(treasureType, (newTreasure) => {
   if (newTreasure)
-    selectedTransferEnergy.value = newTreasure[0].value
-})
+    selectedTransferEnergy.value = newTreasure[0]?.value ?? 0
+}, { immediate: true })
 // 转账笔数数
 const transferNum = ref(1)
 // 接收地址
@@ -247,10 +250,7 @@ function getPrice(u: string, t = 1) {
   }
 }
 function resetForm() {
-  transferNum.value = 1
-  receiverAddress.value = accountStore.address
-  unitPriceType.value = 'm10'
-  selectedTransferEnergy.value = treasureType.value[0].value
+  emits('closed')
 }
 async function handlePay() {
   if (!hasEnoughEnergy(actualPrice.value)) {
