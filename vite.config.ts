@@ -41,13 +41,13 @@ export default defineConfig({
     },
   },
   css: {
-    postcss: {
-      plugins: [
-        pxToViewport({
-          viewportWidth: 750,
-          exclude: [/node_modules/],
-        }),
-      ],
-    },
+    // postcss: {
+    //   plugins: [
+    //     pxToViewport({
+    //       viewportWidth: 750,
+    //       exclude: [/node_modules/],
+    //     }),
+    //   ],
+    // },
   },
 })

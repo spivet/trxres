@@ -1,8 +1,9 @@
 <script setup lang=ts>
+import PCEntry from './pages/pc/index.vue'
 </script>
 
 <template>
-  <router-view />
+  <PCEntry />
 </template>
 
 <style scoped>

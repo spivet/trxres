@@ -1,44 +1,146 @@
-# trxres_web
+# TRXRES Web
 
-## 框架要求：
+TRXRES Web is a Vue 3 application for TRON blockchain resource management, focusing on energy resource rental and management.
 
-  + 主框架 vue3
+## Project Architecture
 
-  + css框架 unocss
+### Technology Stack
 
-  + UI库 elementUI-plus
+- **Framework**: Vue 3 with Composition API
+- **Build Tool**: Vite
+- **Language**: TypeScript
+- **State Management**: Pinia with persistence
+- **Routing**: Vue Router
+- **Styling**:
+  - UnoCSS (atomic CSS framework)
+  - Less
+  - CSS Variables for theming
+- **UI Components**:
+  - Element Plus (PC)
+  - Vant (Mobile)
+  - Custom components
+- **Internationalization**: Vue I18n (supports Chinese and English)
+- **HTTP Client**: Axios
+- **Blockchain Integration**:
+  - TronLink wallet
+  - TokenPocket wallet (tp-js-sdk)
 
-  + HTTP请求库 axios
+### Project Structure
 
-  + 控制台库 eruda，要求dev模式下常开，prod模式下有特定区域埋点触发显示
+```
+trxres_web/
+├── public/                 # Static assets
+├── src/
+│   ├── api/                # API definitions and types
+│   ├── assets/             # Project assets (images, SVGs)
+│   ├── components/         # Reusable components
+│   ├── constants/          # Constants and enums
+│   ├── hooks/              # Custom Vue hooks
+│   ├── i18n/               # Internationalization
+│   │   └── locales/        # Language files (zh.json, en.json)
+│   ├── pages/              # Page components
+│   │   ├── energy/         # Archived pages for Energy management pages
+│   │   ├── pc/             # New pages for PC-specific pages
+│   │   └── mobile/         # New pages for Mobile-specific pages
+│   ├── router/             # Vue Router configuration
+│   ├── store/              # Pinia stores
+│   ├── styles/             # Global styles
+│   │   └── theme.css       # Theme variables
+│   ├── utils/              # Utility functions
+│   │   ├── http/           # HTTP request handling
+│   │   └── wallet.ts       # Wallet integration
+│   ├── App.vue             # Root component
+│   └── main.ts             # Application entry point
+├── .env.development        # Development environment variables
+├── .env.production         # Production environment variables
+├── vite.config.ts          # Vite configuration
+├── unocss.config.ts        # UnoCSS configuration
+└── tsconfig.json           # TypeScript configuration
+```
 
-  + 状态管理 pinia，尽量少用或不用provide/inject 特性，维护全局状态使用pinia，维护局部状态在当前组件里完成
+## Features
 
-  + 钱包连接使用tronweb 不用安装，用浏览器插件的形式，所以需要安装tronlink拓展，参考文档 https://tronweb.network/docu
+- Wallet connection (TronLink and TokenPocket)
+- Energy resource management
+- Order creation and management
+- Multi-language support (Chinese and English)
+- Responsive design for both PC and mobile
 
-  + 需要下载TP钱包，调试的时候保证chrome的tronlink和tp上集成的tronlink行为一致，tp jssdk: tp-js-sdk
+## Code Style and Conventions
 
-## 项目规范：
+### Vue Components
 
-  + 根据响应式布局编写页面，设计稿上的像素单位转为rem
+- Uses Vue 3 Composition API with `<script lang='ts' setup>` syntax
+- Component naming follows PascalCase convention
+- Custom components are prefixed with "Kele" (e.g., `KeleInput`)
+- Component structure follows the order: script, template, style
 
-  + 使用eslint和styleint保证代码质量和规范性
+### TypeScript
 
-  + 页面seo相关属性根据语言版本可配置，如keywords、descriptions和title
+- Strong typing with interfaces for API responses and requests
+- Namespace API for all API-related types
+- Enums for status codes and constants
 
-  + 不要过度抽象，非公用方法不用单独写一个lib文件
+### CSS/Styling
 
-  + 图片文件需要压缩
+- CSS variables for theming (defined in `src/styles/theme.css`)
+- UnoCSS for utility classes
+- Custom shortcuts for common patterns:
+  - `flex-center`: centered flex container
+  - `flex-between`: flex with space-between
+  - `flex-around`: flex with space-around
+- Mobile-responsive with `postcss-px-to-viewport` for automatic conversion
 
-  + 打包走ssg流程，最后输出多语言版本纯静态文件
+### Icons and Assets
 
-## 测试API 地址
+- SVG icons loaded via UnoCSS with custom collection
+- Icons are used with the syntax: `i-icon:[icon-name]`
+- SVG files are stored in `src/assets/svg/`
 
-  + 47.236.112.168:9007
+## State Management
 
-## 计算
+- Uses Pinia for state management
+- Persistent state with `pinia-plugin-persistedstate`
+- Main stores:
+  - `account`: Manages wallet connection and user account
+  - `config`: Manages application configuration
 
-  + 参考工具 https://tronscan.org/#/tools/tronstation
+## API Integration
 
-  + 显示的节省费用为 所需能量数 / 燃烧1TRX可获得能量数 - 报价
-    比如tronify租赁 1笔 32000能量 1小时，报价为4.08，当前燃烧1TRX可获得 2380.95238 , 32000 / 2380.95238 - 4.08 = 9.3600000054，保留两位小数就是9.36
+- Axios for HTTP requests
+- Centralized API definitions in `src/api/index.ts`
+- Type definitions in `src/api/api.d.ts`
+- Response interceptor for standardized error handling
+
+## Wallet Integration
+
+- Supports TronLink and TokenPocket wallets
+- Wallet detection and connection in `src/utils/wallet.ts`
+- Account state management in the account store
+
+## Internationalization
+
+- Vue I18n for multi-language support
+- Language files in `src/i18n/locales/`
+- Supports Chinese (zh) and English (en)
+- Default language is Chinese
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+## Environment Variables
+
+- `VITE_API_URL`: API base URL
