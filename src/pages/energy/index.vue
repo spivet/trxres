@@ -12,7 +12,7 @@ import useConfigStore from '@/store/config'
 import useAccountStore from '@/store/account'
 import { apiGetBalance } from '@/api'
 import { isTokenPocket } from '@/utils/wallet'
-import useWallet from '@/hooks/useWallet'
+import useWallet from '@/hooks/useWallet-old'
 
 const accountStore = useAccountStore()
 const { address } = toRefs(accountStore)

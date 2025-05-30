@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { reactive, toRefs } from 'vue'
+import useWallet from '@/hooks/useWallet-old'
+import useAccountStore from '@/store/account'
 import energyImg from '../../images/energy-icon.png'
 import rentImg from '../../images/rent-icon.png'
 import ActionButton from './ActionButton.vue'
 import EnergyDialog from './EnergyDialog.vue'
 import FastTradingDialog from './FastTradingDialog.vue'
-import useWallet from '@/hooks/useWallet'
-import useAccountStore from '@/store/account'
 
 const { linkWallet } = useWallet()
 const { address } = toRefs(useAccountStore())

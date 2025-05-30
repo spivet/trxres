@@ -20,11 +20,13 @@ export default defineConfig({
         'transition-timing-function': 'cubic-bezier(0.4, 0, 0.2, 1)',
         'transition-duration': '150ms',
         'vertical-align': 'middle',
+        'width': '1em',
+        'height': '1em',
+        'background-color': 'currentColor',
       },
       collections: {
         icon: FileSystemIconLoader(
           './src/assets/svg',
-          svg => svg.replace(/#FFF/, 'currentColor'),
         ),
       },
     }),

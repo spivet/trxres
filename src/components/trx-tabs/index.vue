@@ -12,6 +12,7 @@ const props = defineProps<{
   tabs: TabItem[]
   modelValue?: string | number
   defaultActiveKey?: string | number
+  size?: 'normal' | 'big'
 }>()
 
 const emit = defineEmits<{
@@ -23,8 +24,9 @@ const emit = defineEmits<{
 const activeKey = ref<string | number>(props.modelValue || props.defaultActiveKey || (props.tabs[0]?.key || ''))
 
 // 切换tab
-const handleTabClick = (tab: TabItem) => {
-  if (tab.disabled) return
+function handleTabClick(tab: TabItem) {
+  if (tab.disabled)
+    return
 
   const oldValue = activeKey.value
   activeKey.value = tab.key
@@ -39,20 +41,24 @@ watch(
     if (newValue !== undefined && newValue !== activeKey.value) {
       activeKey.value = newValue
     }
-  }
+  },
 )
 </script>
 
 <template>
-  <div class="trx-tabs">
+  <div class="trx-tabs" :class="[`size-${props.size || 'normal'}`]">
     <div
       v-for="tab in props.tabs"
       :key="tab.key"
       class="trx-tab-item"
-      :class="{ 'active': activeKey === tab.key, 'disabled': tab.disabled }"
+      :class="{
+        active: activeKey === tab.key,
+        disabled: tab.disabled,
+        [`size-${props.size || 'normal'}`]: true,
+      }"
       @click="handleTabClick(tab)"
     >
-      <i v-if="tab.icon" :class="tab.icon"></i>
+      <i v-if="tab.icon" :class="tab.icon" :style="{ color: activeKey === tab.key ? '#000' : '#fff' }" />
       <span>{{ tab.label }}</span>
     </div>
   </div>
@@ -63,26 +69,32 @@ watch(
   display: inline-flex;
   align-items: center;
   background-color: #000;
-  border-radius: 100px;
-  padding: 4px;
+  border-radius: 60px;
   box-sizing: border-box;
+
+  &.size-normal {
+    height: 40px;
+    padding: 0 4px;
+  }
+
+  &.size-big {
+    gap: 10px;
+    height: 60px;
+    padding: 0 5px;
+  }
 }
 
 .trx-tab-item {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 52px;
-  border-radius: 100px;
+  border-radius: 60px;
   color: #fff;
-  font-size: 16px;
+  font-size: 14px;
+  line-height: 1;
   cursor: pointer;
   white-space: nowrap;
-  gap: 8px;
-
-  i {
-    font-size: 18px;
-  }
+  gap: 10px;
 
   &.active {
     background-color: #fff;
@@ -92,6 +104,21 @@ watch(
   &.disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  &.size-normal {
+    padding: 9px 30px;
+    font-size: 14px;
+    font-weight: normal;
+    &.active {
+      font-weight: bold;
+    }
+  }
+
+  &.size-big {
+    padding: 15px 53px;
+    font-size: 20px;
+    font-weight: bold;
   }
 
   &:not(.active):not(.disabled):hover {

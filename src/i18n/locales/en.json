@@ -39,7 +39,15 @@
     "unauthorized": "Please log in your account",
     "installWallet": "Install Wallet",
     "install": "Install",
-    "loading": "Loading"
+    "loading": "Loading",
+    "noData": "No data yet",
+    "tokenBalance": "Token Balance",
+    "resource": "Resource",
+    "residue": "Residue",
+    "used": "Used",
+    "currentBlockHeight": "Latest Block Height",
+    "noWallet": "wallet not found",
+    "connecting": "Connecting"
   },
 
   "notice": {
@@ -59,8 +67,19 @@
 
   "order": {
     "latest": "Latest",
+    "orderTitle": "Purchase Order",
+    "orderInfo": "Order Detail",
+    "viewMore": "View More",
+    "orderType": "Order Type",
+    "date": "Date",
+    "time": "Time",
+    "price": "Price",
+    "noData": "No data yet",
+    "pledgeHour": "Time/Hour",
+    "pledgeAddress": "Pledge Address",
     "highestPrice": "Price Highest",
     "highestEnergy": "Energy Highest",
+    "status": "Status",
     "all": "All",
     "0": "Unpaid",
     "1": "Paid",
@@ -96,6 +115,8 @@
   },
 
   "fastTradingDialog": {
+    "tabTitle1": "By Amount",
+    "tabTitle2": "By Transaction",
     "title": "Energy Trading",
     "rentalAmount": "Rental Amount",
     "rentalAmountPlace": "Please enter the quantity",
@@ -105,6 +126,17 @@
     "receiverPlace": "If left blank, used current payment address",
     "money": "Pay",
     "moneyDesc": "Price %{unitPrice} SUN , TRX saved in %{time} discount %{savedPercent} ≈ %{savedPrice}TRX ($ %{savedUsdPrice})"
+  },
+
+  "tips": {
+    "title": "Tips",
+    "content1": "Using Energy for transactions and transfers can significantly reduce your network fees.",
+    "content2": "Leased Energy will be reclaimed immediately upon expiration. Please use it before it expires.",
+    "compareTitle": "Comparison",
+    "compareText": "A single USDT transfer currently consumes 65,000 Energy. (If the recipient doesn't hold USDT, the Energy cost doubles.)",
+    "iconText1": "Use TRX without Energy",
+    "iconText2": "Save {saved}% by leasing Energy",
+    "contactTitle": "Contact Information"
   },
 
   "api": {

@@ -18,3 +18,18 @@
   /* 输入框 placeholder 颜色 */
   --kele-color-placeholder: #BDBDBD;
 }
+
+.el-select {
+  overflow: hidden;
+}
+.el-select__wrapper {
+  background-color: #F6F7FB !important;
+  box-shadow: none !important;
+}
+.el-select__placeholder {
+  color: #000 !important;
+  font-weight: bold;
+}
+.el-select__caret {
+  font-size: 10px !important;
+}

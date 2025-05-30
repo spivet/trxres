@@ -1,9 +1,10 @@
+import { ElMessage } from 'element-plus'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { apiCreateOrder, apiUploadOrder } from '@/api'
 import useAccountStore from '@/store/account'
+import { getRentalTime } from '@/utils/utils'
 
 function usePayment() {
   const { t } = useI18n()
@@ -18,17 +19,19 @@ function usePayment() {
     pledgeAddress: string
     extraTrxNum?: number
     pledgeNum: number
-    pledgeDay?: number
-    pledgeHour?: number
-    pledgeMinute?: number
+    pledgeTime?: string
   }) {
     isPaying.value = true
     try {
+      const { pledgeDay, pledgeHour, pledgeMinute } = getRentalTime(payload.pledgeTime || '')
       const res = await apiCreateOrder({
         ...payload,
         sourceFlag: sourceFlag.value,
         fromAddress: address.value,
-        extraTrxNum: payload.extraTrxNum ?? 0,
+        extraTrxNum: payload.extraTrxNum,
+        pledgeDay,
+        pledgeHour,
+        pledgeMinute,
       })
       const signedTx = await window.tronWeb?.trx.sign(res.transaction)
       // eslint-disable-next-line no-console

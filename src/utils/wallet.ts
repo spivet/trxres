@@ -18,7 +18,7 @@ interface IConnectResponse {
   message: string
 }
 
-function isTronLink() {
+export function isTronLink() {
   return window.tronLink
 }
 

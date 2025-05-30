@@ -54,3 +54,8 @@ export function apiUploadOrder(data: API.IUploadOrderReq, successMsg?: string) {
     successMsg,
   })
 }
+
+// 查询代币信息
+export function apiGetokens() {
+  return http.get<API.IGetTokenItem[]>('/v1/tokens')
+}

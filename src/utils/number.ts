@@ -1,3 +1,4 @@
+import type BigNumberType from 'bignumber.js'
 import BigNumber from 'bignumber.js'
 
 interface SymbolValue {
@@ -41,18 +42,47 @@ export function numberFormatter(num: number, digits: number = 2): FormattedNumbe
   }
 }
 
+// bignumber minus
+export function minus(a: BigNumberType.Value, b: BigNumberType.Value, decimals = 2) {
+  return computeBase(a, b, 'minus', decimals)
+}
+
+// bignumber plus
+export function plus(a: BigNumberType.Value, b: BigNumberType.Value, decimals = 2) {
+  return computeBase(a, b, 'plus', decimals)
+}
+
 // bignumber divided
-export function divided(a: number, b: number, decimals: number = 2): string {
+export function divided(a: BigNumberType.Value, b: BigNumberType.Value, decimals: number = 2): string {
   return computeBase(a, b, 'dividedBy', decimals)
 }
 
-export function formatAmount(num: number | string, decimals: number = 2): string {
-  const _num = new BigNumber(num)
-  return _num.toFormat(decimals).replace(/\.0+$|(\.[0-9]*[1-9])0+$/, '$1')
+// bignumber multiplied
+export function multiplied(a: BigNumberType.Value, b: BigNumberType.Value, decimals: number = 2): string {
+  return computeBase(a, b, 'multipliedBy', decimals)
 }
 
-function computeBase(a: number, b: number, method: 'dividedBy', decimals: number): string {
+export function formatAmount(num: BigNumberType.Value, decimals: number = 2): string {
+  const _num = new BigNumber(num)
+  return _num.toFormat(decimals).replace(/\.0+$|(\.\d*[1-9])0+$/, '$1')
+}
+
+function computeBase(a: BigNumberType.Value, b: BigNumberType.Value, method: 'dividedBy' | 'multipliedBy' | 'plus' | 'minus', decimals: number): string {
   const x = new BigNumber(a)
   const y = new BigNumber(b)
   return decimals >= 0 ? x[method](y).toFixed(decimals, 1) : x[method](y).toString()
+}
+
+/**
+ * 保留 n 位小数，支持字符串和数字输入，异常时返回 0
+ * @param value 输入值
+ * @param n 保留小数位数
+ */
+export function roundFloat(value: number | string, n: number): number {
+  const num = Number(value)
+  if (Number.isNaN(num))
+    return 0
+
+  const factor = 10 ** n
+  return Math.round(num * factor) / factor
 }

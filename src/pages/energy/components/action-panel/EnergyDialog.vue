@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { storeToRefs } from 'pinia'
 import DialogTitle from '@/components/dialog-custom/DialogTitle.vue'
 import KeleInput from '@/components/kele-input/index.vue'
 import PopoverSelect from '@/components/popover-select/index.vue'
-import useConfigStore from '@/store/config'
-import useAccountStore from '@/store/account'
 import usePayment from '@/hooks/usePayment'
+import useAccountStore from '@/store/account'
+import useConfigStore from '@/store/config'
 import { toThousands } from '@/utils/utils'
 
 const emits = defineEmits<{
@@ -204,7 +204,7 @@ const totalEnergy = computed(() => {
 })
 const actualPrice = computed(() => {
   const basePrice = unitPriceTRX.value * transferNum.value
-  const lowEnergyFee = totalEnergy.value < 65e3 && transferNum.value ? config.value.lowEnergyFee : 0
+  const lowEnergyFee = totalEnergy.value < 65e3 && transferNum.value ? Number(config.value.lowEnergyFee) : 0
   return +(basePrice + lowEnergyFee).toFixed(6) || 0
 })
 

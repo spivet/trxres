@@ -30,3 +30,28 @@ export const OrderType = {
   RentOrder: 0,
   SubsidyOrder: 1,
 }
+
+/**
+ * 租赁的物品
+ * energy: 能量
+ * band: 带宽
+ */
+export const TradeStuffTypes = {
+  ENERGY: 'energy',
+  BAND: 'band',
+}
+
+// 能量租赁类型
+export const EnergyTradeTypes = {
+  // 按量租赁
+  AMOUNT: 1,
+  // 按笔租赁
+  TIMES: 2,
+}
+
+// 币种
+export const CoinTypes = {
+  TRX: 'TRX',
+  USDT: 'USDT',
+  USDD: 'USDD',
+}
