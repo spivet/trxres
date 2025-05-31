@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
+import TrxInput from '@/components/trx-input/index.vue'
 import useAccountStore from '@/store/account'
 import useConfigStore from '@/store/config'
 import { toThousands } from '@/utils/utils'
-import TrxInput from '@/components/trx-input/index.vue'
 
 const rentalAmount = defineModel<number>()
 
@@ -55,14 +55,14 @@ defineExpose({
       v-model="rentalAmount"
       positive-only
       type="tel"
-      :min="config.lowEnergyCanBuy"
+      :min="0"
       :max="config.topEnergyCanBuy"
       :placeholder="$t('fastTradingDialog.rentalAmountPlace')"
       :suffix="$t('app.energy')"
       :rule="{
         validator: validateRentalAmount,
         message: $t('fastTradingDialog.rentalAmountRule', {
-          min: toThousands(65000),
+          min: toThousands(config.lowEnergyCanBuy),
           max: toThousands(config.topEnergyCanBuy),
         }),
       }"

@@ -61,7 +61,7 @@ export function pledgeTimeToDay(pledgeDay: string, pledgeHour: string, pledgeMin
  * 获取租赁时长参数
  * @param rentalTime 租赁时长，m10/h1/h3/day1-day30
  */
-export function getRentalTime(rentalTime: string) {
+export function getRentalTime(rentalTime?: string) {
   let pledgeDay
   let pledgeHour
   let pledgeMinute
@@ -74,7 +74,7 @@ export function getRentalTime(rentalTime: string) {
   else if (rentalTime === 'h3') {
     pledgeHour = 3
   }
-  else if (rentalTime.startsWith('day')) {
+  else if (rentalTime?.startsWith('day')) {
     pledgeDay = Number(rentalTime.replace('day', ''))
   }
 

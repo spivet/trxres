@@ -3,11 +3,14 @@ import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { apiCreateOrder, apiUploadOrder } from '@/api'
+import useWallet from '@/hooks/useWallet'
 import useAccountStore from '@/store/account'
 import { getRentalTime } from '@/utils/utils'
 
 function usePayment() {
   const { t } = useI18n()
+  const { signTransaction } = useWallet()
+
   const { address, sourceFlag, balance } = storeToRefs(useAccountStore())
   const isPaying = ref(false)
 
@@ -18,8 +21,9 @@ function usePayment() {
   async function pay(payload: {
     pledgeAddress: string
     extraTrxNum?: number
-    pledgeNum: number
+    pledgeNum?: number
     pledgeTime?: string
+    pledgeBandwidthNum?: number
   }) {
     isPaying.value = true
     try {
@@ -33,7 +37,7 @@ function usePayment() {
         pledgeHour,
         pledgeMinute,
       })
-      const signedTx = await window.tronWeb?.trx.sign(res.transaction)
+      const signedTx = await signTransaction(res.transaction)
       // eslint-disable-next-line no-console
       console.log('签名结果', signedTx)
       await apiUploadOrder({

@@ -47,7 +47,8 @@
     "used": "Used",
     "currentBlockHeight": "Latest Block Height",
     "noWallet": "wallet not found",
-    "connecting": "Connecting"
+    "connecting": "Connecting",
+    "note": "Note: "
   },
 
   "notice": {
@@ -112,6 +113,12 @@
     "h3": "3 Hours",
     "day1": "1 Day",
     "notEnoughEnergy": "The balance is insufficient"
+  },
+
+  "bandwidth": {
+    "rentalAmountRule": "Please enter an integer between {min} and {max}",
+    "rentalAmountPlace": "Bandwidth quantity (1,000 - 10,000,000)",
+    "bandwidthNote": "When you purchase bandwidth multiple times with the same address, please note that due to the mechanism of TRON, the available bandwidth on the address will be reclaimed when each order expires. To avoid this, it is recommended to buy multiple units of bandwidth at once, make new purchases after the previous ones have been reclaimed, or use the bandwidth promptly before it's reclaimed for efficiency."
   },
 
   "fastTradingDialog": {

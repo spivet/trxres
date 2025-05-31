@@ -2,7 +2,6 @@
 import { storeToRefs } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { EnergyTradeTypes } from '@/constants'
 import usePayment from '@/hooks/usePayment'
 import usePrice from '@/hooks/usePrice'
 import useAccountStore from '@/store/account'
@@ -10,19 +9,29 @@ import useConfigStore from '@/store/config'
 import { roundFloat } from '@/utils/number'
 import AmountOfPay from './AmountOfPay.vue'
 import ReceiveAddress from './ReceiveAddress.vue'
-import RentEnergyAmount from './RentEnergyAmount.vue'
-import RentTime from './RentTime.vue'
-import ResultOfEnergyAmount from './ResultOfEnergyAmount.vue'
+import TransferNumber from './TransferNumber.vue'
 
 const { t } = useI18n()
-
 const accountStore = useAccountStore()
-
 const configStore = useConfigStore()
-const { config } = storeToRefs(configStore)
 
 const { priceData, checkPriceLoading, checkPrice } = usePrice()
-const { pay, isPaying } = usePayment()
+const { hasEnoughEnergy, pay, isPaying } = usePayment()
+
+const { config } = storeToRefs(configStore)
+
+// 转账笔数/单价/转账能量
+const transferNum = ref()
+const unitPriceType = ref('m10')
+const transferTypeValue = ref()
+// 计算租赁天数
+const rentalDays = computed(() => {
+  return unitPriceType.value.includes('day') ? +unitPriceType.value.replace('day', '') : 1
+})
+// 转账总能量
+const totalEnergy = computed(() => {
+  return transferTypeValue.value * transferNum.value || 0
+})
 
 // 接收地址
 const receiverAddress = ref('')
@@ -30,139 +39,63 @@ watch(() => accountStore.address, (newAddress) => {
   receiverAddress.value = newAddress || ''
 }, { immediate: true })
 
-// 租赁数量
-const rentalAmount = ref()
-// 租赁时长
-const rentalTime = ref('h1')
-// 监听数量和时长变化，获取价格
-watch([rentalAmount, rentalTime], ([newAmount, newUnitPriceType]) => {
-  if (!newAmount || !newUnitPriceType)
+watch([transferNum, unitPriceType, transferTypeValue], ([newNum, newUnitPriceType, newTransferTypeValue]) => {
+  if (!newNum || !newUnitPriceType || !newTransferTypeValue)
     return
 
   checkPrice({
     pledgeAddress: receiverAddress.value,
     pledgeTime: newUnitPriceType,
-    pledgeNum: newAmount,
+    pledgeNum: newTransferTypeValue,
   })
-})
-
-// 计算租赁天数
-const rentalDays = computed(() => {
-  return rentalTime.value.includes('day')
-    ? +rentalTime.value.replace('day', '')
-    : 1
-})
-
-// 获取单价（SUN）
-const unitPriceSun = computed(() => {
-  return getPrice(rentalTime.value).priceSun
-})
-
-function getPrice(u: string) {
-  let priceSun = 0
-  let time = 1
-
-  switch (u) {
-    case 'm10':
-      priceSun = config.value.sun_10m || 0
-      break
-    case 'h1':
-      priceSun = config.value.sun_1h || 0
-      break
-    case 'h3':
-      priceSun = config.value.sun_3h || 0
-      break
-    case 'day1':
-      priceSun = config.value.sun_1d || 0
-      break
-    case 'day2':
-      priceSun = config.value.sun_2d || 0
-      time = 2
-      break
-    // day3及以后的价格
-    default:
-      priceSun = config.value.defaultEnergyPrice || 0
-      time = Number(u.replace('day', '')) || 1
-  }
-
-  return {
-    priceSun,
-    priceRtx: rentalAmount.value ? +(rentalAmount.value / 1e6 * priceSun * time).toFixed(6) : 0,
-  }
-}
+}, { immediate: true })
 
 // TRX 烧毁原价
 const originalTRXAmount = computed(() => {
-  if (!rentalAmount.value || !config.value.burnEnergy)
+  if (!totalEnergy.value || !config.value.burnEnergy)
     return 0
 
-  return roundFloat(rentalAmount.value / config.value.burnEnergy * rentalDays.value, 2)
-})
-
-// TRX 烧毁原价约等于的美元价格
-const orginalUsdAmount = computed(() => {
-  return roundFloat(originalTRXAmount.value * config.value.price, 2)
+  return roundFloat(totalEnergy.value / config.value.burnEnergy * rentalDays.value, 2)
 })
 
 // 节省的TRX价格
 const savedTRXAmount = computed(() => {
-  if (rentalAmount.value < config.value.lowEnergyCanBuy)
+  if (totalEnergy.value < config.value.lowEnergyCanBuy)
     return 0
 
-  return roundFloat(originalTRXAmount.value - Number(priceData.value.actualPrice), 2)
-})
-
-// 节省的 TRX 百分比
-const savedTRXPercent = computed(() => {
-  if (rentalAmount.value < config.value.lowEnergyCanBuy)
-    return 0
-
-  return roundFloat((savedTRXAmount.value / originalTRXAmount.value) * 100, 0)
+  return roundFloat(originalTRXAmount.value - priceData.value.actualPrice, 2)
 })
 
 // 约等于的美元价格
 const savedUsdAmount = computed(() => {
   return roundFloat(savedTRXAmount.value * config.value.price, 2)
 })
-
-// 开始支付
 async function handlePay() {
-  if (!accountStore.address) {
-    ElMessage.error(t('energyPalDialog.connectWallet'))
+  if (!accountStore.address || checkPriceLoading.value || isPaying.value) {
     return
   }
-
-  if (priceChecking) {
-    ElMessage.error(t('energyPalDialog.priceChecking'))
+  if (!hasEnoughEnergy(priceData.value.actualPrice)) {
+    ElMessage.error(t('energyPalDialog.notEnoughEnergy'))
     return
   }
-
-  // 验证输入
-  if (rentType.value === EnergyTradeTypes.AMOUNT && isEnergyInputError.value) {
-    ElMessage.error(t('energyPalDialog.inputError'))
-    return
-  }
-  if (rentType.value === EnergyTradeTypes.TIMES && isNetInputError.value) {
-    ElMessage.error(t('energyPalDialog.inputError'))
-    return
-  }
-
-  try {
-    await pay(submitForm.value)
-    ElMessage.success(t('energyPalDialog.paySuccess'))
-  }
-  catch (error) {
-    console.error('支付失败:', error)
-    ElMessage.error(t('energyPalDialog.payFailed'))
-  }
+  await pay({
+    pledgeAddress: receiverAddress.value,
+    pledgeNum: totalEnergy.value,
+    pledgeTime: unitPriceType.value,
+  })
 }
 </script>
 
 <template>
   <!-- 按量租赁 -->
   <div class="trade-energy-by-amount">
-    <RentEnergyAmount v-model="rentalAmount" class="mb-20px" />
-    <RentTime v-model:time-type="rentalTime" class="mb-20px" />
+    <TransferNumber
+      v-model:transfer-num="transferNum"
+      v-model:unit-price-type="unitPriceType"
+      v-model:transfer-type-value="transferTypeValue"
+      class="mb-20px"
+    />
+
     <ReceiveAddress v-model="receiverAddress" class="mb-20px" />
 
     <AmountOfPay
@@ -170,19 +103,18 @@ async function handlePay() {
       :loading="checkPriceLoading"
     />
 
-    <ResultOfEnergyAmount
-      :original-trx-amount="originalTRXAmount"
-      :original-usd-amount="orginalUsdAmount"
-      :unit-price-sun="unitPriceSun"
-      :saved-trx-percent="savedTRXPercent"
-      :saved-trx-amount="savedTRXAmount"
-      :saved-usd-amount="savedUsdAmount"
-    />
+    <p class="tips-box">
+      <template v-if="totalEnergy < config.lowEnergyLimit">
+        {{ $t('energyPalDialog.lowEnergyFee') }}
+      </template>
+      {{ $t('energyPalDialog.discountDesc') }}
+      <span class="color-font-primary font-500">{{ savedTRXAmount }} TRX ≈ $ {{ savedUsdAmount }}</span>
+    </p>
 
     <el-button
       :loading="isPaying"
       :disabled="isPaying"
-      class="mt-60px"
+      class="btn-pay"
       size="large"
       type="success"
       style="width: 100%"
@@ -194,5 +126,24 @@ async function handlePay() {
 </template>
 
 <style lang="less" scoped>
+.tips-box {
+  border-radius: 6px;
+  padding: 10px;
+  background: #f5f5f5;
+  font-size: 12px;
+  line-height: 24px;
+  color: #1a1a1a;
+}
+.btn-pay {
+  height: 54px !important;
+  margin-top: 60px;
+  background-color: #05E18C;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
 
+  &:hover {
+    background-color: #16ec99;
+  }
+}
 </style>

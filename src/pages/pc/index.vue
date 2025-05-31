@@ -21,9 +21,6 @@ const isWalletConnectVisible = ref(false)
 function openWalletConnect() {
   isWalletConnectVisible.value = true
 }
-function closeWalletConnect() {
-  isWalletConnectVisible.value = false
-}
 </script>
 
 <template>

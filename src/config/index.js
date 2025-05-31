@@ -1,4 +1,4 @@
-export const unitPriceList = [
+export const rentalTimeList = [
   {
     label: 'm10',
     value: 'm10',
@@ -14,6 +14,7 @@ export const unitPriceList = [
   {
     label: 'day1',
     value: 'day1',
+    time: 1,
   },
   ...Array.from({ length: 29 }, (_, i) => ({
     label: `day${i + 2}`,

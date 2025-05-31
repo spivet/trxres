@@ -22,7 +22,7 @@ const configStore = useConfigStore()
 const { config } = storeToRefs(configStore)
 
 const { priceData, checkPriceLoading, checkPrice } = usePrice()
-const { pay, isPaying,hasEnoughEnergy } = usePayment()
+const { pay, isPaying, hasEnoughEnergy } = usePayment()
 
 // 接收地址
 const receiverAddress = ref('')
@@ -174,7 +174,7 @@ async function handlePay() {
     <el-button
       :loading="isPaying"
       :disabled="isPaying"
-      class="mt-60px"
+      class="btn-pay"
       size="large"
       type="success"
       style="width: 100%"
@@ -186,5 +186,16 @@ async function handlePay() {
 </template>
 
 <style lang="less" scoped>
+.btn-pay {
+  height: 54px !important;
+  margin-top: 60px;
+  background-color: #05E18C;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
 
+  &:hover {
+    background-color: #16ec99;
+  }
+}
 </style>

@@ -8,6 +8,10 @@ const { t } = useI18n()
 // 导航菜单项
 const navItems = computed(() => [
   { key: 'home', label: t('app.home'), path: '/', icon: 'i-icon:home' },
+  { key: 'api', label: 'API', onClick: () => {
+    window.open('https://docs.trxres.com/')
+    return false
+  } },
 ])
 </script>
 

@@ -26,7 +26,7 @@ function usePrice() {
 
   async function checkPrice(payload: {
     pledgeAddress: string
-    pledgeTime?: 'm10' | 'h1' | 'h3' | 'day1' | 'day2' | 'day3'
+    pledgeTime?: string // 'm10' | 'h1' | 'h3' | 'day1'-'day30'
     pledgeNum?: number
     extraTrxNum?: number
     pledgeBandwidthNum?: number

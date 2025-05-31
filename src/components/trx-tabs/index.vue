@@ -6,6 +6,7 @@ interface TabItem {
   label: string
   icon?: string
   disabled?: boolean
+  onClick?: () => boolean
 }
 
 const props = defineProps<{
@@ -26,6 +27,9 @@ const activeKey = ref<string | number>(props.modelValue || props.defaultActiveKe
 // 切换tab
 function handleTabClick(tab: TabItem) {
   if (tab.disabled)
+    return
+
+  if (tab.onClick && !tab.onClick())
     return
 
   const oldValue = activeKey.value
@@ -78,7 +82,7 @@ watch(
   }
 
   &.size-big {
-    gap: 10px;
+    gap: 4px;
     height: 60px;
     padding: 0 5px;
   }
