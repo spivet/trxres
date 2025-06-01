@@ -84,3 +84,11 @@ export function getRentalTime(rentalTime?: string) {
     pledgeMinute,
   }
 }
+
+/**
+ * 获取url参数
+ */
+export function getUrlQuery(key: string) {
+  const url = new URL(window.location.href)
+  return url.searchParams.get(key)
+}

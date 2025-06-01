@@ -1,8 +1,9 @@
-import axios from 'axios'
 import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { ElMessage } from 'element-plus'
 import type { StatusMessages } from './code'
+import axios from 'axios'
+import { ElMessage } from 'element-plus'
 import { i18n } from '@/i18n'
+import { getUrlQuery } from '@/utils/utils'
 
 interface IAPIRes<T> {
   resCode: keyof typeof StatusMessages
@@ -18,6 +19,23 @@ const instance: AxiosInstance = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api`,
 })
 
+// 请求拦截器
+instance.interceptors.request.use((config) => {
+  const sourceFlag = getUrlQuery('sourceFlag') || 'hit'
+  if (config.method === 'get') {
+    config.params = {
+      ...config.params,
+      sourceFlag,
+    }
+  }
+  if (config.method === 'post') {
+    config.data = {
+      ...config.data,
+      sourceFlag,
+    }
+  }
+  return config
+})
 // 响应拦截器
 instance.interceptors.response.use((response: AxiosResponse<IAPIRes<any>>) => {
   const { resCode, resMsg, data } = response.data
