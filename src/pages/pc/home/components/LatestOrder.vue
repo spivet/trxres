@@ -1,16 +1,36 @@
 <script setup>
-import { toRefs } from 'vue'
+import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
+import { apiGetOrderList } from '@/api'
 import useAccountStore from '@/store/account'
 import { formatTimestamp, formatTimeToHour, shortenAddress } from '@/utils/utils.js'
 
-const emits = defineEmits({
-  showMore: null,
-})
+const router = useRouter()
 const accountStore = useAccountStore()
 
 const { t } = useI18n()
-const { history } = toRefs(accountStore)
+const history = ref([])
+const { loading, run: getHistory } = useRequest(apiGetOrderList, {
+  manual: true,
+  onSuccess: (res) => {
+    history.value = res.data
+  },
+})
+
+watch(() => accountStore.address, (newAddress) => {
+  if (newAddress) {
+    getHistory({
+      fromAddress: newAddress,
+      pageSize: 5,
+      page: 1,
+    })
+  }
+})
+
+function navToOrders() {
+  router.push('/orders')
+}
 </script>
 
 <template>
@@ -19,13 +39,13 @@ const { history } = toRefs(accountStore)
       <p class="title">
         {{ t('order.latest') }}
       </p>
-      <p v-if="history && history.length > 0" class="more" @click="emits('showMore')">
+      <p v-if="history && history.length > 0" class="more" @click="navToOrders">
         {{ t('order.viewMore') }}
       </p>
     </div>
 
     <div class="page-footer__content">
-      <el-table :data="history" :loading="accountStore.historyLoading" stripe style="width: 780px">
+      <el-table :data="history" :loading="loading" stripe style="width: 780px">
         <el-table-column prop="startTime" :label="$t('order.date')" width="180">
           <template #default="scope">
             <span>{{ formatTimestamp(scope.row.startTime) }}</span>

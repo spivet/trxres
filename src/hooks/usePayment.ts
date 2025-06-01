@@ -21,10 +21,13 @@ function usePayment() {
   async function pay(payload: {
     pledgeAddress: string
     extraTrxNum?: number
-    pledgeNum?: number
+    pledgeNum: number
     pledgeTime?: string
     pledgeBandwidthNum?: number
   }) {
+    if (!address.value)
+      return
+
     isPaying.value = true
     try {
       const { pledgeDay, pledgeHour, pledgeMinute } = getRentalTime(payload.pledgeTime || '')

@@ -12,4 +12,9 @@ export default [
     name: 'home',
     component: () => import('@/pages/pc/home/index.vue'),
   },
+  {
+    path: '/orders',
+    name: 'orders',
+    component: () => import('@/pages/pc/orders/index.vue'),
+  },
 ]

@@ -1,9 +1,9 @@
 import { ElMessage } from 'element-plus'
 import { defineStore } from 'pinia'
+import { apiGetBalance, apiGetOrderList } from '@/api'
 import { CoinTypes } from '@/constants'
 import { multiplied } from '@/utils/number'
 import { connectWallet, StatusCodes } from '@/utils/wallet'
-import { apiGetOrderList, apiGetBalance } from "@/api";
 import useConfigStore from './config'
 
 interface IState {
@@ -54,22 +54,24 @@ const useAccountStore = defineStore('account', {
     },
     // 获取订单列表
     async getHistory() {
-      if (!this.address) return;
-      this.loadingHistory = true;
+      if (!this.address)
+        return
+      this.loadingHistory = true
       const res = await apiGetOrderList({
         fromAddress: this.address,
         pageSize: 6,
         page: 1,
       }).finally(() => {
-        this.loadingHistory = false;
-      });
-      this.history = res.data;
+        this.loadingHistory = false
+      })
+      this.history = res.data
     },
     // 获取钱包余额
     async queryBalance() {
-      if (!this.address) return;
-      const res = await apiGetBalance(this.address);
-      this.setBalance(res);
+      if (!this.address)
+        return
+      const res = await apiGetBalance(this.address)
+      this.setBalance(res)
     },
     async connect() {
       const res = await connectWallet()
