@@ -49,7 +49,8 @@
     "currentBlockHeight": "Latest Block Height",
     "noWallet": "wallet not found",
     "connecting": "Connecting",
-    "note": "Note: "
+    "note": "Note: ",
+    "back": "Back"
   },
 
   "notice": {
@@ -133,7 +134,8 @@
     "rentalDurationPlace": "Please enter rental duration",
     "receiverPlace": "If left blank, used current payment address",
     "money": "Pay",
-    "moneyDesc": "Price %{unitPrice} SUN , TRX saved in %{time} discount %{savedPercent} ≈ %{savedPrice}TRX ($ %{savedUsdPrice})"
+    "moneyDesc": "Unit price {unitPrice} SUN, saves {savedTrxPercent}% compared to direct burning, approximately {savedTrxAmount} TRX (${savedUsdAmount})",
+    "equalEnergyPledgeAmount": "Obtaining the same amount of energy requires staking {originalTrxAmount} TRX (${originalUsdAmount})"
   },
 
   "tips": {

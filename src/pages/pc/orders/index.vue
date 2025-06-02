@@ -11,7 +11,7 @@ import PageOrderList from './PageOrderList.vue'
         <div class="flex items-center mb-30px cursor-pointer" @click="() => $router.back()">
           <img class="w-30px h-30px mr-30px" src="@/assets/images/back.png">
           <span class="text-30px leading-30px color-#000">
-            返回
+            {{ $t('app.back') }}
           </span>
         </div>
         <Tips />
