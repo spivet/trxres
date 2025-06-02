@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { computed, onMounted } from 'vue'
-import rtx from '@/assets/images/rtx.png'
 import tokenpoketLogo from '@/assets/images/tokenPoket.png'
 import tronlinkLogo from '@/assets/images/TronLink.png'
+import trx from '@/assets/images/trx.png'
 import usdt from '@/assets/images/usdt.png'
 import useWallet from '@/hooks/useWallet'
 import useAccountStore from '@/store/account'
@@ -54,7 +54,7 @@ onMounted(() => {
         <ul class="flex flex-col gap-20px">
           <li class="item">
             <BalanceItem
-              :src="rtx" title="RTX(RTX)"
+              :src="trx" title="TRX"
               :address="balance?.address"
               :amount="balance?.trxBalance"
               totle-value=""
