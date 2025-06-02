@@ -10,6 +10,7 @@
     "account": "Account",
     "connectWallet": "Connect Wallet",
     "disconnect": "Disconnect",
+    "connectSuccess": "Connect Success",
     "balance": "Balance",
     "energy": "Energy",
     "bandwidth": "Bandwidth",
