@@ -21,7 +21,7 @@ const { hasEnoughEnergy, pay, isPaying } = usePayment()
 const { config } = storeToRefs(configStore)
 
 // 转账笔数/单价/转账能量
-const transferNum = ref()
+const transferNum = ref(1)
 const unitPriceType = ref('m10')
 const transferTypeValue = ref()
 // 计算租赁天数

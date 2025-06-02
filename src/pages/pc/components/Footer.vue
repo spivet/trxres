@@ -22,12 +22,27 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped>
+<style lang="less" scoped>
 .footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 40px;
   padding: 0 36px;
+}
+
+.block-height {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+
+  &::before{
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: linear-gradient(239deg, #01FF84 9%, #E73F2E 89%);
+    margin-right: 10px;
+  }
 }
 </style>

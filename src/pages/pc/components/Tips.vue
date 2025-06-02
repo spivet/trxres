@@ -204,5 +204,6 @@ onMounted(() => {
 .text {
   font-size: 10px;
   color: #9E9E9E;
+  word-break: break-all;
 }
 </style>

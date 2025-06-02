@@ -27,6 +27,9 @@
   background-color: #F6F7FB !important;
   box-shadow: none !important;
 }
+.el-input__inner {
+  color: #000 !important;
+}
 .el-select {
   overflow: hidden;
 }

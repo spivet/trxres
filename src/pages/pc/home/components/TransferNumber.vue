@@ -98,7 +98,7 @@ function getUnitPrice(u: string, t = 1) {
         :min="1"
         size="large"
         :controls="false"
-        class="w-100px! rounded-6px!"
+        class="w-100px! rounded-6px! font-bold"
       />
       <span class="mx-10px text-18px font-500 color-#000">{{ $t("energyPalDialog.times") }} x</span>
       <el-select
