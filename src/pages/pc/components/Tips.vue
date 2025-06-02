@@ -1,11 +1,41 @@
 <script setup>
 import { storeToRefs } from 'pinia'
+import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import usePrice from '@/hooks/usePrice'
 import useConfigStore from '@/store/config'
+import { roundFloat } from '@/utils/number'
 
+const priceStore = usePrice()
 const configStore = useConfigStore()
-const { config, perCostRTX, perCostPledge, perSaved } = storeToRefs(configStore)
+const { config } = storeToRefs(configStore)
 const { t } = useI18n()
+
+const originalTRXPrice = computed(() => {
+  if (!config.value.burnEnergy)
+    return 0
+  return roundFloat(65000 / config.value.burnEnergy, 2)
+})
+
+const actualTRXPrice = computed(() => {
+  if (!priceStore.priceData.value)
+    return 0
+  return roundFloat(65000 / 1e6 * config.value.sun_10m, 2)
+})
+
+const savedTRXPercent = computed(() => {
+  if (!priceStore.priceData.value)
+    return 0
+  return ((originalTRXPrice.value - actualTRXPrice.value) / originalTRXPrice.value * 100).toFixed(0)
+})
+onMounted(() => {
+  priceStore.checkPrice({
+    pledgeAddress: '',
+    pledgeTime: 'm10',
+    pledgeNum: 65000,
+    payToken: 'TRX',
+  })
+})
 </script>
 
 <template>
@@ -34,11 +64,11 @@ const { t } = useI18n()
       <div class="comp-eg">
         <div class="comp-eg-item">
           <div class="left">
-            <img src="@/assets/images/fire.png" class="w-44px h-44px">
+            <img src="@/assets/images/fire.png" class="w-44px h-44px mr-4px">
           </div>
           <div class="rightArea rightArea--1">
             <div class="cost">
-              {{ perCostRTX }} TRX
+              {{ originalTRXPrice }} TRX
             </div>
             <div class="text">
               {{ t('tips.iconText1') }}
@@ -47,14 +77,14 @@ const { t } = useI18n()
         </div>
         <div class="comp-eg-item">
           <div class="left">
-            <img src="@/assets/images/battery.png" class="w-44px h-44px">
+            <img src="@/assets/images/battery.png" class="w-44px h-44px -mr-2px">
           </div>
           <div class="rightArea rightArea--2">
             <div class="cost">
-              {{ perCostPledge }} TRX
+              {{ actualTRXPrice }} TRX
             </div>
             <div class="text">
-              {{ t('tips.iconText2', { saved: perSaved }) }}
+              {{ t('tips.iconText2', { saved: savedTRXPercent }) }}
             </div>
           </div>
         </div>

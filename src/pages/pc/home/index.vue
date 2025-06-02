@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import ContactUs from './components/ContactWe.vue'
+import ContactUs from '../components/ContactWe.vue'
+import Tips from '../components/Tips.vue'
 import LatestOrder from './components/LatestOrder.vue'
-import Tips from './components/Tips.vue'
 import Trade from './components/Trade.vue'
 </script>
 
