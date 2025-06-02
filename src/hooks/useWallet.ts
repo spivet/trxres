@@ -2,12 +2,13 @@ import {
   TokenPocketAdapter,
   TronLinkAdapter,
 } from '@tronweb3/tronwallet-adapters'
-import {TronWeb} from 'tronweb';
 import { ElMessage } from 'element-plus'
+import { TronWeb } from 'tronweb'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useAccountStore from '@/store/account'
 import useConfigStore from '@/store/config'
+import useOrderStore from '@/store/orders'
 
 type IWalletAdapter = TokenPocketAdapter | TronLinkAdapter
 
@@ -67,6 +68,7 @@ function useWallet() {
   const { t } = useI18n()
   const accountStore = useAccountStore()
   const configStore = useConfigStore()
+  const orderStore = useOrderStore()
 
   // Reactive state
   const address = ref<string | null>(null)
@@ -80,6 +82,7 @@ function useWallet() {
   watch(address, (newAddress) => {
     accountStore.setAddress(newAddress)
     accountStore.queryBalance()
+    orderStore.getLatestHistory()
     if (newAddress) {
       configStore.getConfig(newAddress, accountStore.sourceFlag)
     }
@@ -333,4 +336,3 @@ function useWallet() {
 }
 
 export default useWallet
-

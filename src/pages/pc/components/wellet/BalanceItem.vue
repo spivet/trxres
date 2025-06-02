@@ -26,16 +26,16 @@ const {
     default: '',
   },
   amount: {
-    type: String,
-    default: '',
+    type: Number,
+    default: 0,
   },
   avaibleAmount: {
-    type: String,
-    default: '',
+    type: Number,
+    default: 0,
   },
   usdtValue: {
-    type: String,
-    default: '',
+    type: Number,
+    default: 0,
   },
 })
 

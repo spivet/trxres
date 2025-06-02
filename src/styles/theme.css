@@ -17,8 +17,16 @@
 
   /* 输入框 placeholder 颜色 */
   --kele-color-placeholder: #BDBDBD;
+
+  /* element-plus */
+  --el-color-primary: #000;
+  --el-color-primary-light-9: #F6F7FB;
 }
 
+.el-input__wrapper {
+  background-color: #F6F7FB !important;
+  box-shadow: none !important;
+}
 .el-select {
   overflow: hidden;
 }

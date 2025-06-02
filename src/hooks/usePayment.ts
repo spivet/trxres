@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { apiCreateOrder, apiUploadOrder } from '@/api'
 import useWallet from '@/hooks/useWallet'
 import useAccountStore from '@/store/account'
+import useOrderStore from '@/store/orders'
 import { getRentalTime } from '@/utils/utils'
 
 function usePayment() {
@@ -12,6 +13,7 @@ function usePayment() {
   const { signTransaction } = useWallet()
 
   const { address, sourceFlag, balance } = storeToRefs(useAccountStore())
+  const orderStore = useOrderStore()
   const isPaying = ref(false)
 
   const hasEnoughEnergy = (price: number) => {
@@ -41,14 +43,13 @@ function usePayment() {
         pledgeMinute,
       })
       const signedTx = await signTransaction(res.transaction)
-      // eslint-disable-next-line no-console
-      console.log('签名结果', signedTx)
       await apiUploadOrder({
         orderId: res.orderId,
         fromHash: signedTx.txID,
         signedData: signedTx,
       })
       ElMessage.success(t('energyPalDialog.paySuccessMsg'))
+      orderStore.getLatestHistory()
     }
     catch (error) {
       if (typeof error === 'string') {

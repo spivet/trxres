@@ -52,8 +52,13 @@ declare namespace API {
     netTotal: number // 总带宽
     netUsed: number // 已用带宽
     isActived: boolean // 是否已激活
-    trxBalance: number // TRX 余额，为防止精度丢失，所以使用字符串
-    usdtBalance: number // USDT 余额，为防止精度丢失，所以使用字符串
+    trxBalance: number // TRX 余额（新版采用balance，保留该参数向下兼容）
+    usdtBalance: number // USDT 余额（新版采用balance，保留该参数向下兼容）
+    balance: { // 支持支付的所有币种的余额
+      TRX: number
+      USDD: number
+      USDT: number
+    }
   }
 
   interface IOrderListReq {

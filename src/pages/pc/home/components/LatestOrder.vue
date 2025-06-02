@@ -1,35 +1,26 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { apiGetOrderList } from '@/api'
-import useAccountStore from '@/store/account'
+import useOrderStore from '@/store/orders'
 import { formatTimestamp, formatTimeToHour, shortenAddress } from '@/utils/utils.js'
 
 const router = useRouter()
-const accountStore = useAccountStore()
 
 const { t } = useI18n()
-const history = ref([])
-const { loading, run: getHistory } = useRequest(apiGetOrderList, {
-  manual: true,
-  onSuccess: (res) => {
-    history.value = res.data
-  },
-})
-
-watch(() => accountStore.address, (newAddress) => {
-  if (newAddress) {
-    getHistory({
-      fromAddress: newAddress,
-      pageSize: 5,
-      page: 1,
-    })
-  }
-})
+const orderStore = useOrderStore()
+const { latestHistory, loading } = storeToRefs(orderStore)
 
 function navToOrders() {
   router.push('/orders')
+}
+
+function cellClassName({ rowIndex }) {
+  // 偶数
+  if (rowIndex % 2 === 0) {
+    return ' bg-#F6F7FB! color-#000 font-400! border-b-0! rounded-4px'
+  }
+  return 'color-#000 font-400! border-b-0!'
 }
 </script>
 
@@ -39,13 +30,18 @@ function navToOrders() {
       <p class="title">
         {{ t('order.latest') }}
       </p>
-      <p v-if="history && history.length > 0" class="more" @click="navToOrders">
+      <p v-if="latestHistory && latestHistory.length > 0" class="more" @click="navToOrders">
         {{ t('order.viewMore') }}
       </p>
     </div>
 
     <div class="page-footer__content">
-      <el-table :data="history" :loading="loading" stripe style="width: 780px">
+      <el-table
+        :data="latestHistory"
+        :loading="loading"
+        header-cell-class-name="color-#000 font-400! border-b-0!"
+        :cell-class-name="cellClassName"
+      >
         <el-table-column prop="startTime" :label="$t('order.date')" width="180">
           <template #default="scope">
             <span>{{ formatTimestamp(scope.row.startTime) }}</span>
@@ -115,10 +111,6 @@ function navToOrders() {
       font-size: 14px;
       cursor: pointer;
       margin: 0;
-
-      &:hover {
-        text-decoration: underline;
-      }
     }
   }
 }

@@ -53,16 +53,16 @@ export function plus(a: BigNumberType.Value, b: BigNumberType.Value, decimals = 
 }
 
 // bignumber divided
-export function divided(a: BigNumberType.Value, b: BigNumberType.Value, decimals: number = 2): string {
+export function divided(a: BigNumberType.Value, b: BigNumberType.Value, decimals: number = 2) {
   return computeBase(a, b, 'dividedBy', decimals)
 }
 
 // bignumber multiplied
-export function multiplied(a: BigNumberType.Value, b: BigNumberType.Value, decimals: number = 2): string {
+export function multiplied(a: BigNumberType.Value, b: BigNumberType.Value, decimals: number = 2) {
   return computeBase(a, b, 'multipliedBy', decimals)
 }
 
-export function formatAmount(num: BigNumberType.Value, decimals: number = 2): string {
+export function formatAmount(num: BigNumberType.Value, decimals: number = 2) {
   const _num = new BigNumber(num)
   return _num.toFormat(decimals).replace(/\.0+$|(\.\d*[1-9])0+$/, '$1')
 }

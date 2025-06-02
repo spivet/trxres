@@ -1,14 +1,13 @@
 import { ElMessage } from 'element-plus'
 import { defineStore } from 'pinia'
 import { apiGetBalance, apiGetOrderList } from '@/api'
-import { CoinTypes } from '@/constants'
 import { multiplied } from '@/utils/number'
 import { connectWallet, StatusCodes } from '@/utils/wallet'
 import useConfigStore from './config'
 
 interface IState {
   sourceFlag: string
-  address: string | null
+  address: string | undefined
   noWallet: boolean
   balance: API.IBalanceRes | null
   // 订单数据
@@ -20,7 +19,7 @@ const useAccountStore = defineStore('account', {
   state: (): IState => {
     return {
       sourceFlag: '',
-      address: null,
+      address: undefined,
       noWallet: false,
       balance: null,
       loadingHistory: false,
@@ -29,21 +28,21 @@ const useAccountStore = defineStore('account', {
   },
   getters: {
     shortAddress(state) {
-      return state.address ? `${state.address.slice(0, 6)}...${state.address.slice(-4)}` : null
+      return state.address ? `${state.address.slice(0, 6)}...${state.address.slice(-4)}` : ''
     },
-    trxBalanceToUsdt(state) {
-      const configStore = useConfigStore()
-      const rtx = configStore.tokens.find(item => item.symbol === CoinTypes.TRX)
-      if (!state.balance?.trxBalance || !rtx)
+    trxBalanceToUsdt(state): number {
+      if (!state.balance)
         return 0
-      return multiplied(state.balance.trxBalance, rtx.usdPrice)
+
+      const configStore = useConfigStore()
+      return Number(multiplied(state.balance.trxBalance, configStore.config.price))
     },
   },
   actions: {
     setNoWallet(noWallet: boolean) {
       this.noWallet = noWallet
     },
-    setAddress(address: string | null) {
+    setAddress(address: string | undefined) {
       this.address = address
     },
     setSourceFlag(type: string) {
