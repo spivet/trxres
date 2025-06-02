@@ -72,14 +72,9 @@ async function connectWallet() {
     return
   }
 
-  try {
-    await connect(selectedWallet.value.id)
-    visible.value = false
-    ElMessage.success(t('app.connectSuccess'))
-  }
-  catch (err) {
-    ElMessage.error(t('app.connectFailed'))
-  }
+  await connect(selectedWallet.value.id)
+  visible.value = false
+  ElMessage.success(t('app.connectSuccess'))
 }
 
 /**

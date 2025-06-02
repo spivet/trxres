@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
-import { computed, getCurrentInstance, inject, onMounted, onUnmounted } from 'vue'
 import type { KeyType, RegisterTabCallback, UnregisterTabCallback } from './types'
+import { computed, getCurrentInstance, inject, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
   title: {

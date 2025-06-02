@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, provide, ref, watchEffect } from 'vue'
 import type { ITab, KeyType, RegisterTabCallback, UnregisterTabCallback } from './types'
+import { computed, provide, ref, watchEffect } from 'vue'
 
 const props = defineProps({
   modelValue: {

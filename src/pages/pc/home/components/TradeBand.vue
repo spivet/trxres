@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia'
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import TrxInput from '@/components/trx-input/index.vue'
 import usePayment from '@/hooks/usePayment'
 import usePrice from '@/hooks/usePrice'
 import useAccountStore from '@/store/account'
 import useConfigStore from '@/store/config'
-import { roundFloat } from '@/utils/number'
+// import { roundFloat } from '@/utils/number'
 import { toThousands } from '@/utils/utils'
 import AmountOfPay from './AmountOfPay.vue'
 import ReceiveAddress from './ReceiveAddress.vue'
@@ -50,45 +50,45 @@ watch([rentalAmount, rentalTime], ([newAmount, newUnitPriceType]) => {
 })
 
 // 计算租赁天数
-const rentalDays = computed(() => {
-  return rentalTime.value.includes('day')
-    ? +rentalTime.value.replace('day', '')
-    : 1
-})
+// const rentalDays = computed(() => {
+//   return rentalTime.value.includes('day')
+//     ? +rentalTime.value.replace('day', '')
+//     : 1
+// })
 
 // TRX 烧毁原价
-const originalTRXAmount = computed(() => {
-  if (!rentalAmount.value || !config.value.netPrice)
-    return 0
+// const originalTRXAmount = computed(() => {
+//   if (!rentalAmount.value || !config.value.netPrice)
+//     return 0
 
-  return roundFloat(rentalAmount.value * config.value.netPrice * rentalDays.value / 1e6, 2)
-})
+//   return roundFloat(rentalAmount.value * config.value.netPrice * rentalDays.value / 1e6, 2)
+// })
 
 // TRX 烧毁原价约等于的美元价格
-const orginalUsdAmount = computed(() => {
-  return roundFloat(originalTRXAmount.value * config.value.price, 2)
-})
+// const orginalUsdAmount = computed(() => {
+//   return roundFloat(originalTRXAmount.value * config.value.price, 2)
+// })
 
 // 节省的TRX价格
-const savedTRXAmount = computed(() => {
-  if (rentalAmount.value < config.value.lowEnergyCanBuy)
-    return 0
+// const savedTRXAmount = computed(() => {
+//   if (rentalAmount.value < config.value.lowEnergyCanBuy)
+//     return 0
 
-  return roundFloat(originalTRXAmount.value - Number(priceData.value.actualPrice), 2)
-})
+//   return roundFloat(originalTRXAmount.value - Number(priceData.value.actualPrice), 2)
+// })
 
 // 节省的 TRX 百分比
-const savedTRXPercent = computed(() => {
-  if (rentalAmount.value < config.value.lowEnergyCanBuy)
-    return 0
+// const savedTRXPercent = computed(() => {
+//   if (rentalAmount.value < config.value.lowEnergyCanBuy)
+//     return 0
 
-  return roundFloat((savedTRXAmount.value / originalTRXAmount.value) * 100, 0)
-})
+//   return roundFloat((savedTRXAmount.value / originalTRXAmount.value) * 100, 0)
+// })
 
 // 约等于的美元价格
-const savedUsdAmount = computed(() => {
-  return roundFloat(savedTRXAmount.value * config.value.price, 2)
-})
+// const savedUsdAmount = computed(() => {
+//   return roundFloat(savedTRXAmount.value * config.value.price, 2)
+// })
 
 // 开始支付
 const rentalAmountInputRef = ref<typeof TrxInput | null>(null)

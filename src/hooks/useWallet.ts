@@ -1,10 +1,11 @@
+/* eslint-disable no-console */
 import {
   TokenPocketAdapter,
   TronLinkAdapter,
 } from '@tronweb3/tronwallet-adapters'
 import { ElMessage } from 'element-plus'
 import { TronWeb } from 'tronweb'
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useAccountStore from '@/store/account'
 import useConfigStore from '@/store/config'
@@ -128,14 +129,15 @@ function useWallet() {
 
       adapter = selectAdapter(name)
       if (!adapter) {
-        throw new Error(`${name} wallet not support`)
+        ElMessage.warning(`${name} wallet not support`)
+        return
       }
 
       // 检查钱包是否已安装
       if (adapter.readyState !== WalletReadyState.Found) {
         const errorMessage = `${name} ${t('app.noWallet')}`
-        ElMessage.error(errorMessage)
-        throw new Error(errorMessage)
+        ElMessage.warning(errorMessage)
+        return
       }
 
       // 请求连接账户
@@ -254,7 +256,7 @@ function useWallet() {
     try {
       return await adapter.signMessage(message)
     }
-    catch (err) {
+    catch (err: any) {
       ElMessage.error(err.message)
       return null
     }
@@ -270,7 +272,7 @@ function useWallet() {
     try {
       return await adapter.signTransaction(transaction)
     }
-    catch (err) {
+    catch (err: any) {
       ElMessage.error(err.message)
       return null
     }

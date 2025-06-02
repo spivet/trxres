@@ -7,7 +7,7 @@ import useConfigStore from './config'
 
 interface IState {
   sourceFlag: string
-  address: string | undefined
+  address: string | null | undefined
   noWallet: boolean
   balance: API.IBalanceRes | null
   // 订单数据
@@ -42,7 +42,7 @@ const useAccountStore = defineStore('account', {
     setNoWallet(noWallet: boolean) {
       this.noWallet = noWallet
     },
-    setAddress(address: string | undefined) {
+    setAddress(address: string | null | undefined) {
       this.address = address
     },
     setSourceFlag(type: string) {

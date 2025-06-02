@@ -1,5 +1,5 @@
-import { ref } from 'vue'
 import type { Eruda } from 'eruda'
+import { ref } from 'vue'
 
 function useEruda(times: number) {
   let eruda: Eruda | null = null

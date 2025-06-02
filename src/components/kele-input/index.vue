@@ -70,7 +70,7 @@ function onInput(event: Event) {
   let value: string | number = (event.target as HTMLInputElement).value
   if (props.positiveOnly) {
     // 如果只允许正整数，则移除小数点和负数符号
-    value = value.replace(/[^\d]/g, '')
+    value = value.replace(/\D/g, '')
     if (props.max && Number.parseInt(value) > props.max)
       value = props.max
 
