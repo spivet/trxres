@@ -2,8 +2,8 @@
 import { ElMessage } from 'element-plus'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import tpLogo from '@/assets/images/tokenPoket.png'
-import tlLogo from '@/assets/images/tronLink.png'
+import tpLogo from '@/assets/images/tp-logo.png'
+import tlLogo from '@/assets/images/tronlink-logo.png'
 import useWallet, { WalletType } from '@/hooks/useWallet'
 
 // 定义事件
@@ -210,4 +210,3 @@ function openOfficialWebsite(type: WalletType) {
   }
 }
 </style>
-

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { computed, onMounted } from 'vue'
-import tokenpoketLogo from '@/assets/images/tokenPoket.png'
-import tronlinkLogo from '@/assets/images/TronLink.png'
+import tokenpoketLogo from '@/assets/images/tp-logo.png'
+import tronlinkLogo from '@/assets/images/tronlink-logo.png'
 import trx from '@/assets/images/trx.png'
-import usdt from '@/assets/images/usdt.png'
+import usdt from '@/assets/images/usdt-logo.png'
 import useWallet from '@/hooks/useWallet'
 import useAccountStore from '@/store/account'
 import LanguageChange from '../LanguageChange.vue'
