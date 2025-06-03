@@ -27,8 +27,9 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 40px;
+  height: 36px;
   padding: 0 36px;
+  font-size: 12px;
 }
 
 .block-height {
