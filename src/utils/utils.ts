@@ -40,11 +40,11 @@ export function formatTimeToHour(day: string, hour: string, minute: string) {
   let hours = Number.parseInt(hour)
   if (!day && !hour && !minute)
     return ''
-  if (day > 0) {
-    hours = Number.parseInt(day) * 24 + Number.parseInt(hour)
+  if (Number(day) > 0) {
+    hours = Number(day) * 24 + Number(hour)
   }
-  if (minute > 0) {
-    hours = Number.parseInt(hour) + Number.parseInt(minute) / 60
+  if (Number(minute) > 0) {
+    hours = Number(hour) + Number(minute) / 60
   }
   return hours.toFixed(2)
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ContactUs from '../components/ContactWe.vue'
 import Tips from '../components/Tips.vue'
-import PageOrderList from './PageOrderList.vue'
+import OrderList from './OrderList.vue'
 </script>
 
 <template>
@@ -18,7 +18,7 @@ import PageOrderList from './PageOrderList.vue'
         <ContactUs class="mt-18px" />
       </div>
 
-      <PageOrderList />
+      <OrderList />
     </div>
   </div>
 </template>

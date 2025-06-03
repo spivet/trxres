@@ -15,12 +15,20 @@ function navToOrders() {
   router.push('/orders')
 }
 
-function cellClassName({ rowIndex }) {
+function cellClassName({ rowIndex, columnIndex }) {
+  let baseStyle = 'color-#000 font-400! border-b-0!'
   // 偶数
   if (rowIndex % 2 === 0) {
-    return ' bg-#F6F7FB! color-#000 font-400! border-b-0! rounded-4px'
+    baseStyle += ' bg-#F6F7FB!'
+    if (columnIndex === 0) {
+      return `${baseStyle} rounded-tl-6px rounded-bl-6px`
+    }
+    if (columnIndex === 3) {
+      return `${baseStyle} rounded-tr-6px rounded-br-6px`
+    }
+    return baseStyle
   }
-  return 'color-#000 font-400! border-b-0!'
+  return baseStyle
 }
 </script>
 
@@ -47,24 +55,24 @@ function cellClassName({ rowIndex }) {
             <span>{{ formatTimestamp(scope.row.startTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="orderType" :label="t('order.orderType')" width="180">
+        <el-table-column prop="orderType" :label="$t('order.orderType')" width="180">
           <template #default="scope">
-            <span class="fw-bold">{{ scope.row.orderType === 'ENERGY' ? t('app.energy') : t('app.bandwidth') }} {{
+            <span class="fw-bold">{{ scope.row.orderType === 'ENERGY' ? $t('app.energy') : $t('app.bandwidth') }} {{
               scope.row.pledgeNum }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="orderPrice" :label="t('order.price')">
+        <el-table-column prop="orderPrice" :label="$t('order.price')">
           <template #default="scope">
             <span class="fw-bold">{{ scope.row.orderPrice }} SUN</span>
           </template>
         </el-table-column>
-        <el-table-column prop="pledgeMinute" :label="t('order.pledgeHour')">
+        <el-table-column prop="pledgeMinute" :label="$t('order.pledgeHour')">
           <template #default="scope">
             <span class="fw-bold">{{ formatTimeToHour(scope.row.pledgeDay, scope.row.pledgeHour, scope.row.pledgeMinute)
             }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="pledgeAddress" :label="t('order.pledgeAddress')" width="140">
+        <el-table-column prop="pledgeAddress" :label="$t('order.pledgeAddress')" width="140">
           <template #default="scope">
             <span class="address" :title="scope.row.pledgeAddress">{{ shortenAddress(scope.row.pledgeAddress) }}</span>
           </template>
@@ -73,7 +81,7 @@ function cellClassName({ rowIndex }) {
           <div class="empty mt-14 mb-14">
             <img src="@/assets/images/no-data.png" class="w-80px h-80px" alt="empty">
             <div class="fw-bold">
-              {{ t('order.noData') }}
+              {{ $t('order.noData') }}
             </div>
           </div>
         </template>

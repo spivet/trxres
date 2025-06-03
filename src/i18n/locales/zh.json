@@ -11,6 +11,7 @@
     "connectWallet": "连接钱包",
     "disconnect": "断开连接",
     "connectSuccess": "连接成功",
+    "walletNotConnected": "钱包未连接",
     "balance": "余额",
     "energy": "能量",
     "bandwidth": "带宽",
