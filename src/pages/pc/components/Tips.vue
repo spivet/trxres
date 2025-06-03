@@ -1,15 +1,14 @@
 <script setup>
 import { storeToRefs } from 'pinia'
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import usePrice from '@/hooks/usePrice'
 import useConfigStore from '@/store/config'
 import { roundFloat } from '@/utils/number'
 
-const priceStore = usePrice()
 const configStore = useConfigStore()
-const { config } = storeToRefs(configStore)
 const { t } = useI18n()
+
+const { config } = storeToRefs(configStore)
 
 const originalTRXPrice = computed(() => {
   if (!config.value.burnEnergy)
@@ -18,23 +17,11 @@ const originalTRXPrice = computed(() => {
 })
 
 const actualTRXPrice = computed(() => {
-  if (!priceStore.priceData.value)
-    return 0
   return roundFloat(65000 / 1e6 * config.value.sun_10m, 2)
 })
 
 const savedTRXPercent = computed(() => {
-  if (!priceStore.priceData.value)
-    return 0
   return ((originalTRXPrice.value - actualTRXPrice.value) / originalTRXPrice.value * 100).toFixed(0)
-})
-onMounted(() => {
-  priceStore.checkPrice({
-    pledgeAddress: '',
-    pledgeTime: 'm10',
-    pledgeNum: 65000,
-    payToken: 'TRX',
-  })
 })
 </script>
 
