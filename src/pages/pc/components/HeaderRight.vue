@@ -1,10 +1,13 @@
 <script lang="ts" setup>
+import { storeToRefs } from 'pinia'
 import useAccountStore from '@/store/account'
 import LanguageChange from './LanguageChange.vue'
 
 const emit = defineEmits(['connect', 'openWallet'])
 
 const accountStore = useAccountStore()
+const { address } = storeToRefs(accountStore)
+
 async function connectWallet() {
   emit('connect')
 }
@@ -16,11 +19,11 @@ function openWallet() {
 <template>
   <div class="header-right">
     <LanguageChange />
-    <button v-if="!accountStore.address" class="button connect-wallet" @click="connectWallet">
+    <button v-if="!address" class="button connect-wallet" @click="connectWallet">
       {{ $t('app.connectWallet') }}
     </button>
     <button v-else class="button wallet-info" @click="openWallet">
-      {{ accountStore.address.slice(0, 4) }}...{{ accountStore.address.slice(-4) }}
+      {{ address.slice(0, 4) }}...{{ address.slice(-4) }}
     </button>
   </div>
 </template>

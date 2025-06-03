@@ -1,11 +1,14 @@
 <script setup lang=ts>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import PackUpRightIcon from '@/assets/svg/pack-up-right.svg'
+import useWallet from '@/hooks/useWallet'
 import Footer from './components/Footer.vue'
 import Header from './components/Header.vue'
 import HeaderRight from './components/HeaderRight.vue'
 import WalletConnectDialog from './components/WalletConnectDialog.vue'
 import Wellet from './components/wellet/index.vue'
+
+const { autoConnect } = useWallet()
 
 // 控制侧边栏
 const isWalletVisible = ref(false)
@@ -21,6 +24,10 @@ const isWalletConnectVisible = ref(false)
 function openWalletConnect() {
   isWalletConnectVisible.value = true
 }
+
+onMounted(() => {
+  autoConnect()
+})
 </script>
 
 <template>
@@ -59,7 +66,7 @@ function openWalletConnect() {
 
 .main {
   display: flex;
-  height: calc(100vh - 40px);
+  height: calc(100vh - 36px);
   position: relative;
   transition: all 0.3s ease;
 }
@@ -82,8 +89,8 @@ function openWalletConnect() {
 .aside {
   position: relative;
   width: 0;
-  height: calc(100vh - 70px);
-  margin-top: 30px;
+  height: calc(100vh - 56px);
+  margin-top: 20px;
   background-color: #fff;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 20px;

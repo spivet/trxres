@@ -1,7 +1,7 @@
 import http from '@/utils/http'
 
 // 查询配置
-export function apiGetConfig(fromAddress: string, sourceFlag?: string) {
+export function apiGetConfig(fromAddress?: string, sourceFlag?: string) {
   return http.post<API.IConfigRes>('/v1/config', {
     fromAddress,
     sourceFlag,

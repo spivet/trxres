@@ -13,8 +13,8 @@ const useConfigStore = defineStore('config', {
     },
   },
   actions: {
-    async getConfig(fromAddress: string, sourceFlag?: string) {
-      const config = await apiGetConfig(fromAddress, sourceFlag)
+    async getConfig(fromAddress?: string) {
+      const config = await apiGetConfig(fromAddress)
       this.config = config
     },
     // 获取代币信息

@@ -15,7 +15,7 @@ interface IState {
   history: API.IOrderItem[]
 }
 const useAccountStore = defineStore('account', {
-  persist: true,
+  // persist: true,
   state: (): IState => {
     return {
       sourceFlag: '',

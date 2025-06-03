@@ -1,17 +1,14 @@
-/* eslint-disable no-console */
 import {
   TokenPocketAdapter,
   TronLinkAdapter,
 } from '@tronweb3/tronwallet-adapters'
 import { ElMessage } from 'element-plus'
 import { TronWeb } from 'tronweb'
-import { computed, onMounted, ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useAccountStore from '@/store/account'
 import useConfigStore from '@/store/config'
 import useOrderStore from '@/store/orders'
-
-type IWalletAdapter = TokenPocketAdapter | TronLinkAdapter
 
 /**
  * 钱包类型枚举
@@ -19,22 +16,6 @@ type IWalletAdapter = TokenPocketAdapter | TronLinkAdapter
 export enum WalletType {
   TronLink = 'TronLink',
   TokenPocket = 'TokenPocket',
-}
-
-// 钱包就绪状态
-enum WalletReadyState {
-  /**
-   * 适配器将在创建实例后开始检查钱包是否存在
-   */
-  Loading = 'Loading',
-  /**
-   * 检查结束且未找到钱包时，readyState 将为 NotFound
-   */
-  NotFound = 'NotFound',
-  /**
-   * 检查结束且找到钱包时，readyState 将为 Found
-   */
-  Found = 'Found',
 }
 
 // 网络类型定义
@@ -54,16 +35,10 @@ export interface Network {
   eventServer: string
 }
 
-// 链信息接口
-interface ChainInfo {
-  chainId: string
-}
-
 const StorageKey = {
   WalletType: 'walletType',
 }
-// 选择适配器实例
-let adapter: IWalletAdapter | null = null
+let adapter: TokenPocketAdapter | TronLinkAdapter | null = null
 
 function useWallet() {
   const { t } = useI18n()
@@ -72,106 +47,72 @@ function useWallet() {
   const orderStore = useOrderStore()
 
   // Reactive state
-  const address = ref<string | null>(null)
-  const chainId = ref<string | null>(null)
-  const network = ref<Network | null>(null)
-  const isReady = ref(false)
   const isConnecting = ref(false)
-  const isConnected = computed(() => !!address.value)
-  const error = ref<Error | null>(null)
 
-  watch(address, (newAddress) => {
+  // 事件处理函数
+  const onAddressChanged = (newAddress: string | null) => {
     accountStore.setAddress(newAddress)
+    configStore.getConfig(newAddress || undefined)
     accountStore.queryBalance()
     orderStore.getLatestHistory()
-    if (newAddress) {
-      configStore.getConfig(newAddress, accountStore.sourceFlag)
-    }
-    console.log('address changed', newAddress)
-  }, { immediate: true })
-
-  // 适配器配置
-  const tronLinkConfig = {
-    openUrlWhenWalletNotFound: true,
-    checkTimeout: 30000, // 30秒
-    openTronLinkAppOnMobile: true,
-    dappName: document.title,
   }
 
-  const tokenPocketConfig = {
-    openUrlWhenWalletNotFound: true,
-  }
+  // 移除事件监听并重置适配器
+  function cleanup() {
+    if (!adapter)
+      return
 
-  // 初始化适配器
-  const tronLinkAdapter = new TronLinkAdapter(tronLinkConfig)
-  const tokenPocketAdapter = new TokenPocketAdapter(tokenPocketConfig)
-
-  // 检查钱包是否可用
-  // 注意：不要监听 readyStateChanged，只要有 TokenPocket, TronLink 就会变成 Found 状态
-  const tronLinkAvailable = ref<boolean>(tronLinkAdapter.readyState === WalletReadyState.Found)
-  const tokenPocketAvailable = ref<boolean>(tokenPocketAdapter.readyState === WalletReadyState.Found)
-
-  function selectAdapter(name: WalletType) {
-    cleanup()
-    const adapters = {
-      [WalletType.TronLink]: tronLinkAdapter,
-      [WalletType.TokenPocket]: tokenPocketAdapter,
-    }
-    adapter = adapters[name]
-    return adapter
+    adapter.removeAllListeners()
+    adapter = null
   }
 
   // 连接到选定的钱包
   async function connect(name: WalletType) {
     try {
-      error.value = null
       isConnecting.value = true
 
-      adapter = selectAdapter(name)
-      if (!adapter) {
-        ElMessage.warning(`${name} wallet not support`)
-        return
-      }
+      // 根据钱包类型创建对应的适配器
+      if (name === WalletType.TronLink) {
+        const tronLinkAdapter = new TronLinkAdapter()
+        // 设置事件监听
+        tronLinkAdapter.on('connect', onAddressChanged)
+        tronLinkAdapter.on('accountsChanged', onAddressChanged)
+        adapter = tronLinkAdapter
 
-      // 检查钱包是否已安装
-      if (adapter.readyState !== WalletReadyState.Found) {
-        const errorMessage = `${name} ${t('app.noWallet')}`
-        ElMessage.warning(errorMessage)
-        return
-      }
+        // 如果钱包已连接，直接设置地址
+        if (tronLinkAdapter.connected) {
+          onAddressChanged(tronLinkAdapter.address)
+          // 记录当前使用的钱包类型
+          localStorage.setItem(StorageKey.WalletType, name)
+          return
+        }
 
-      // 请求连接账户
-      await adapter.connect()
-      // 更新状态
-      address.value = adapter.address
-      accountStore.setAddress(adapter.address)
-
-      // 获取网络信息
-      try {
-        // 注意：TokenPocket和TronLink都支持network()方法
-        const networkInfo = await adapter.network()
-        network.value = networkInfo
-        chainId.value = networkInfo.chainId
-        console.log('networkInfo', networkInfo)
+        await tronLinkAdapter.connect()
       }
-      catch (netErr) {
-        console.warn('[useWallet] get network error', netErr)
-      }
+      else if (name === WalletType.TokenPocket) {
+        const tokenPocketAdapter = new TokenPocketAdapter()
+        adapter = tokenPocketAdapter
+        // 设置事件监听
+        // 注意：TokenPocket 移动端App在切换账户时会自动刷新页面，所以不需要监听 accountsChanged 事件
+        tokenPocketAdapter.on('connect', onAddressChanged)
+        tokenPocketAdapter.on('accountsChanged', onAddressChanged)
 
-      // 设置事件监听
-      setupListeners(adapter)
-      isReady.value = true
+        // 如果钱包已连接，直接设置地址
+        if (tokenPocketAdapter.connected) {
+          onAddressChanged(tokenPocketAdapter.address)
+          // 记录当前使用的钱包类型
+          localStorage.setItem(StorageKey.WalletType, name)
+          return
+        }
+
+        await tokenPocketAdapter.connect()
+      }
 
       // 记录当前使用的钱包类型
       localStorage.setItem(StorageKey.WalletType, name)
-
-      return {
-        address: adapter.address,
-        chainId: chainId.value,
-      }
     }
     catch (err: any) {
-      error.value = err
+      console.error('[useWallet] connect error', err)
       ElMessage.error(err.message)
     }
     finally {
@@ -181,74 +122,25 @@ function useWallet() {
 
   // 断开当前钱包连接
   async function disconnect() {
-    console.trace('[useWallet] disconnect', adapter)
     if (!adapter)
       return
+
     try {
       // 注意：TronLink不支持通过DApp断开连接，但我们仍然调用此方法保持API一致性
       await adapter.disconnect()
-    }
-    catch (err: any) {
-      console.warn('[useWallet] disconnect error', err)
-    }
-    finally {
       cleanup()
-      address.value = null
-      chainId.value = null
-      network.value = null
-      isReady.value = false
+      accountStore.setAddress(null)
       localStorage.removeItem(StorageKey.WalletType)
     }
-  }
-
-  // 事件处理函数
-  const onAddressChanged = (newAddress: string, oldAddress?: string) => {
-    console.log(`[useWallet] address changed from ${oldAddress} to ${newAddress}`)
-    address.value = newAddress
-  }
-
-  const onNetworkChanged = (chainData: unknown) => {
-    const chainInfo = chainData as ChainInfo
-    console.warn(`[useWallet] network changed to chainId: ${chainInfo.chainId}`)
-    chainId.value = chainInfo.chainId
-    // 尝试更新完整的网络信息
-    if (adapter) {
-      adapter.network().then((networkInfo) => {
-        network.value = networkInfo
-      }).catch(console.error)
+    catch (err: any) {
+      console.error('[useWallet] disconnect error', err)
+      ElMessage.error(err.message)
     }
-  }
-
-  const onDisconnect = () => {
-    console.warn('[useWallet] disconnected')
-    address.value = null
-    chainId.value = null
-    network.value = null
-    isReady.value = false
-    localStorage.removeItem(StorageKey.WalletType)
-  }
-
-  // 添加事件监听
-  function setupListeners(adapter: IWalletAdapter) {
-    // 注意：TokenPocket 移动端App在切换账户时会自动刷新页面，所以不需要监听 accountsChanged 事件
-    adapter.on('connect', onAddressChanged)
-    adapter.on('accountsChanged', onAddressChanged)
-    adapter.on('chainChanged', onNetworkChanged)
-    adapter.on('disconnect', onDisconnect)
-  }
-
-  // 移除事件监听并重置适配器
-  function cleanup() {
-    console.log('[useWallet] cleanup', adapter)
-    if (!adapter)
-      return
-    adapter.removeAllListeners()
-    adapter = null
   }
 
   // 签名消息
   async function signMessage(message: string): Promise<string | null> {
-    if (!adapter || !isConnected.value) {
+    if (!adapter) {
       ElMessage.error(t('app.walletNotConnected'))
       return null
     }
@@ -264,7 +156,7 @@ function useWallet() {
 
   // 签名交易
   async function signTransaction(transaction: any): Promise<any> {
-    if (!adapter || !isConnected.value) {
+    if (!adapter) {
       ElMessage.error(t('app.walletNotConnected'))
       return null
     }
@@ -287,8 +179,8 @@ function useWallet() {
       const block = await tronWeb.trx.getCurrentBlock()
       return block.block_header.raw_data.number
     }
-    catch (err) {
-      error.value = err as Error
+    catch (err: any) {
+      ElMessage.error(err.message)
       return null
     }
   }
@@ -296,31 +188,22 @@ function useWallet() {
   // 自动连接上次使用的钱包
   function autoConnect() {
     const savedWalletType = localStorage.getItem(StorageKey.WalletType) as WalletType | null
-    if (savedWalletType) {
-      connect(savedWalletType)
+    if (savedWalletType === WalletType.TronLink) {
+      // TronLink 立即触发连接，否则会被 TP 拦截
+      connect(WalletType.TronLink)
+    }
+    else if (savedWalletType === WalletType.TokenPocket) {
+      // TokenPocket 钱包初始化会有延迟，所以需要延迟连接，否则会报错
+      setTimeout(() => {
+        connect(WalletType.TokenPocket)
+      }, 600)
     }
   }
 
-  // 组件挂载时尝试自动连接
-  onMounted(() => {
-    setTimeout(autoConnect, 1000)
-  })
-
-  // 组件卸载时自动清理
-  // onUnmounted(cleanup)
-
   return {
     // 状态
-    address,
-    chainId,
-    network,
-    isConnected,
+    adapter,
     isConnecting,
-    isReady,
-    error,
-    // 可用性
-    tronLinkAvailable,
-    tokenPocketAvailable,
     // 操作
     connect,
     autoConnect,
@@ -328,12 +211,6 @@ function useWallet() {
     signMessage,
     signTransaction,
     getLatestBlockHeight,
-    // 工具方法
-    getShortAddress: () => {
-      if (!address.value)
-        return ''
-      return `${address.value.slice(0, 6)}...${address.value.slice(-4)}`
-    },
   }
 }
 

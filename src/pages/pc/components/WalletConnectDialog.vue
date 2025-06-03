@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ElMessage } from 'element-plus'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import tpLogo from '@/assets/images/tp-logo.png'
@@ -8,8 +7,6 @@ import useWallet, { WalletType } from '@/hooks/useWallet'
 
 // 定义事件
 const emit = defineEmits(['connect', 'close', 'walletChange'])
-
-// 使用 defineModel 替代 modelValue 和 update:modelValue
 const visible = defineModel<boolean>()
 
 const { t } = useI18n()
@@ -18,8 +15,6 @@ const { t } = useI18n()
 const {
   isConnecting,
   connect,
-  tronLinkAvailable,
-  tokenPocketAvailable,
 } = useWallet()
 
 // 可选择的钱包列表常量
@@ -28,13 +23,11 @@ const walletOptions = computed(() => [
     id: WalletType.TokenPocket,
     name: 'TokenPocket',
     icon: tpLogo,
-    isInstall: tokenPocketAvailable.value,
   },
   {
     id: WalletType.TronLink,
     name: 'TronLink',
     icon: tlLogo,
-    isInstall: tronLinkAvailable.value,
   },
 ])
 
@@ -67,24 +60,8 @@ async function connectWallet() {
   if (!selectedWallet.value)
     return
 
-  if (!selectedWallet.value.isInstall) {
-    openOfficialWebsite(selectedWallet.value.id)
-    return
-  }
-
   await connect(selectedWallet.value.id)
   visible.value = false
-  ElMessage.success(t('app.connectSuccess'))
-}
-
-/**
- * 打开钱包官网
- */
-function openOfficialWebsite(type: WalletType) {
-  if (type === WalletType.TokenPocket)
-    window.open('https://www.tokenpocket.pro/')
-  else if (type === WalletType.TronLink)
-    window.open('https://www.tronlink.org/')
 }
 </script>
 
@@ -120,9 +97,6 @@ function openOfficialWebsite(type: WalletType) {
       >
         {{ buttonText }}
       </el-button>
-      <div v-if="selectedWallet && !selectedWallet.isInstall" class="install-tip">
-        {{ `${selectedWallet.name} ${t('app.noWallet')}` }}
-      </div>
     </div>
   </el-dialog>
 </template>
@@ -181,13 +155,6 @@ function openOfficialWebsite(type: WalletType) {
 .btn-connect:hover {
   background-color: #333;
   border-color: #333;
-}
-
-.install-tip {
-  margin-top: 12px;
-  font-size: 12px;
-  color: #999;
-  text-align: center;
 }
 </style>
 
