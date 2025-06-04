@@ -1,4 +1,3 @@
-import { ElMessage } from 'element-plus'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -12,8 +11,9 @@ import { getRentalTime } from '@/utils/utils'
 function usePayment() {
   const { t } = useI18n()
   const { signTransaction } = useWallet()
+  const accountStore = useAccountStore()
 
-  const { address, sourceFlag, balance } = storeToRefs(useAccountStore())
+  const { address, sourceFlag, balance } = storeToRefs(accountStore)
   const orderStore = useOrderStore()
   const isPaying = ref(false)
 
@@ -50,6 +50,7 @@ function usePayment() {
         signedData: signedTx,
       })
       TrxAlert.success(t('energyPalDialog.paySuccessMsg'))
+      accountStore.queryBalance()
       orderStore.getLatestHistory()
     }
     catch (error) {
