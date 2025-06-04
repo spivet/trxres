@@ -42,10 +42,6 @@ function updateValue(tab: TabItem) {
 .trade-tabs {
   display: inline-flex;
   align-items: center;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  background-color: #000;
-  overflow: hidden;
 }
 
 .trade-tab {
@@ -54,17 +50,27 @@ function updateValue(tab: TabItem) {
   font-weight: 600;
   line-height: 1;
   color: #fff;
+  background-color: #000;
+
+  &:first-child {
+    border-top-left-radius: 10px;
+  }
 
   &:last-child {
     margin-left: -16px;
+    border-top-right-radius: 10px;
   }
 
   &:first-child.active {
     background: url('../images/tab1.png') no-repeat right center #fff;
+    opacity: 1;
+    z-index: 1;
   }
 
   &:last-child.active {
     background: url('../images/tab2.png') no-repeat left center #fff;
+    opacity: 1;
+    z-index: 1;
   }
 
   &.active {
