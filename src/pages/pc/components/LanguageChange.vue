@@ -17,9 +17,9 @@ function switchLanguage(lang: string) {
         <el-dropdown-item @click="switchLanguage('zh-tw')">
           繁體中文
         </el-dropdown-item>
-        <el-dropdown-item @click="switchLanguage('zh-cn')">
+        <!-- <el-dropdown-item @click="switchLanguage('zh-cn')">
           简体中文
-        </el-dropdown-item>
+        </el-dropdown-item> -->
       </el-dropdown-menu>
     </template>
   </el-dropdown>
