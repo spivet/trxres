@@ -18,11 +18,11 @@ const emit = defineEmits(['unlink'])
 const { disconnect } = useWallet()
 const accountStore = useAccountStore()
 
-const { address, trxBalanceToUsdt, balance, sourceFlag, shortAddress } = storeToRefs(accountStore)
+const { address, trxBalanceToUsdt, balance, shortAddress, walletName } = storeToRefs(accountStore)
 const { copy, copied } = useClipboard()
 
 const sourceFlagAvatar = computed(() => {
-  return sourceFlag.value === 'tronlink' ? tronlinkLogo : tokenpoketLogo
+  return walletName.value === 'tronlink' ? tronlinkLogo : tokenpoketLogo
 })
 
 function closeWelletConnect() {

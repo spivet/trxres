@@ -82,6 +82,7 @@ function useWallet() {
         tronLinkAdapter.on('connect', onAddressChanged)
         tronLinkAdapter.on('accountsChanged', onAddressChanged)
         adapter = tronLinkAdapter
+        accountStore.setWalletName('tronlink')
 
         // 如果钱包已连接，直接设置地址
         if (tronLinkAdapter.connected) {
@@ -100,6 +101,7 @@ function useWallet() {
         // 注意：TokenPocket 移动端App在切换账户时会自动刷新页面，所以不需要监听 accountsChanged 事件
         tokenPocketAdapter.on('connect', onAddressChanged)
         tokenPocketAdapter.on('accountsChanged', onAddressChanged)
+        accountStore.setWalletName('tokenpocket')
 
         // 如果钱包已连接，直接设置地址
         if (tokenPocketAdapter.connected) {

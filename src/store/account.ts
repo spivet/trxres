@@ -8,7 +8,7 @@ import useConfigStore from './config'
 interface IState {
   sourceFlag: string
   address: string | null | undefined
-  noWallet: boolean
+  walletName: 'tronlink' | 'tokenpocket' | ''
   balance: API.IBalanceRes | null
   // 订单数据
   loadingHistory: boolean
@@ -20,7 +20,7 @@ const useAccountStore = defineStore('account', {
     return {
       sourceFlag: '',
       address: undefined,
-      noWallet: false,
+      walletName: '',
       balance: null,
       loadingHistory: false,
       history: [],
@@ -39,8 +39,8 @@ const useAccountStore = defineStore('account', {
     },
   },
   actions: {
-    setNoWallet(noWallet: boolean) {
-      this.noWallet = noWallet
+    setWalletName(walletName: 'tronlink' | 'tokenpocket' | '') {
+      this.walletName = walletName
     },
     setAddress(address: string | null | undefined) {
       this.address = address
@@ -81,7 +81,7 @@ const useAccountStore = defineStore('account', {
       else if (res.code === StatusCodes.Unauthorized)
         ElMessage.error(res.message)
       else if (res.code === StatusCodes.NoEnvironment)
-        this.setNoWallet(true)
+        this.setWalletName('')
       else ElMessage.error(res.message)
     },
   },
