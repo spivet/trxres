@@ -162,7 +162,7 @@ async function connectWallet() {
 
 .install-tip {
   font-size: 12px;
-  color: #999;
+  color: #EA0000;
   text-align: center;
 }
 </style>
