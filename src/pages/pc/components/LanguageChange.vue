@@ -11,11 +11,14 @@ function switchLanguage(lang: string) {
     <i class="i-icon:language color-#000 outline-0 text-26px" />
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item @click="switchLanguage('zh')">
-          简体中文
-        </el-dropdown-item>
         <el-dropdown-item @click="switchLanguage('en')">
           English
+        </el-dropdown-item>
+        <el-dropdown-item @click="switchLanguage('zh-tw')">
+          繁體中文
+        </el-dropdown-item>
+        <el-dropdown-item @click="switchLanguage('zh-cn')">
+          简体中文
         </el-dropdown-item>
       </el-dropdown-menu>
     </template>
