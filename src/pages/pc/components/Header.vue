@@ -1,18 +1,28 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
 import TrxTabs from '@/components/trx-tabs/index.vue'
 
 const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
 
 // 导航菜单项
 const navItems = computed(() => [
-  { key: 'home', label: t('app.home'), path: '/', icon: 'i-icon:home' },
+  { key: 'home', label: t('app.home'), path: '/', icon: 'i-icon:home', onClick: () => {
+    router.push('/')
+    return false
+  } },
   { key: 'api', label: 'API', onClick: () => {
     window.open('https://docs.trxres.com/')
     return false
   } },
 ])
+const activeNav = ref('')
+watch(() => route.name, () => {
+  activeNav.value = route.name as string
+})
 </script>
 
 <template>
@@ -21,7 +31,7 @@ const navItems = computed(() => [
       <img src="@/assets/images/logo.png" alt="TRXRes">
     </div>
 
-    <TrxTabs :tabs="navItems" class="mx-auto" size="big" />
+    <TrxTabs v-model="activeNav" :tabs="navItems" class="mx-auto" size="big" />
 
     <slot name="right" />
   </header>
