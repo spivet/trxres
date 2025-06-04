@@ -133,6 +133,7 @@ function useWallet() {
       await adapter.disconnect()
       cleanup()
       accountStore.setAddress(null)
+      accountStore.setBalance(null)
       localStorage.removeItem(StorageKey.WalletType)
     }
     catch (err: any) {

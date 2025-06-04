@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { apiCreateOrder, apiUploadOrder } from '@/api'
+import TrxAlert from '@/components/trx-alert'
 import useWallet from '@/hooks/useWallet'
 import useAccountStore from '@/store/account'
 import useOrderStore from '@/store/orders'
@@ -48,15 +49,12 @@ function usePayment() {
         fromHash: signedTx.txID,
         signedData: signedTx,
       })
-      ElMessage.success(t('energyPalDialog.paySuccessMsg'))
+      TrxAlert.success(t('energyPalDialog.paySuccessMsg'))
       orderStore.getLatestHistory()
     }
     catch (error) {
       if (typeof error === 'string') {
-        ElMessage.error({
-          message: error,
-          customClass: 'whitespace-nowrap',
-        })
+        TrxAlert.error(error)
       }
 
       console.error('支付失败', error)
