@@ -144,7 +144,7 @@ function cellClassName({ rowIndex, columnIndex }: { rowIndex: number, columnInde
             class="status-tag"
             :class="getStatusClass(row.status)"
           >
-            {{ t(`order.${row.status}`) }}
+            {{ $t(`order.${row.status}`) }}
           </span>
         </template>
       </el-table-column>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Check } from '@element-plus/icons-vue'
+import { useClipboard } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { computed, onMounted } from 'vue'
 import tokenpoketLogo from '@/assets/images/tp-logo.png'
@@ -14,10 +16,10 @@ import ResourceItem from './ResourceItem.vue'
 const emit = defineEmits(['unlink'])
 
 const { disconnect } = useWallet()
-
 const accountStore = useAccountStore()
 
 const { address, trxBalanceToUsdt, balance, sourceFlag, shortAddress } = storeToRefs(accountStore)
+const { copy, copied } = useClipboard()
 
 const sourceFlagAvatar = computed(() => {
   return sourceFlag.value === 'tronlink' ? tronlinkLogo : tokenpoketLogo
@@ -40,7 +42,10 @@ onMounted(() => {
         <span class="user__address">
           {{ shortAddress }}
         </span>
-        <i class="i-icon:copy cursor-pointer" @click="() => 'copyText(address)'" />
+        <i v-if="!copied" class="i-icon:copy cursor-pointer" @click="() => copy(address || '')" />
+        <el-icon v-else>
+          <Check />
+        </el-icon>
       </div>
       <LanguageChange />
     </div>
@@ -66,7 +71,7 @@ onMounted(() => {
             <BalanceItem
               :src="usdt" title="Tether USD(USDT)"
               :amount="balance?.usdtBalance"
-              :address="address"
+              :address="address || ''"
               chain="TRC20"
             />
           </li>
