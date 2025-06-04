@@ -96,13 +96,13 @@ defineExpose({
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 28px;
+  margin-bottom: 30px;
 }
 
 .trx-alert__icon {
   width: 48px;
   height: 48px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .trx-alert__message {
