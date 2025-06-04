@@ -12,6 +12,7 @@
     "disconnect": "Disconnect",
     "connectSuccess": "Connect Success",
     "walletNotConnected": "Wallet Not Connected",
+    "walletConnectionError": "Wallet Connection Error",
     "balance": "Balance",
     "energy": "Energy",
     "bandwidth": "Bandwidth",

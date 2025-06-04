@@ -1,3 +1,4 @@
+import { WalletConnectionError } from '@tronweb3/tronwallet-abstract-adapter'
 import {
   TokenPocketAdapter,
   TronLinkAdapter,
@@ -113,7 +114,9 @@ function useWallet() {
     }
     catch (err: any) {
       console.error('[useWallet] connect error', err)
-      ElMessage.error(err.message)
+      if (err instanceof WalletConnectionError)
+        ElMessage.error(t('app.walletConnectionError'))
+      else ElMessage.error(err.message)
     }
     finally {
       isConnecting.value = false
