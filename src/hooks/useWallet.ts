@@ -74,7 +74,10 @@ function useWallet() {
 
       // 根据钱包类型创建对应的适配器
       if (name === WalletType.TronLink) {
-        const tronLinkAdapter = new TronLinkAdapter()
+        const tronLinkAdapter = new TronLinkAdapter({
+          openUrlWhenWalletNotFound: true,
+          checkTimeout: 3000,
+        })
         // 设置事件监听
         tronLinkAdapter.on('connect', onAddressChanged)
         tronLinkAdapter.on('accountsChanged', onAddressChanged)

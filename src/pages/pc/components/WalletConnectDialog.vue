@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import tpLogo from '@/assets/images/tp-logo.png'
 import tlLogo from '@/assets/images/tronlink-logo.png'
 import useWallet, { WalletType } from '@/hooks/useWallet'
+import { hasTokenPocket } from '@/utils/wallet'
 
 // 定义事件
 const emit = defineEmits(['connect', 'close', 'walletChange'])
@@ -36,7 +37,6 @@ const selectedWallet = ref<{
   id: WalletType
   name: string
   icon: string
-  isInstall: boolean
 } | null>(null)
 
 /**
@@ -97,6 +97,9 @@ async function connectWallet() {
       >
         {{ buttonText }}
       </el-button>
+      <div v-if="selectedWallet?.name === 'TronLink' && hasTokenPocket()" class="install-tip">
+        {{ t('app.tpHijackTl') }}
+      </div>
     </div>
   </el-dialog>
 </template>
@@ -155,6 +158,12 @@ async function connectWallet() {
 .btn-connect:hover {
   background-color: #333;
   border-color: #333;
+}
+
+.install-tip {
+  font-size: 12px;
+  color: #999;
+  text-align: center;
 }
 </style>
 

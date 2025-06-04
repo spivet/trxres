@@ -13,4 +13,13 @@ declare interface Window {
     tronWeb: typeof Window.tronWeb
     request: (options: { method: string }) => Promise<any>
   }
+  tron?: {
+    isTokenPocket?: boolean
+    isTronLink: boolean
+    tronWeb: boolean | typeof Window.tronWeb
+    tronlinkParams: {
+      websiteIcon: string
+      websiteName: string
+    }
+  }
 }

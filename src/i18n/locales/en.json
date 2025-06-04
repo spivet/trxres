@@ -53,7 +53,8 @@
     "connecting": "Connecting",
     "note": "Note: ",
     "back": "Back",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "tpHijackTl": "TronLink will be intercepted by TokenPocket, please close TokenPocket plugin first"
   },
 
   "notice": {

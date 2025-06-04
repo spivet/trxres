@@ -82,3 +82,8 @@ export async function connectWallet(): Promise<IConnectResponse> {
 export async function signOnTronLink(address: string, second: number) {
   return await window.tronWeb?.trx.signMessageV2(`${address}-${second}`)
 }
+
+export function hasTokenPocket() {
+  return window.tron?.isTokenPocket
+}
+
