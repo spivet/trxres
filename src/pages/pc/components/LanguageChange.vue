@@ -3,6 +3,7 @@ import { loadLanguageAsync } from '@/i18n'
 
 function switchLanguage(lang: string) {
   loadLanguageAsync(lang)
+  localStorage.setItem('lang', lang)
 }
 </script>
 

@@ -47,6 +47,7 @@ export async function loadLanguageAsync(lang: string): Promise<Locale> {
 export default {
   install(app: App) {
     app.use(i18n)
-    loadLanguageAsync('en')
+    const lang = localStorage.getItem('lang') || 'en'
+    loadLanguageAsync(lang)
   },
 }
