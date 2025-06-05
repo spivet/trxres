@@ -22,6 +22,8 @@ const lessNum = computed(() => {
 })
 
 const progressValue = computed(() => {
+  if (props.total === 0)
+    return 0
   return Math.floor((props.total - props.used) / props.total * 100)
 })
 </script>
