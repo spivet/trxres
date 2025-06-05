@@ -1439,6 +1439,14 @@
     "@tronweb3/tronwallet-abstract-adapter" "^1.1.9"
     "@tronweb3/tronwallet-adapter-tronlink" "^1.1.12"
 
+"@tronweb3/tronwallet-adapter-vue-hooks@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.npmmirror.com/@tronweb3/tronwallet-adapter-vue-hooks/-/tronwallet-adapter-vue-hooks-1.0.3.tgz#eef81c555d320ae5958aa19f878baadf1d966673"
+  integrity sha512-h+YosZGtx0Epxcp46sKXqw0s1gJFQ1vspb9dgl000d6SEBqSUYJ5PR+1kHceSUr6sd1Lqrc9B5VR2tZtbyf7ug==
+  dependencies:
+    "@tronweb3/tronwallet-abstract-adapter" "^1.1.9"
+    "@tronweb3/tronwallet-adapter-tronlink" "^1.1.12"
+
 "@tronweb3/tronwallet-adapter-walletconnect@^2.0.3":
   version "2.0.3"
   resolved "https://registry.npmmirror.com/@tronweb3/tronwallet-adapter-walletconnect/-/tronwallet-adapter-walletconnect-2.0.3.tgz#94f2899380c78978d49ff608e4fa7086c9c813a4"

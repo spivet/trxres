@@ -140,7 +140,7 @@ declare namespace API {
     pledgeMinute?: number // 租赁分钟数 取值范围[10] 整数
     pledgeNum?: number // 租赁能量数量
     extraTrxNum?: number // 需要兑换的trx数量, 传大于等于0或空字符串认为是TRC20支付 取值范围[0-30]; 不传则为TRX支付
-    sourceFlag: string // 第三方来源
+    sourceFlag?: string // 第三方来源
     pledgeBandwidthNum?: number // 租赁带宽数量
     payToken?: string // TRC20支付币种（可选），通过"查询币种"接口查询，传币种的symbol；仅在TRC20支付时有效，默认值为USDT
   }

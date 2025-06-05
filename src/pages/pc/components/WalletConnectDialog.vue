@@ -1,40 +1,43 @@
 <script setup lang="ts">
+import { AdapterState } from '@tronweb3/tronwallet-abstract-adapter'
+import { useWallet } from '@tronweb3/tronwallet-adapter-vue-hooks'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import tpLogo from '@/assets/images/tp-logo.png'
-import tlLogo from '@/assets/images/tronlink-logo.png'
-import useWallet, { WalletType } from '@/hooks/useWallet'
-import { hasTokenPocket } from '@/utils/wallet'
+import { WalletType } from '@/utils/wallet'
 
 // 定义事件
-const emit = defineEmits(['connect', 'close', 'walletChange'])
 const visible = defineModel<boolean>()
 
 const { t } = useI18n()
 
 // 初始化钱包 hook
-const {
-  isConnecting,
-  connect,
-} = useWallet()
+const { wallets, wallet, connecting, connect, select } = useWallet()
 
 // 可选择的钱包列表常量
-const walletOptions = computed(() => [
-  {
-    id: WalletType.TokenPocket,
-    name: 'TokenPocket',
-    icon: tpLogo,
-  },
-  {
-    id: WalletType.TronLink,
-    name: 'TronLink',
-    icon: tlLogo,
-  },
-])
+const walletOptions = computed(() => wallets.value.map(wallet => ({
+  name: wallet.adapter.name,
+  icon: wallet.adapter.icon,
+})))
+
+const hasTokenPocket = computed(() => {
+  const tpWallet = wallets.value.find(wallet => wallet.adapter.name === WalletType.TokenPocket)
+  return tpWallet?.state !== AdapterState.NotFound && tpWallet?.state !== AdapterState.Loading
+})
+
+// 可选择的钱包列表常量
+// const walletOptions = computed(() => [
+//   {
+//     name: WalletType.TokenPocket,
+//     icon: tpLogo,
+//   },
+//   {
+//     name: WalletType.TronLink,
+//     icon: tlLogo,
+//   },
+// ])
 
 // 当前选中的钱包
 const selectedWallet = ref<{
-  id: WalletType
   name: string
   icon: string
 } | null>(null)
@@ -42,9 +45,9 @@ const selectedWallet = ref<{
 /**
  * 选择钱包
  */
-function selectWallet(wallet: any) {
+async function selectWallet(wallet: any) {
   selectedWallet.value = wallet
-  emit('walletChange', wallet)
+  await select(wallet.name)
 }
 
 /**
@@ -52,15 +55,12 @@ function selectWallet(wallet: any) {
  */
 
 const buttonText = computed(() => {
-  if (isConnecting.value)
+  if (connecting.value)
     return t('app.connecting')
   return t('app.connectWallet')
 })
 async function connectWallet() {
-  if (!selectedWallet.value)
-    return
-
-  await connect(selectedWallet.value.id)
+  await connect()
   visible.value = false
 }
 </script>
@@ -79,25 +79,25 @@ async function connectWallet() {
     <div class="container">
       <div class="options">
         <div
-          v-for="wallet in walletOptions"
-          :key="wallet.id"
+          v-for="walletOption in walletOptions"
+          :key="walletOption.name"
           class="option"
-          :class="{ active: selectedWallet?.id === wallet.id }"
-          @click="selectWallet(wallet)"
+          :class="{ active: wallet?.adapter.name === walletOption.name }"
+          @click="selectWallet(walletOption)"
         >
-          <img :src="wallet.icon" :alt="wallet.name" class="icon">
-          {{ wallet.name }}
+          <img :src="walletOption.icon" :alt="walletOption.name" class="icon">
+          {{ walletOption.name }}
         </div>
       </div>
       <el-button
         type="primary"
         class="btn-connect"
-        :loading="isConnecting"
+        :loading="connecting"
         @click="connectWallet"
       >
         {{ buttonText }}
       </el-button>
-      <div v-if="selectedWallet?.name === 'TronLink' && hasTokenPocket()" class="install-tip">
+      <div v-if="wallet?.adapter.name === WalletType.TronLink && hasTokenPocket" class="install-tip">
         {{ t('app.tpHijackTl') }}
       </div>
     </div>

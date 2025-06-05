@@ -1,12 +1,11 @@
 <script lang="ts" setup>
-import { storeToRefs } from 'pinia'
-import useAccountStore from '@/store/account'
+import { useWallet } from '@tronweb3/tronwallet-adapter-vue-hooks'
+import { getShortAddress } from '@/utils/wallet'
 import LanguageChange from './LanguageChange.vue'
 
 const emit = defineEmits(['connect', 'openWallet'])
 
-const accountStore = useAccountStore()
-const { address } = storeToRefs(accountStore)
+const { address } = useWallet()
 
 async function connectWallet() {
   emit('connect')
@@ -23,7 +22,7 @@ function openWallet() {
       {{ $t('app.connectWallet') }}
     </button>
     <button v-else class="button wallet-info" @click="openWallet">
-      {{ address.slice(0, 4) }}...{{ address.slice(-4) }}
+      {{ getShortAddress(address, 4) }}
     </button>
   </div>
 </template>

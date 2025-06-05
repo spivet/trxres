@@ -1,15 +1,16 @@
 <script setup lang=ts>
-import { onMounted, ref } from 'vue'
+import { useWallet } from '@tronweb3/tronwallet-adapter-vue-hooks'
+import { ref, watch } from 'vue'
 import PackUpRightIcon from '@/assets/svg/pack-up-right.svg'
-import useWallet from '@/hooks/useWallet'
+import useAccountStore from '@/store/account'
 import Footer from './components/Footer.vue'
 import Header from './components/Header.vue'
 import HeaderRight from './components/HeaderRight.vue'
 import WalletConnectDialog from './components/WalletConnectDialog.vue'
 import Wellet from './components/wellet/index.vue'
 
-const { autoConnect } = useWallet()
-
+const accountStore = useAccountStore()
+const { address } = useWallet()
 // 控制侧边栏
 const isWalletVisible = ref(false)
 function openWallet() {
@@ -25,9 +26,10 @@ function openWalletConnect() {
   isWalletConnectVisible.value = true
 }
 
-onMounted(() => {
-  autoConnect()
-})
+watch(address, (newAddress, oldAddress) => {
+  if (newAddress && newAddress !== oldAddress)
+    accountStore.queryBalance(newAddress)
+}, { immediate: true })
 </script>
 
 <template>

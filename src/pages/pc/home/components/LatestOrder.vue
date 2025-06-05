@@ -1,16 +1,23 @@
 <script setup>
+import { useWallet } from '@tronweb3/tronwallet-adapter-vue-hooks'
 import { storeToRefs } from 'pinia'
+import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import useOrderStore from '@/store/orders'
 import { formatTimestamp, formatTimeToHour, shortenAddress } from '@/utils/utils.js'
 
 const router = useRouter()
 const route = useRoute()
-
+const { address } = useWallet()
 const { t } = useI18n()
 const orderStore = useOrderStore()
 const { latestHistory, loading } = storeToRefs(orderStore)
+
+watch(address, (newAddress, oldAddress) => {
+  if (newAddress && newAddress !== oldAddress)
+    orderStore.getLatestHistory(newAddress)
+}, { immediate: true })
 
 function navToOrders() {
   const query = route.query

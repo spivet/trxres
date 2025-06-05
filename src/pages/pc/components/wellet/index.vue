@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Check } from '@element-plus/icons-vue'
+import { useWallet } from '@tronweb3/tronwallet-adapter-vue-hooks'
 import { useClipboard } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { computed, onMounted } from 'vue'
@@ -7,22 +8,22 @@ import tokenpoketLogo from '@/assets/images/tp-logo.png'
 import tronlinkLogo from '@/assets/images/tronlink-logo.png'
 import trx from '@/assets/images/trx.png'
 import usdt from '@/assets/images/usdt-logo.png'
-import useWallet from '@/hooks/useWallet'
 import useAccountStore from '@/store/account'
+import { getShortAddress, WalletType } from '@/utils/wallet'
 import LanguageChange from '../LanguageChange.vue'
 import BalanceItem from './BalanceItem.vue'
 import ResourceItem from './ResourceItem.vue'
 
 const emit = defineEmits(['unlink'])
 
-const { disconnect } = useWallet()
+const { wallet, address, disconnect } = useWallet()
 const accountStore = useAccountStore()
 
-const { address, trxBalanceToUsdt, balance, shortAddress, walletName } = storeToRefs(accountStore)
+const { trxBalanceToUsdt, balance } = storeToRefs(accountStore)
 const { copy, copied } = useClipboard()
 
 const sourceFlagAvatar = computed(() => {
-  return walletName.value === 'tronlink' ? tronlinkLogo : tokenpoketLogo
+  return wallet.value?.adapter.name === WalletType.TronLink ? tronlinkLogo : tokenpoketLogo
 })
 
 function closeWelletConnect() {
@@ -40,7 +41,7 @@ onMounted(() => {
       <div class="user">
         <img class="user__avatar" :src="sourceFlagAvatar" alt="">
         <span class="user__address">
-          {{ shortAddress }}
+          {{ getShortAddress(address || '') }}
         </span>
         <i v-if="!copied" class="i-icon:copy cursor-pointer" @click="() => copy(address || '')" />
         <el-icon v-else>

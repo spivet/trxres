@@ -2,10 +2,8 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useRequest } from 'vue-request'
 import { apiGetOrderList } from '@/api'
-import useAccountStore from '@/store/account'
 
 const useOrderStore = defineStore('order', () => {
-  const accountStore = useAccountStore()
   const latestHistory = ref<API.IOrderItem[]>([])
   const { loading, run: getHistory } = useRequest(apiGetOrderList, {
     manual: true,
@@ -13,11 +11,11 @@ const useOrderStore = defineStore('order', () => {
       latestHistory.value = res.data
     },
   })
-  function getLatestHistory() {
-    if (!accountStore.address)
+  function getLatestHistory(address: string) {
+    if (!address)
       return
     getHistory({
-      fromAddress: accountStore.address,
+      fromAddress: address,
       pageSize: 5,
       page: 1,
     })

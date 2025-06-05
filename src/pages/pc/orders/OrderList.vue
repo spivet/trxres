@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, toRefs, watch } from 'vue'
+import { useWallet } from '@tronweb3/tronwallet-adapter-vue-hooks'
+import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { apiGetOrderList } from '@/api'
 import { OrderStatus } from '@/constants'
-import useAccountStore from '@/store/account'
 import { formatTimestamp } from '@/utils/utils.js'
 
 // 定义订单项类型
@@ -22,9 +22,8 @@ interface OrderItem {
 const { t } = useI18n()
 const page = ref(1)
 const pageSize = ref(10)
-const accountStore = useAccountStore()
 
-const { address } = toRefs(accountStore)
+const { address } = useWallet()
 
 // 订单列表数据
 const { data: tableData, run, loading } = useRequest(apiGetOrderList, {

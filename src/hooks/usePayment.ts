@@ -1,19 +1,19 @@
+import { useWallet } from '@tronweb3/tronwallet-adapter-vue-hooks'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { apiCreateOrder, apiUploadOrder } from '@/api'
 import TrxAlert from '@/components/trx-alert'
-import useWallet from '@/hooks/useWallet'
 import useAccountStore from '@/store/account'
 import useOrderStore from '@/store/orders'
 import { getRentalTime } from '@/utils/utils'
 
 function usePayment() {
   const { t } = useI18n()
-  const { signTransaction } = useWallet()
+  const { address, signTransaction } = useWallet()
   const accountStore = useAccountStore()
 
-  const { address, sourceFlag, balance } = storeToRefs(accountStore)
+  const { balance } = storeToRefs(accountStore)
   const orderStore = useOrderStore()
   const isPaying = ref(false)
 
@@ -36,7 +36,6 @@ function usePayment() {
       const { pledgeDay, pledgeHour, pledgeMinute } = getRentalTime(payload.pledgeTime || '')
       const res = await apiCreateOrder({
         ...payload,
-        sourceFlag: sourceFlag.value,
         fromAddress: address.value,
         extraTrxNum: payload.extraTrxNum,
         pledgeDay,
@@ -50,8 +49,8 @@ function usePayment() {
         signedData: signedTx,
       })
       TrxAlert.success(t('energyPalDialog.paySuccessMsg'))
-      accountStore.queryBalance()
-      orderStore.getLatestHistory()
+      accountStore.queryBalance(address.value)
+      orderStore.getLatestHistory(address.value)
     }
     catch (error) {
       if (typeof error === 'string') {

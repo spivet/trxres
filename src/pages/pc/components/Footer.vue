@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import useWallet from '@/hooks/useWallet'
-
-const { getLatestBlockHeight } = useWallet()
+import { getLatestBlockHeight } from '@/utils/wallet'
 
 const latestBlockHeight = ref<number | null>(null)
 

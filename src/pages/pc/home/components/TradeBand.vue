@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { useWallet } from '@tronweb3/tronwallet-adapter-vue-hooks'
 import { storeToRefs } from 'pinia'
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -7,7 +8,6 @@ import usePayment from '@/hooks/usePayment'
 import usePrice from '@/hooks/usePrice'
 import useAccountStore from '@/store/account'
 import useConfigStore from '@/store/config'
-// import { roundFloat } from '@/utils/number'
 import { toThousands } from '@/utils/utils'
 import AmountOfPay from './AmountOfPay.vue'
 import ReceiveAddress from './ReceiveAddress.vue'
@@ -19,6 +19,7 @@ const MaxBandWidth = 10000000
 const { t } = useI18n()
 
 const accountStore = useAccountStore()
+const { address } = useWallet()
 
 const configStore = useConfigStore()
 const { config } = storeToRefs(configStore)
@@ -28,7 +29,7 @@ const { pay, isPaying, hasEnoughEnergy } = usePayment()
 
 // 接收地址
 const receiverAddress = ref('')
-watch(() => accountStore.address, (newAddress) => {
+watch(address, (newAddress) => {
   receiverAddress.value = newAddress || ''
 }, { immediate: true })
 

@@ -1,13 +1,12 @@
+import { useWallet } from '@tronweb3/tronwallet-adapter-vue-hooks'
 import { debounce } from 'lodash'
-import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 import { apiCheckPrice } from '@/api'
-import useAccountStore from '@/store/account'
 import { roundFloat } from '@/utils/number'
 import { getRentalTime } from '@/utils/utils'
 
 function usePrice() {
-  const { address, sourceFlag } = storeToRefs(useAccountStore())
+  const { address } = useWallet()
 
   const { data, loading: checkPriceLoading, run } = useRequest(apiCheckPrice, {
     manual: true,
@@ -39,7 +38,6 @@ function usePrice() {
 
     const params = {
       fromAddress: address.value,
-      sourceFlag: sourceFlag.value,
       pledgeAddress: payload.pledgeAddress,
       pledgeDay,
       pledgeHour,

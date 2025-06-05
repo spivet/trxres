@@ -1,10 +1,10 @@
 <script lang="ts" setup>
+import { useWallet } from '@tronweb3/tronwallet-adapter-vue-hooks'
 import { storeToRefs } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import usePayment from '@/hooks/usePayment'
 import usePrice from '@/hooks/usePrice'
-import useAccountStore from '@/store/account'
 import useConfigStore from '@/store/config'
 import { roundFloat } from '@/utils/number'
 import AmountOfPay from './AmountOfPay.vue'
@@ -12,7 +12,7 @@ import ReceiveAddress from './ReceiveAddress.vue'
 import TransferNumber from './TransferNumber.vue'
 
 const { t } = useI18n()
-const accountStore = useAccountStore()
+const { address } = useWallet()
 const configStore = useConfigStore()
 
 const { priceData, checkPriceLoading, checkPrice } = usePrice()
@@ -35,7 +35,7 @@ const totalEnergy = computed(() => {
 
 // 接收地址
 const receiverAddress = ref('')
-watch(() => accountStore.address, (newAddress) => {
+watch(address, (newAddress) => {
   receiverAddress.value = newAddress || ''
 }, { immediate: true })
 
@@ -71,7 +71,7 @@ const savedUsdAmount = computed(() => {
   return roundFloat(savedTRXAmount.value * config.value.price, 2)
 })
 async function handlePay() {
-  if (!accountStore.address || checkPriceLoading.value || isPaying.value) {
+  if (!address.value || checkPriceLoading.value || isPaying.value) {
     return
   }
   if (!hasEnoughEnergy(priceData.value.actualPrice)) {

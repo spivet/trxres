@@ -11,6 +11,8 @@
     "lint": "eslint src/**/*.ts src/**/*.vue --fix"
   },
   "dependencies": {
+    "@tronweb3/tronwallet-abstract-adapter": "^1.1.9",
+    "@tronweb3/tronwallet-adapter-vue-hooks": "^1.0.3",
     "@tronweb3/tronwallet-adapters": "^1.2.8",
     "@vueuse/core": "^13.2.0",
     "axios": "^1.6.8",
