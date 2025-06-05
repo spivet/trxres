@@ -53,7 +53,7 @@
     "note": "注意：",
     "back": "返回",
     "confirm": "確認",
-    "tpHijackTl": "TronLink 會被 TokenPocket 攔截，請先關閉 TokenPocket 插件"
+    "tpHijackTl": "TronLink 可能會被 TokenPocket 攔截"
   },
   "notice": {
     "saving": "能量是TRON鏈上的一種資源，每天都會分配給那些質押了TRX的用戶。你可以把能量留給自己用，也可以租借給別人使用。當用戶在TRON鏈上進行交易或轉賬時，如果沒有能量，就會直接消耗TRX（每筆交易大約需要30到100個TRX），如果有能量的話，則會消耗能量而不是TRX。使用能量相較於消耗TRX可以節省70%的費用。",

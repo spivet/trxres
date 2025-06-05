@@ -54,7 +54,7 @@
     "note": "Note: ",
     "back": "Back",
     "confirm": "Confirm",
-    "tpHijackTl": "TronLink will be intercepted by TokenPocket, please close TokenPocket plugin first"
+    "tpHijackTl": "TronLink may be intercepted by TokenPocket"
   },
 
   "notice": {

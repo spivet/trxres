@@ -53,7 +53,7 @@
     "note": "注意：",
     "back": "返回",
     "confirm": "确认",
-    "tpHijackTl": "TronLink 会被 TokenPocket 拦截，请先关闭 TokenPocket 插件"
+    "tpHijackTl": "TronLink 可能会被 TokenPocket 拦截"
   },
 
   "notice": {
