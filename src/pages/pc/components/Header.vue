@@ -11,7 +11,8 @@ const router = useRouter()
 // 导航菜单项
 const navItems = computed(() => [
   { key: 'home', label: t('app.home'), path: '/', icon: 'i-icon:home', onClick: () => {
-    router.push('/')
+    const query = route.query
+    router.push({ path: '/', query })
     return false
   } },
   { key: 'api', label: 'API', onClick: () => {

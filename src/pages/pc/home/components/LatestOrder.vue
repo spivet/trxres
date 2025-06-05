@@ -1,18 +1,20 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import useOrderStore from '@/store/orders'
 import { formatTimestamp, formatTimeToHour, shortenAddress } from '@/utils/utils.js'
 
 const router = useRouter()
+const route = useRoute()
 
 const { t } = useI18n()
 const orderStore = useOrderStore()
 const { latestHistory, loading } = storeToRefs(orderStore)
 
 function navToOrders() {
-  router.push('/orders')
+  const query = route.query
+  router.push({ path: '/orders', query })
 }
 
 function cellClassName({ rowIndex, columnIndex }) {
