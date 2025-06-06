@@ -11,6 +11,12 @@ export function hasTokenPocket() {
   return window.tron?.isTokenPocket
 }
 
+export function isTokenPocketEnv() {
+  const host = window.tronWeb?.fullNode?.host
+  const isTokenPocket = host?.includes('tokenpocket')
+  return isTokenPocket
+}
+
 export function getShortAddress(address: string, startIndex = 6, endIndex = 4) {
   return `${address.slice(0, startIndex)}...${address.slice(-endIndex)}`
 }

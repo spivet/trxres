@@ -6,6 +6,9 @@ declare interface Window {
       hex: string | false
     }
     trx: any
+    fullNode: {
+      host: string
+    }
     ready: boolean
     request: (options: { method: string }) => Promise<any>
   }

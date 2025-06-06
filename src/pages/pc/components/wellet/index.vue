@@ -3,36 +3,37 @@ import { Check } from '@element-plus/icons-vue'
 import { useWallet } from '@tronweb3/tronwallet-adapter-vue-hooks'
 import { useClipboard } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
-import { computed, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import tokenpoketLogo from '@/assets/images/tp-logo.png'
 import tronlinkLogo from '@/assets/images/tronlink-logo.png'
 import trx from '@/assets/images/trx.png'
 import usdt from '@/assets/images/usdt-logo.png'
 import useAccountStore from '@/store/account'
-import { getShortAddress, WalletType } from '@/utils/wallet'
+import { getShortAddress, isTokenPocketEnv } from '@/utils/wallet'
 import LanguageChange from '../LanguageChange.vue'
 import BalanceItem from './BalanceItem.vue'
 import ResourceItem from './ResourceItem.vue'
 
 const emit = defineEmits(['unlink'])
 
-const { wallet, address, disconnect } = useWallet()
+const { connected, address, disconnect } = useWallet()
 const accountStore = useAccountStore()
 
 const { trxBalanceToUsdt, balance } = storeToRefs(accountStore)
 const { copy, copied } = useClipboard()
 
-const sourceFlagAvatar = computed(() => {
-  return wallet.value?.adapter.name === WalletType.TronLink ? tronlinkLogo : tokenpoketLogo
-})
+const sourceFlagAvatar = ref(tronlinkLogo)
 
 function closeWelletConnect() {
   disconnect()
   emit('unlink')
 }
 
-onMounted(() => {
-})
+watch(connected, () => {
+  if (isTokenPocketEnv()) {
+    sourceFlagAvatar.value = tokenpoketLogo
+  }
+}, { immediate: true })
 </script>
 
 <template>
