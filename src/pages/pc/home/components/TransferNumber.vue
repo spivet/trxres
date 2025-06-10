@@ -122,9 +122,11 @@ function getUnitPrice(u: string, t = 1) {
         <el-option v-for="item in transferTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
       </el-select>
 
-      <p class="text-12px color-#767676 mt-10px">
-        {{ $t("energyPalDialog.transResult", { result: transferTypeValue }) }}
-      </p>
+      <i18n-t class="text-12px color-#767676 mt-10px" keypath="energyPalDialog.transResult" tag="p">
+        <template #result>
+          <span class="font-bold color-#000">{{ transferTypeValue }}</span>
+        </template>
+      </i18n-t>
     </div>
   </div>
 </template>

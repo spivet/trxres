@@ -138,8 +138,8 @@
     "rentalDurationPlace": "Please enter rental duration",
     "receiverPlace": "If left blank, used current payment address",
     "money": "Pay",
-    "moneyDesc": "Unit price {unitPrice} SUN, saves {savedTrxPercent}% compared to direct burning, approximately {savedTrxAmount} TRX (${savedUsdAmount})",
-    "equalEnergyPledgeAmount": "Obtaining the same amount of energy requires staking {originalTrxAmount} TRX (${originalUsdAmount})"
+    "moneyDesc": "Unit price {unitPrice} SUN, saves {savedTrxPercent}% compared to direct burning, approximately {savedTrxAmount} (${savedUsdAmount})",
+    "equalEnergyPledgeAmount": "Obtaining the same amount of energy requires staking {originalTrxAmount} (${originalUsdAmount})"
   },
 
   "tips": {

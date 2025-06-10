@@ -138,8 +138,8 @@
     "rentalDurationPlace": "请输入租用时长",
     "receiverPlace": "不填写默认当前付款地址",
     "money": "支付金额",
-    "moneyDesc": "单价 {unitPrice} SUN, 比直接烧毁节省 {savedTrxPercent}%，约{savedTrxAmount}TRX (${savedUsdAmount})",
-    "equalEnergyPledgeAmount": "获得同等能量需要质押 {originalTrxAmount} TRX (${originalUsdAmount})"
+    "moneyDesc": "单价 {unitPrice} SUN, 比直接烧毁节省 {savedTrxPercent}%，约{savedTrxAmount} (${savedUsdAmount})",
+    "equalEnergyPledgeAmount": "获得同等能量需要质押 {originalTrxAmount} (${originalUsdAmount})"
   },
 
   "tips": {
