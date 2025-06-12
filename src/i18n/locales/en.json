@@ -27,6 +27,10 @@
     "days": "Days",
     "hour": "Hour",
     "minute": "Minute",
+    "m10": "10 m",
+    "h1": "1 h",
+    "h3": "3 h",
+    "day1": "1 d",
     "pricePerDay": "Price/day",
     "income": "Income",
     "receiver": "Receiver",
@@ -54,7 +58,11 @@
     "note": "Note: ",
     "back": "Back",
     "confirm": "Confirm",
-    "tpHijackTl": "TronLink may be intercepted by TokenPocket"
+    "tpHijackTl": "TronLink may be intercepted by TokenPocket",
+    "65k": "65k",
+    "100k": "100k",
+    "130k": "130k",
+    "1m": "1m"
   },
 
   "notice": {
@@ -114,7 +122,7 @@
     "transfer": "Transfer - The other account has USDT",
     "notUtransfer": "Transfer - The other account doesn't have USDT",
     "exchange": "Contract conversion",
-    "m10": "10 minutes",
+    "m10": "10 Minutes",
     "h1": "1 Hour",
     "h3": "3 Hours",
     "day1": "1 Day",

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import TrxInput from '@/components/trx-input/index.vue'
 import useAccountStore from '@/store/account'
 import useConfigStore from '@/store/config'
@@ -11,14 +12,17 @@ const rentalAmount = defineModel<number>()
 const configStore = useConfigStore()
 const accountStore = useAccountStore()
 const { config } = storeToRefs(configStore)
+const { t } = useI18n()
 
 const rentalAmountInputRef = ref<typeof TrxInput | null>(null)
-const rentalOptions = [
-  { name: '65,000', value: 65000 },
-  { name: '100,000', value: 100000 },
-  { name: '10,000,000', value: 10000000 },
-  { name: '100,000,000', value: 100000000 },
-]
+const rentalOptions = computed(() => {
+  return [
+    { name: t('app.65k'), value: 65000 },
+    { name: t('app.100k'), value: 130000 },
+    { name: t('app.1m'), value: 100000 },
+    { name: t('app.1m'), value: 1000000 },
+  ]
+})
 
 function validateRentalAmount(value: string | number | undefined) {
   if (!value)
@@ -67,7 +71,7 @@ defineExpose({
         }),
       }"
     />
-    <div class="flex-between mt-10px">
+    <div class="flex mt-10px">
       <span
         v-for="i in rentalOptions"
         :key="i.value"
@@ -92,8 +96,9 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 80px;
   height: 40px;
-  padding: 0 8px;
+  margin-right: 20px;
   background-color: #000;
   border-radius: 6px;
   cursor: pointer;

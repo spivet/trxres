@@ -27,6 +27,10 @@
     "days": "天",
     "hour": "小时",
     "minute": "分钟",
+    "m10": "10 分钟",
+    "h1": "1 小时",
+    "h3": "3 小时",
+    "day1": "1 天",
     "pricePerDay": "价格/天",
     "income": "收入",
     "receiver": "接收地址",
@@ -53,7 +57,11 @@
     "note": "注意：",
     "back": "返回",
     "confirm": "确认",
-    "tpHijackTl": "TronLink 可能会被 TokenPocket 拦截"
+    "tpHijackTl": "TronLink 可能会被 TokenPocket 拦截",
+    "65k": "6.5万",
+    "100k": "10万",
+    "130k": "13万",
+    "1m": "100万"
   },
 
   "notice": {

@@ -104,10 +104,10 @@ const unitPriceOptions = computed(() => {
 
 // 快捷选择按钮的选项
 const rentalTimeOptions = computed(() => [
-  { label: `${t('energyPalDialog.m10')}`, value: 'm10', type: 'minute' },
-  { label: `${t('energyPalDialog.h1')}`, value: 'h1', type: 'hours' },
-  { label: `${t('energyPalDialog.h3')}`, value: 'h3', type: 'hours' },
-  { label: `${t('energyPalDialog.day1')}`, value: 'day1', type: 'days' },
+  { label: `${t('app.m10')}`, value: 'm10', type: 'minute' },
+  { label: `${t('app.h1')}`, value: 'h1', type: 'hours' },
+  { label: `${t('app.h3')}`, value: 'h3', type: 'hours' },
+  { label: `${t('app.day1')}`, value: 'day1', type: 'days' },
 ])
 
 // 通过快捷按钮修改时间类型
@@ -182,7 +182,7 @@ function handleInput() {
   align-items: center;
   justify-content: center;
   height: 40px;
-  padding: 0 8px;
+  width: 64px;
   background-color: #000;
   border-radius: 6px;
   cursor: pointer;
