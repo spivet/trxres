@@ -108,7 +108,7 @@ async function handlePay() {
         {{ $t('energyPalDialog.lowEnergyFee') }}
       </template>
       {{ $t('energyPalDialog.discountDesc') }}
-      <span class="color-font-primary font-500">{{ savedTRXAmount }} TRX ≈ $ {{ savedUsdAmount }}</span>
+      <span class="color-font-primary font-bold">{{ savedTRXAmount }} TRX ≈ $ {{ savedUsdAmount }}</span>
     </p>
 
     <el-button

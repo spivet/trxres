@@ -33,7 +33,7 @@ defineProps({
   <div class="tips-box">
     <i18n-t keypath="fastTradingDialog.moneyDesc" tag="p">
       <template #unitPrice>
-        <span class="font-bold color-#000">{{ unitPriceSun }}</span>
+        {{ unitPriceSun }}
       </template>
       <template #savedTrxPercent>
         <span class="font-bold color-#000">{{ savedTrxPercent }}</span>
