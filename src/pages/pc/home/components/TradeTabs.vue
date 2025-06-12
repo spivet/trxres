@@ -32,9 +32,9 @@ function updateValue(tab: TabItem) {
     <span class="trade-tab" :class="{ active: isActive(tabItems[0]) }" @click="updateValue(tabItems[0])">
       {{ tabItems[0].label }}
     </span>
-    <span class="trade-tab" :class="{ active: isActive(tabItems[1]) }" @click="updateValue(tabItems[1])">
+    <!-- <span class="trade-tab" :class="{ active: isActive(tabItems[1]) }" @click="updateValue(tabItems[1])">
       {{ tabItems[1].label }}
-    </span>
+    </span> -->
   </div>
 </template>
 
@@ -56,25 +56,27 @@ function updateValue(tab: TabItem) {
     border-top-left-radius: 10px;
   }
 
-  &:last-child {
-    margin-left: -16px;
-    border-top-right-radius: 10px;
-  }
+  // &:last-child {
+  //   margin-left: -16px;
+  //   border-top-right-radius: 10px;
+  // }
 
-  &:first-child.active {
-    background: url('../images/tab1.png') no-repeat right center #fff;
-    opacity: 1;
-    z-index: 1;
-  }
+  // &:first-child.active {
+  //   background: url('../images/tab1.png') no-repeat right center #fff;
+  //   opacity: 1;
+  //   z-index: 1;
+  // }
 
-  &:last-child.active {
-    background: url('../images/tab2.png') no-repeat left center #fff;
-    opacity: 1;
-    z-index: 1;
-  }
+  // &:last-child.active {
+  //   background: url('../images/tab2.png') no-repeat left center #fff;
+  //   opacity: 1;
+  //   z-index: 1;
+  // }
 
   &.active {
+    background-color: #fff;
     color: #000;
+    clip-path: polygon(0 0, 90% 0, 100% 100%, 0 100%);
   }
 }
 </style>
