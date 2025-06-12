@@ -35,7 +35,7 @@ const rentalAmount = ref()
 const rentalTime = ref('h1')
 // 监听数量和时长变化，获取价格
 watch([rentalAmount, rentalTime], ([newAmount, newUnitPriceType]) => {
-  if (!newAmount || !newUnitPriceType)
+  if (!newAmount || newAmount < config.value.lowEnergyCanBuy || newAmount > config.value.topEnergyCanBuy || !newUnitPriceType)
     return
 
   checkPrice({

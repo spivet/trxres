@@ -28,7 +28,7 @@ function validateRentalAmount(value: string | number | undefined) {
   if (!value)
     return false
   const num = Number(value)
-  if (num < 0 || num > config.value.topEnergyCanBuy)
+  if (num < config.value.lowEnergyCanBuy || num > config.value.topEnergyCanBuy)
     return false
   return true
 }
@@ -50,7 +50,7 @@ defineExpose({
       <span>
         {{ $t('app.balance') }}：
         <strong>
-          {{ accountStore.balance ? toThousands(accountStore.balance.trxBalance) : 0 }} RTX
+          {{ accountStore.balance ? accountStore.balance.trxBalance : 0 }} RTX
         </strong>
       </span>
     </div>
